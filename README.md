@@ -1,2 +1,2 @@
-# Balance_ton_bully - Projet étudiant temps plein reconversion, Coding Factory by ESIEE-IT
+# Balance ton bully - Projet étudiant temps plein reconversion, Coding Factory by ESIEE-IT
 "Balance ton bully" est un site web conçu pour lutter contre le harcèlement scolaire. Ce projet vise à offrir une plateforme d'information, de soutien, et de ressources pour les élèves, parents, et enseignants. Il inclut un forum de témoignage, une liste de professionnels de santé pour des rendez-vous, une mise en relation avec des professionnels de la formation sur la sensibilisation contre le harcèlement scolaire, ainsi que des actualités et informations sur ce sujet.
