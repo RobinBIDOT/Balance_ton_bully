@@ -1,5 +1,9 @@
+CREATE DATABASE IF NOT EXISTS balance_ton_bully;
+
+USE balance_ton_bully;
+    
 -- Suppression des tables si elles existent déjà
-DROP TABLE IF EXISTS reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites;
+DROP TABLE IF EXISTS reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites, administrateurs;
 
 -- Création de la table `utilisateurs`
 CREATE TABLE utilisateurs (
@@ -81,7 +85,26 @@ INSERT INTO sujets_forum (id_utilisateur, titre, contenu, date_creation) VALUES
     (27, 'Réunions de soutien', 'Lorem ipsum dolor sit amet', '2024-04-05 00:00:00'),
     (13, 'Ressources utiles', 'Lorem ipsum dolor sit amet', '2024-04-07 00:00:00'),
     (26, 'Vivre après le harcèlement', 'Lorem ipsum dolor sit amet', '2024-04-09 00:00:00'),
-    (16, 'Témoignages d''élèves', 'Lorem ipsum dolor sit amet', '2024-04-11 00:00:00');
+    (16, 'Témoignages d''élèves', 'Lorem ipsum dolor sit amet', '2024-04-11 00:00:00'),
+    (5, 'Témoignages de parents sur le harcèlement scolaire', 'Lorem ipsum dolor sit amet', '2024-04-15 00:00:00'),
+    (14, 'Conseils pour détecter le harcèlement à l''école', 'Lorem ipsum dolor sit amet', '2024-04-17 00:00:00'),
+    (3, 'Stratégies pour soutenir un enfant harcelé', 'Lorem ipsum dolor sit amet', '2024-04-19 00:00:00'),
+    (7, 'Témoignages d''enseignants face au harcèlement', 'Lorem ipsum dolor sit amet', '2024-04-21 00:00:00'),
+    (9, 'Discussion sur les conséquences du harcèlement', 'Lorem ipsum dolor sit amet', '2024-04-23 00:00:00'),
+    (2, 'Partage d''expériences sur le harcèlement en ligne', 'Lorem ipsum dolor sit amet', '2024-04-25 00:00:00'),
+    (17, 'Comment agir en tant que parent face au harcèlement', 'Lorem ipsum dolor sit amet', '2024-04-27 00:00:00'),
+    (4, 'Ressources pour aider les enfants victimes de harcèlement', 'Lorem ipsum dolor sit amet', '2024-04-29 00:00:00'),
+    (11, 'Débats sur les politiques de lutte contre le harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-01 00:00:00'),
+    (19, 'Témoignages de survivants du harcèlement scolaire', 'Lorem ipsum dolor sit amet', '2024-05-03 00:00:00'),
+    (22, 'Conseils pour prévenir le harcèlement entre élèves', 'Lorem ipsum dolor sit amet', '2024-05-05 00:00:00'),
+    (8, 'Rôle des écoles dans la prévention du harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-07 00:00:00'),
+    (12, 'Soutien psychologique pour les victimes de harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-09 00:00:00'),
+    (23, 'Débats sur l''impact du harcèlement sur la santé mentale', 'Lorem ipsum dolor sit amet', '2024-05-11 00:00:00'),
+    (15, 'Stratégies pour promouvoir un environnement anti-harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-13 00:00:00'),
+    (27, 'Témoignages d''anciens harceleurs sur leur expérience', 'Lorem ipsum dolor sit amet', '2024-05-15 00:00:00'),
+    (13, 'Comment favoriser l''expression des élèves face au harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-17 00:00:00'),
+    (26, 'Discussion sur le rôle des réseaux sociaux dans le harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-19 00:00:00'),
+    (16, 'Témoignages d''intervenants extérieurs dans la prévention du harcèlement', 'Lorem ipsum dolor sit amet', '2024-05-21 00:00:00');
 
 
 -- Création de la table `reponses_forum`
@@ -132,7 +155,58 @@ INSERT INTO reponses_forum (id_sujet, id_utilisateur, contenu, date_creation) VA
     (19, 29, 'Lorem ipsum dolor sit amet', '2024-04-19 00:00:00'),
     (19, 26, 'Lorem ipsum dolor sit amet', '2024-04-20 00:00:00'),
     (20, 14, 'Lorem ipsum dolor sit amet', '2024-04-21 00:00:00'),
-    (20, 12, 'Lorem ipsum dolor sit amet', '2024-04-22 00:00:00');
+    (20, 12, 'Lorem ipsum dolor sit amet', '2024-04-22 00:00:00'),
+    (21, 21, 'Lorem ipsum dolor sit amet', '2024-03-12 09:00:00'),
+    (21, 22, 'Lorem ipsum dolor sit amet', '2024-03-12 09:15:00'),
+    (21, 23, 'Lorem ipsum dolor sit amet', '2024-03-12 09:30:00'),
+    (21, 24, 'Lorem ipsum dolor sit amet', '2024-03-12 09:45:00'),
+    (21, 25, 'Lorem ipsum dolor sit amet', '2024-03-12 10:00:00'),
+    (22, 26, 'Lorem ipsum dolor sit amet', '2024-03-12 10:15:00'),
+    (22, 17, 'Lorem ipsum dolor sit amet', '2024-03-12 10:30:00'),
+    (22, 8, 'Lorem ipsum dolor sit amet', '2024-03-12 10:45:00'),
+    (22, 9, 'Lorem ipsum dolor sit amet', '2024-03-12 11:00:00'),
+    (22, 10, 'Lorem ipsum dolor sit amet', '2024-03-12 11:15:00'),
+    (23, 11, 'Lorem ipsum dolor sit amet', '2024-03-12 11:30:00'),
+    (23, 12, 'Lorem ipsum dolor sit amet', '2024-03-12 11:45:00'),
+    (23, 13, 'Lorem ipsum dolor sit amet', '2024-03-12 12:00:00'),
+    (23, 14, 'Lorem ipsum dolor sit amet', '2024-03-12 12:15:00'),
+    (23, 5, 'Lorem ipsum dolor sit amet', '2024-03-12 12:30:00'),
+    (24, 1, 'Lorem ipsum dolor sit amet', '2024-03-12 12:45:00'),
+    (24, 2, 'Lorem ipsum dolor sit amet', '2024-03-12 13:00:00'),
+    (24, 3, 'Lorem ipsum dolor sit amet', '2024-03-12 13:15:00'),
+    (24, 4, 'Lorem ipsum dolor sit amet', '2024-03-12 13:30:00'),
+    (24, 5, 'Lorem ipsum dolor sit amet','2024-03-12 13:45:00'),
+    (25, 6, 'Lorem ipsum dolor sit amet', '2024-03-12 14:00:00'),
+    (25, 7, 'Lorem ipsum dolor sit amet', '2024-03-12 14:15:00'),
+    (25, 8, 'Lorem ipsum dolor sit amet', '2024-03-12 14:30:00'),
+    (25, 9, 'Lorem ipsum dolor sit amet', '2024-03-12 14:45:00'),
+    (25, 10, 'Lorem ipsum dolor sit amet','2024-03-12 15:00:00'),
+    (26, 11, 'Lorem ipsum dolor sit amet', '2024-03-12 15:15:00'),
+    (26, 12, 'Lorem ipsum dolor sit amet', '2024-03-12 15:30:00'),
+    (26, 13, 'Lorem ipsum dolor sit amet', '2024-03-12 15:45:00'),
+    (26, 14, 'Lorem ipsum dolor sit amet', '2024-03-12 16:00:00'),
+    (26, 15, 'Lorem ipsum dolor sit amet','2024-03-12 16:15:00'),
+    (27, 1, 'Lorem ipsum dolor sit amet', '2024-03-12 16:30:00'),
+    (27, 2, 'Lorem ipsum dolor sit amet', '2024-03-12 16:45:00'),
+    (27, 3, 'Lorem ipsum dolor sit amet', '2024-03-12 17:00:00'),
+    (27, 4, 'Lorem ipsum dolor sit amet', '2024-03-12 17:15:00'),
+    (27, 5, 'Lorem ipsum dolor sit amet','2024-03-12 17:30:00'),
+    (28, 6, 'Lorem ipsum dolor sit amet', '2024-03-12 17:45:00'),
+    (28, 7, 'Lorem ipsum dolor sit amet', '2024-03-12 18:00:00'),
+    (28, 8, 'Lorem ipsum dolor sit amet', '2024-03-12 18:15:00'),
+    (28, 9, 'Lorem ipsum dolor sit amet', '2024-03-12 18:30:00'),
+    (28, 10, 'Lorem ipsum dolor sit amet','2024-03-12 18:45:00'),
+    (29, 11, 'Lorem ipsum dolor sit amet', '2024-03-12 19:00:00'),
+    (29, 12, 'Lorem ipsum dolor sit amet', '2024-03-12 19:15:00'),
+    (29, 13, 'Lorem ipsum dolor sit amet', '2024-03-12 19:30:00'),
+    (29, 14, 'Lorem ipsum dolor sit amet', '2024-03-12 19:45:00'),
+    (29, 15, 'Lorem ipsum dolor sit amet','2024-03-12 20:00:00'),
+    (30, 1, 'Lorem ipsum dolor sit amet', '2024-03-12 20:15:00'),
+    (30, 2, 'Lorem ipsum dolor sit amet', '2024-03-12 20:30:00'),
+    (30, 3, 'Lorem ipsum dolor sit amet', '2024-03-12 20:45:00'),
+    (30, 4, 'Lorem ipsum dolor sit amet', '2024-03-12 21:00:00'),
+    (30, 5, 'Lorem ipsum dolor sit amet','2024-03-12 21:15:00');
+
 
 -- Création de la table `professionnels_sante`
 CREATE TABLE professionnels_sante (
