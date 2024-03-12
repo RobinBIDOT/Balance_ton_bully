@@ -52,4 +52,4 @@
     <div class="transition"></div>
 </body>
 </html>
->>>>>>> d325e6f (Features_PageAccueil : Création et remplissage de la page d'accueil et création de dossier de ressources)
+
