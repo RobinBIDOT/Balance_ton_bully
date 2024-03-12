@@ -1,3 +1,4 @@
+
 /* Header - css */
 .navbar {
     padding-left: 0;
@@ -11,3 +12,108 @@
 #navbarSupportedContent {
     justify-content: center; /* Centre les éléments de navigation */
 }
+
+*{
+    font-family: "Roboto";
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+.container-stats{
+    margin-top: 20px;
+    margin-bottom: 100px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.statistiques{
+    grid-column: 2/4;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+.first-percent, .second-percent{
+    font-size: 5rem;
+    margin-top: 30px;
+}
+
+.harassment, .high-school-harassment{
+    font-size: 2rem;
+    max-width: 300px;
+}
+
+.video-container{
+    grid-column: 4/6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video{
+    -webkit-box-shadow: 5px 5px 15px 5px #000000;
+    box-shadow: 5px 5px 15px 5px #000000;
+}
+
+.video{
+    width: 640px;
+    height: 360px;
+}
+
+
+.transition{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15px;
+    margin-left: 15%;
+    margin-right: 15%;
+    background: #58C1F5;
+    border-radius: 13px;
+    margin-bottom: 100px;
+}
+
+.solutions{
+    margin-top: 10%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 10%;
+}
+
+.first-solution{
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+.second-solution{
+    grid-column: 4/5;
+    grid-row: 1/2;
+}
+
+.illustrations{
+    grid-column: 3/4;
+    grid-row: 2/3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.illustrations img{
+    max-width: 130px;
+}
+
+.third-solution{
+    grid-column: 2/3;
+    grid-row: 3/4;
+}
+
+.fourth-solution{
+    grid-column: 4/5;
+    grid-row: 3/4;
+}
+
+/* @media screen and (max-width:900px) {
+} */
