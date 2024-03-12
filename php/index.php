@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Balance Ton Bully - Accueil</title>
 </head>
 <body>
@@ -38,7 +38,7 @@
             <p class="content-second">Nous proposons a ceux qui le souhaitent de se former afin de pouvoir devenir intervenant auprès des écoles </p>
         </div>
         <div class="illustrations">
-            <img src="./ressources/stop-bullying-2.png" alt="illustration stop harcèlement">
+            <img src="../ressources/stop-bullying-2.png" alt="illustration stop harcèlement">
         </div>
         <div class="third-solution">
             <h4 class="title-third">Interventions</h4>
