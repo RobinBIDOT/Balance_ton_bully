@@ -242,3 +242,18 @@ INSERT INTO dons (id_utilisateur, montant, date_don, recurrent) VALUES
     (18, 300.00, '2024-01-18 12:00:00', 0),
     (19, 50.00, '2024-01-19 12:00:00', 1),
     (20, 100.00, '2024-01-20 12:00:00', 0);
+
+-- Création de la table `administrateurs`
+CREATE TABLE administrateurs (
+    id_administrateur INT AUTO_INCREMENT PRIMARY KEY,
+    nom_administrateur VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    mot_de_passe_hash VARCHAR(255) NOT NULL,
+    date_creation DATETIME NOT NULL
+);
+
+-- Insertion de deux administrateurs dans la table 'administrateurs'
+-- https://phppasswordhash.com/ mot de passe : administrateur
+INSERT INTO administrateurs (nom_administrateur, email, mot_de_passe_hash, date_creation) VALUES
+    ('Admin1', 'admin1@email.fr', '$2y$10$Qp/BmnoWpXkbQ8FO1jmR.eEE2EFK5qKFXxqFBkI/FU6GxW1fuJLli', '2024-01-01 00:00:00'),
+    ('Admin2', 'admin2@email.fr', '$2y$10$vAsCqertK6ec6NeKkt5R1.efqnV9xPFXGsz0McdeaBlYpeYQxWFja', '2024-01-02 00:00:00');
