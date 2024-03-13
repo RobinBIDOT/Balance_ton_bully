@@ -15,7 +15,7 @@ CREATE TABLE utilisateurs (
     email VARCHAR(255) NOT NULL,
     photo_avatar VARCHAR(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',
     mot_de_passe_hash VARCHAR(255) NOT NULL,
-    professionnel_de_sante BOOLEAN NOT NULL,
+    professionnel_de_sante BOOLEAN NOT NULL DEFAULT false,
     date_creation DATETIME NOT NULL,
     derniere_connexion DATETIME
 );

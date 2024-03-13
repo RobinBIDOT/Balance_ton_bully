@@ -1,85 +1,132 @@
 <?php
-session_start();
+// Inclusion du fichier de fonctions et démarrage de la session
 include 'c:/xampp/htdocs/Balance_ton_bully/php/tools/functions.php';
+session_start();
 
-
+// Connexion à la base de données
 $pdo = dbConnexion();
 
-if(isset($_POST['submit'])) {
-    if (empty($_POST['name']) or empty($_POST['lastName']) or empty($_POST['nickName']) or empty($_POST['mail']) or empty($_POST['pwd'])) {
-
+// Vérification de la soumission du formulaire d'inscription
+if (isset($_POST['submit'])) {
+    // Vérification de la saisie des champs requis
+    if (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']) || empty($_POST['fonction'])) {
+        $errors = array();
         if (empty($_POST['name'])) {
-            echo "Veuillez saisir votre prénom<br>";
+            $errors[] = "Veuillez saisir votre prénom";
         }
         if (empty($_POST['lastName'])) {
-            echo "Veuillez saisir votre nom<br>";
+            $errors[] = "Veuillez saisir votre nom";
         }
-        if (empty($_POST['nickName'])) {
-            echo "Veuillez saisir votre nom d'utilisateur<br>";
+        if (empty($_POST['pseudo'])) {
+            $errors[] = "Veuillez saisir votre pseudo";
         }
         if (empty($_POST['mail'])) {
-            echo "Veuillez saisir votre adresse mail<br>";
+            $errors[] = "Veuillez saisir votre adresse mail";
         }
         if (empty($_POST['pwd'])) {
-            echo "Veuillez saisir un mot de passe<br>";
+            $errors[] = "Veuillez saisir un mot de passe";
+        }
+        if (empty($_POST['fonction'])) {
+            $errors[] = "Veuillez sélectionner votre fonction";
+        }
+        // Affichage des erreurs
+        foreach ($errors as $error) {
+            echo "<div class='alert alert-danger' role='alert'>$error</div>";
         }
     } else {
-        @$name = $_POST['name'];
-        @$lastName = $_POST['lastName'];
-        @$mail = $_POST['mail'];
-        @$password = $_POST['pwd'];
-        @$nickName = $_POST['nickName'];
+        // Récupération des données saisies dans le formulaire
+        $name = $_POST['name'];
+        $lastName = $_POST['lastName'];
+        $mail = $_POST['mail'];
+        $password = $_POST['pwd'];
+        $pseudo = $_POST['pseudo'];
+        $fonction = $_POST['fonction'];
 
+        // Hashage du mot de passe
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            $stmt = $pdo->prepare('INSERT INTO utilisateurs (name, firstName, mail, password, userName) VALUES (?,?,?,?,?)');
-            $stmt->execute([$lastName, $name, $mail, $hashedPassword, $nickName]);
-            echo "Utilisateur enregistré avec succès";
+            // Insertion des données dans la base de données
+            $stmt = $pdo->prepare('INSERT INTO utilisateurs (nom_utilisateur, prenom_utilisateur, email, mot_de_passe_hash, pseudo, fonction) VALUES (?,?,?,?,?,?)');
+            $stmt->execute([$lastName, $name, $mail, $hashedPassword, $pseudo, $fonction]);
+            echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
         } catch (PDOException $e) {
-            echo "Erreur: " . $e->getMessage();
+            echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
         }
-
     }
 }
-
 ?>
 
-
-
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="CSS/login_authentification.css" id="css">
-    <link rel="stylesheet" href="CSS/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S'inscrire - MovEase</title>
+    <!-- Liens vers les styles CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/login_authentification.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        .blue-bg {
+            background-color: #0854C7;
+        }
+    </style>
 </head>
+
 <body>
-<?php include('../includes/headerNav.php')?>
-<?php if (!isset($_SESSION['nickName'])){ ?>
-    <h2>S'inscrire</h2>
-    <div id="wrapper">
-        <form method="POST" action="">
-            <p>Votre prénom: <br> <input type="text" name="name" id="name" placeholder="Nom..."></p>
-            <p>Votre nom: <br> <input type="text" name="lastName" id="lastName" placeholder="Nom de famille..."></p>
-            <p>Votre adresse mail: <br> <input type="email" name="mail" id="mail" placeholder="E-mail..."></p>
-            <p>Votre nom d'utilisateur: <br> <input type="text" name="nickName" id="nickName" placeholder="Nom d'utilisateur..."></p>
-            <p>Votre mot de passe: <br> <input type="password" name="pwd" id="pwd" placeholder="Mot de passe..."></p>
-            <a href="connexion.php">Vous avez déjà un compte ?</a><br>
-            <input type="submit" name="submit" id="submit" value="s'enregistrer">
-        </form>
+<?php include('../includes/headerNav.php') ?>
+<div class="container mx-auto mt-5">
+    <div class="row justify-content-center">
+            <div class="blue-bg p-4 rounded-lg shadow-lg">
+                <h2 class="text-center text-white">S'inscrire</h2>
+                <?php if (!empty($_POST) && (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']) || empty($_POST['fonction']))) : ?>
+                    <div class="alert alert-danger" role="alert">
+                        Veuillez compléter tous les champs
+                    </div>
+                <?php elseif (!empty($_POST) && isset($e)) : ?>
+                    <div class="alert alert-danger" role="alert">
+                        Erreur: <?php echo $e->getMessage(); ?>
+                    </div>
+                <?php elseif (!empty($_POST)) : ?>
+                    <div class="alert alert-success" role="alert">
+                        Utilisateur enregistré avec succès
+                    </div>
+                <?php endif; ?>
+                <form method="POST" action="">
+                    <div class="mb-3">
+                        <label for="name" class="form-label text-white">Votre prénom:</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Nom...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label text-white">Votre nom:</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Nom de famille...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="mail" class="form-label text-white">Votre adresse mail:</label>
+                        <input type="email" class="form-control" id="mail" name="mail" placeholder="E-mail...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pseudo" class="form-label text-white">Votre pseudo:</label>
+                        <input type="text" class="form-control" id="pseudo" name="pseudo" placeholder="Pseudo...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label text-white">Votre mot de passe:</label>
+                        <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fonction" class="form-label text-white">Votre fonction:</label>
+                        <input type="text" class="form-control" id="fonction" name="fonction" placeholder="Fonction...">
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="submit">S'enregistrer</button>
+                    <p class="text-white mt-3">J'ai déjà un compte. <a href="connexion.php" class="text-white font-bold">Se connecter</a></p>
+                </form>
+            </div>
     </div>
-<?php }else{ ?>
-    <p>Vous êtes déjà connecté</p>
-    <button>deconnexion</button>
-<?php } ?>
+</div>
 </body>
+
 </html>

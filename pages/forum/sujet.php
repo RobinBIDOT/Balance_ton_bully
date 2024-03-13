@@ -3,6 +3,7 @@ try {
     // Inclusion du fichier de connexion à la base de données
     include('../../php/tools/functions.php');
     $dbh = dbConnexion();
+    session_start();
 
     // Définition du nombre d'éléments par page
     $elementsParPage = 8;
@@ -49,6 +50,7 @@ try {
                 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
                 <link rel="stylesheet" href="../../css/style.css">
             </head>
+            <?php include('../../includes/headerNav.php')?>
             <body>
             <div class="container mt-5 mx-auto max-w-6xl">
                 <h1 class="text-3xl font-bold mb-4"><?= $row['titre'] ?></h1>
