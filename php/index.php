@@ -1,3 +1,12 @@
+<?php
+include('tools/functions.php');
+$dbConnect = dbConnexion();
+
+
+
+
+?>
+
 <!doctype html>
 <html lang="fr">
 <head>
