@@ -14,7 +14,7 @@
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-auto p-2 text-center'>
-                <a href='../../index.php'>
+                <a href='../php/index.php'>
                     <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
                 </a>
             </div>

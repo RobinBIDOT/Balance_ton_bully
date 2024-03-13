@@ -4,6 +4,25 @@
     box-sizing: border-box;
     padding: 0;
 }
+/* css header-navbar */
+.perso_logoSize{
+    width: 200px;
+    background-color: #A42AF0;
+    padding: 3px;
+    border-radius: 2px;
+}
+.custom-bg-logo{
+    background-color: #58C1F5;
+    padding: 5px;
+    
+}
+.custom-bg-dropdown{
+    background-color: #A42AF0;
+    padding: 5px;  
+}
+
+
+/* css acceuil */
 .container-stats{
     margin-top: 20px;
     margin-bottom: 100px;
@@ -101,7 +120,8 @@
 }
 
 @media screen and (max-width:900px) {
-    .
+
+    
 
 }
 

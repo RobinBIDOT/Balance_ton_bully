@@ -11,13 +11,13 @@ if (isset($_POST['submit'])) {
     if (!empty($_POST['pseudo']) && !empty($_POST['pwd'])) {
         $pseudo = htmlspecialchars($_POST['pseudo']);
         $password = $_POST['pwd'];
-        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE pseudo = ?');
+        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE userName = ?');
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user && password_verify($password, $user['mot_de_passe_hash'])) {
+        if ($user && password_verify($password, $user['password'])) {
             $_SESSION['pseudo'] = $pseudo;
             $_SESSION['pwd'] = $password;
-            $_SESSION['id'] = $user['id_utilisateur'];
+            $_SESSION['id'] = $user['id'];
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }
