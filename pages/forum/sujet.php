@@ -16,7 +16,7 @@ try {
     // Vérification de l'existence et de la validité de l'ID du sujet
     if(isset($_GET['id']) && is_numeric($_GET['id'])) {
         $idSujet = $_GET['id'];
-        $sql = "SELECT sujets_forum.*, utilisateurs.nom_utilisateur AS nom_auteur
+        $sql = "SELECT sujets_forum.*, utilisateurs.pseudo AS nom_auteur
                 FROM sujets_forum
                 LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id_utilisateur
                 WHERE id_sujet = :id";
@@ -44,21 +44,22 @@ try {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Titre de votre sujet</title>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
                 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
                 <link rel="stylesheet" href="../../css/style.css">
             </head>
             <body>
-            <div class="container mt-5 mx-auto max-w-3xl">
+            <div class="container mt-5 mx-auto max-w-6xl">
                 <h1 class="text-3xl font-bold mb-4"><?= $row['titre'] ?></h1>
                 <p class="mb-2"><strong>Auteur :</strong> <?= $row['nom_auteur'] ?> | <strong>Date de création :</strong> <?= $row['date_creation'] ?></p>
                 <p class="mb-8"><?= $row['contenu'] ?></p>
-                <h2 class="text-2xl font-bold mb-4">Réponses au sujet</h2>
+                <?php echo '<h2 class="text-2xl font-bold mb-4">Nombre de réponses : ' . $totalReponses . '</h2>';?>
                 <div class="transition"></div>
                 <?php
                 // Récupération et affichage des réponses pour ce sujet
                 echo '<div style="background-color: #0854C7;" class="p-4 rounded-md mb-4">';
-                $sqlReponses = "SELECT reponses_forum.*, utilisateurs.nom_utilisateur AS nom_auteur_reponse
+                $sqlReponses = "SELECT reponses_forum.*, utilisateurs.pseudo AS nom_auteur_reponse, utilisateurs.fonction AS fonction_auteur, utilisateurs.photo_avatar
                                 FROM reponses_forum
                                 LEFT JOIN utilisateurs ON reponses_forum.id_utilisateur = utilisateurs.id_utilisateur
                                 WHERE id_sujet = :id
@@ -70,38 +71,110 @@ try {
                 $stmtReponses->bindParam(':elementsParPage', $elementsParPage, PDO::PARAM_INT);
                 $stmtReponses->execute();
 
+                $sqlCount ="SELECT COUNT(*) AS total FROM reponses_forum WHERE id_sujet = :id";
+                $stmtCount =$dbh->prepare($sqlCount);
+                $stmtCount->bindParam(':id',$idSujet,PDO::PARAM_INT);
+                $stmtCount->execute();
+                $totalReponses =$stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
+
                 if ($stmtReponses->rowCount() > 0) {
                     $reponses = $stmtReponses->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach($reponses as $rowReponse) {
-                        echo '<div class="bg-white shadow-md rounded-md p-4 mb-4">';
-                        echo '<h5 class="text-lg font-semibold mb-2">'.$rowReponse['nom_auteur_reponse'].' - '.$rowReponse['date_creation'].'</h5>';
-                        echo '<p class="mb-2">'.$rowReponse['contenu'].'</p>';
-                        echo '<div class="flex justify-end">';
+                        echo '<div class="response-item d-flex mb-4">';
+                        echo '<div class="avatar-container mr-3">';
+                        echo '<img src="' . $rowReponse['photo_avatar'] . '" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">';
+                        echo '</div>';
+                        echo '<div class="w-full"> ';
+                        echo '<div class="d-flex">';
+
+                        echo '<div class="auteur-info text-white">';
                         if ($rowReponse['id_utilisateur'] === $row['id_utilisateur']) {
-                            echo '<p class="text-gray-500">Auteur</p>';
+                            echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'] . ' - Auteur ';
                         } else {
-                            echo '<a href="#" class="inline-block bg-red-500 text-white px-2 py-1 rounded-md">Signaler</a>';
+                            echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'];
                         }
                         echo '</div>';
                         echo '</div>';
+                        echo '<p class="text-white mb-2">' . $rowReponse['fonction_auteur'] . '</p>';
+                        echo '<div class="bg-white shadow-md rounded-md p-4">';
+                        echo '<p class="mb-2">' . $rowReponse['contenu'] . '</p>';
+                        echo '<div class="flex justify-end">';
+                        if ($rowReponse['id_utilisateur'] !== $row['id_utilisateur']) {
+                            echo '<a href="#" class="inline-block bg-red-500 text-white px-2 py-1 rounded-md">Signaler</a>';
+                        }
+                        if ($rowReponse['id_utilisateur'] === $row['id_utilisateur']) {
+                            echo '<div class="d-flex">';
+                            echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '" class="btn btn-modifier btn btn-outline-info">Modifier</a>';
+                            echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '" class="btn btn-supprimer btn-outline-danger">Supprimer</a>';
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
                     }
+
+
 
                     // Affichage de la pagination
                     if ($totalPages > 1) {
                         echo '<nav aria-label="Pagination">';
                         echo '<ul class="pagination justify-content-center">';
+
+                        // Bouton Précédent
                         echo '<li class="page-item '.($page <= 1 ? 'disabled' : '').'">';
                         echo '<a class="page-link" href="?id='.$idSujet.'&page='.($page - 1).'" tabindex="-1">Précédent</a>';
                         echo '</li>';
-                        for ($i = 1; $i <= $totalPages; $i++) {
-                            echo '<li class="page-item '.($page == $i ? 'active' : '').'">';
-                            echo '<a class="page-link" href="?id='.$idSujet.'&page='.$i.'">'.$i.'</a>';
-                            echo '</li>';
+
+                        // Affichage des pages
+                        $threshold = 5; // Seuil pour afficher les points de suspension
+                        if ($totalPages <= $threshold) {
+                            // Afficher toutes les pages si le nombre total est inférieur ou égal au seuil
+                            for ($i = 1; $i <= $totalPages; $i++) {
+                                echo '<li class="page-item '.($page == $i ? 'active' : '').'">';
+                                echo '<a class="page-link" href="?id='.$idSujet.'&page='.$i.'">'.$i.'</a>';
+                                echo '</li>';
+                            }
+                        } else {
+                            // Afficher les pages avec les points de suspension
+                            $start = max(1, $page - floor($threshold / 2));
+                            $end = min($totalPages, $start + $threshold - 1);
+
+                            if ($start > 1) {
+                                echo '<li class="page-item">';
+                                echo '<a class="page-link" href="?id='.$idSujet.'&page=1">1</a>';
+                                echo '</li>';
+                                if ($start > 2) {
+                                    echo '<li class="page-item disabled">';
+                                    echo '<span class="page-link">...</span>';
+                                    echo '</li>';
+                                }
+                            }
+
+                            for ($i = $start; $i <= $end; $i++) {
+                                echo '<li class="page-item '.($page == $i ? 'active' : '').'">';
+                                echo '<a class="page-link" href="?id='.$idSujet.'&page='.$i.'">'.$i.'</a>';
+                                echo '</li>';
+                            }
+
+                            if ($end < $totalPages) {
+                                if ($end < $totalPages - 1) {
+                                    echo '<li class="page-item disabled">';
+                                    echo '<span class="page-link">...</span>';
+                                    echo '</li>';
+                                }
+                                echo '<li class="page-item">';
+                                echo '<a class="page-link" href="?id='.$idSujet.'&page='.$totalPages.'">'.$totalPages.'</a>';
+                                echo '</li>';
+                            }
                         }
+
+                        // Bouton Suivant
                         echo '<li class="page-item '.($page >= $totalPages ? 'disabled' : '').'">';
                         echo '<a class="page-link" href="?id='.$idSujet.'&page='.($page + 1).'">Suivant</a>';
                         echo '</li>';
+
                         echo '</ul>';
                         echo '</nav>';
                     }
@@ -114,6 +187,17 @@ try {
 
                 <!-- Formulaire d'ajout de réponse -->
                 <?php if (isset($_SESSION['user_id'])) : ?>
+
+                    <div class="response-item d-flex">
+                        <div class="response-content">
+                            <h5 class="response-author"><?= $rowReponse['nom_auteur_reponse'] ?></h5>
+                            <p class="response-info"><?= $rowReponse['date_creation'] ?> | <?= $rowReponse['fonction'] ?></p>
+                            <div class="response-text bg-white p-4">
+                                <?= $rowReponse['contenu'] ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mt-5">
                         <h2 class="text-2xl font-bold mb-4">Ajouter une réponse</h2>
                         <form action="ajouterReponse.php" method="post">
