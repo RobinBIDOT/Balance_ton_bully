@@ -63,7 +63,8 @@ if(isset($_POST['submit'])) {
     <title>S'inscrire - MovEase</title>
 </head>
 <body>
-<?php if (!isset($_SESSION['connexion'])){ ?>
+<?php include('../includes/headerNav.php')?>
+<?php if (!isset($_SESSION['nickName'])){ ?>
     <h2>S'inscrire</h2>
     <div id="wrapper">
         <form method="POST" action="">
