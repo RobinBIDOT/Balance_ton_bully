@@ -46,6 +46,7 @@ if (isset($_POST['disconnect'])){
     <title>Document</title>
 </head>
 <body>
+<?php include('../includes/headerNav.php')?>
 <h2>Se connecter</h2>
 <?php if (!isset($_SESSION['nickName'])){?>
 <div id="wrapper">
