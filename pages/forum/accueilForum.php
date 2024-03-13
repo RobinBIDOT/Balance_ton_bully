@@ -3,6 +3,7 @@ try {
     // Inclusion du fichier de connexion à la base de données
     include('../../php/tools/functions.php');
     $dbh = dbConnexion();
+    session_start();
 
     // Pagination
     $limit = 10; // Nombre de sujets par page
@@ -68,15 +69,6 @@ try {
             color: white;
         }
 
-        .container-primary {
-            background-color: #0854C7;
-            color: white;
-        }
-
-        .container-secondary {
-            background-color: #0854C7;
-        }
-
         .avatar {
             width: 50px;
             height: 50px;
@@ -101,7 +93,7 @@ try {
     </style>
 </head>
 <body>
-
+<?php include('../../includes/headerNav.php')?>
 <div class="container mt-5">
     <div class="jumbotron jumbotron-primary">
         <h1 class="display-4">Bienvenue sur le forum de Balance ton bully</h1>

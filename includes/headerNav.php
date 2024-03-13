@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-auto p-2 text-center'>
-                <a href='index.php'>
+                <a href='../../index.php'>
                     <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
                 </a>
             </div>
@@ -60,7 +60,7 @@
                     <a class="nav-link text-black text-center mx-5" href="">Actualités</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-black text-center mx-5" href="">Forum</a>
+                    <a class="nav-link text-black text-center mx-5" href="../pages/forum/accueilForum.php">Forum</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-black text-center mx-5" href="">Rendez-vous</a>
@@ -74,9 +74,6 @@
 
     </nav>
 </div>
-
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
