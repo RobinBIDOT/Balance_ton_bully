@@ -55,12 +55,11 @@ if(isset($_POST['submit'])) {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="CSS/login_authentification.css" id="css">
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <title>S'inscrire - MovEase</title>
+    <title>S'inscrire - Balance Ton Bully</title>
 </head>
 <body>
 <?php include('../includes/headerNav.php')?>
