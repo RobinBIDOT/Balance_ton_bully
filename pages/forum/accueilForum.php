@@ -1,8 +1,8 @@
 <?php
 try {
     // Inclusion du fichier de connexion à la base de données
-    global $dbh;
-    include('../../php/connect.php');
+    include('../../php/tools/functions.php');
+    $dbh = dbConnexion();
 
     // Pagination
     $limit = 10; // Nombre de sujets par page
