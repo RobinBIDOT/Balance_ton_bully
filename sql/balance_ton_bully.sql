@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 13 mars 2024 à 20:15
+-- Généré le : mer. 13 mars 2024 à 21:00
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -110,8 +110,17 @@ CREATE TABLE `reponses_forum` (
 
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
-  `role` int(11) NOT NULL
+  `role` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `roles`
+--
+
+INSERT INTO `roles` (`id`, `role`) VALUES
+(1, 'Admin'),
+(2, 'User'),
+(3, 'Pro');
 
 -- --------------------------------------------------------
 
@@ -142,15 +151,15 @@ CREATE TABLE `utilisateurs` (
   `mail` varchar(255) NOT NULL,
   `photo_avatar` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `date_creation` datetime NOT NULL
+  `id_role` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `utilisateurs`
 --
 
-INSERT INTO `utilisateurs` (`id`, `firstName`, `name`, `userName`, `mail`, `photo_avatar`, `password`, `date_creation`) VALUES
-(35, 'Kevin', 'Pereira', 'xalos', 'aze@xyz.fr', NULL, '$2y$10$DSyoBE7gUisygeTb6UO6Q.NvlYW9XhTfflWMQENE9h1JbJidj7kIa', '0000-00-00 00:00:00');
+INSERT INTO `utilisateurs` (`id`, `firstName`, `name`, `userName`, `mail`, `photo_avatar`, `password`, `id_role`) VALUES
+(35, 'Kevin', 'Pereira', 'xalos', 'aze@xyz.fr', NULL, '$2y$10$DSyoBE7gUisygeTb6UO6Q.NvlYW9XhTfflWMQENE9h1JbJidj7kIa', 1);
 
 --
 -- Index pour les tables déchargées
@@ -234,7 +243,7 @@ ALTER TABLE `reponses_forum`
 -- AUTO_INCREMENT pour la table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `sujets_forum`

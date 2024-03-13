@@ -17,7 +17,8 @@ if (isset($_POST['submit'])) {
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['nickName'] = $pseudo;
             $_SESSION['pwd'] = $password;
-            $_SESSION['id'] = $user['id'];
+            $_SESSION['roles'] = $user['id_role'];
+
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }
@@ -31,9 +32,6 @@ if (isset($_POST['disconnect'])) {
     session_destroy();
     header('Location: connexion.php');
 }
-var_dump($_SESSION['nickName']);
-var_dump($pseudo);
-var_dump($password);
 ?>
 
 <!DOCTYPE html>
