@@ -9,7 +9,7 @@ $pdo = dbConnexion();
 // Vérification de la soumission du formulaire d'inscription
 if (isset($_POST['submit'])) {
     // Vérification de la saisie des champs requis
-    if (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']) || empty($_POST['fonction'])) {
+    if (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])) {
         $errors = array();
         if (empty($_POST['name'])) {
             $errors[] = "Veuillez saisir votre prénom";
@@ -26,9 +26,9 @@ if (isset($_POST['submit'])) {
         if (empty($_POST['pwd'])) {
             $errors[] = "Veuillez saisir un mot de passe";
         }
-        if (empty($_POST['fonction'])) {
-            $errors[] = "Veuillez sélectionner votre fonction";
-        }
+        //if (empty($_POST['fonction'])) {
+        //    $errors[] = "Veuillez sélectionner votre fonction";
+        //}
         // Affichage des erreurs
         foreach ($errors as $error) {
             echo "<div class='alert alert-danger' role='alert'>$error</div>";
@@ -40,15 +40,15 @@ if (isset($_POST['submit'])) {
         $mail = $_POST['mail'];
         $password = $_POST['pwd'];
         $pseudo = $_POST['pseudo'];
-        $fonction = $_POST['fonction'];
+        //$fonction = $_POST['fonction'];
 
         // Hashage du mot de passe
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
             // Insertion des données dans la base de données
-            $stmt = $pdo->prepare('INSERT INTO utilisateurs (nom_utilisateur, prenom_utilisateur, email, mot_de_passe_hash, pseudo, fonction) VALUES (?,?,?,?,?,?)');
-            $stmt->execute([$lastName, $name, $mail, $hashedPassword, $pseudo, $fonction]);
+            $stmt = $pdo->prepare('INSERT INTO utilisateurs (name, firstname, mail, password, userName) VALUES (?,?,?,?,?)');
+            $stmt->execute([$lastName, $name, $mail, $hashedPassword, $pseudo]);
             echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
         } catch (PDOException $e) {
             echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
     <div class="row justify-content-center">
             <div class="blue-bg p-4 rounded-lg shadow-lg">
                 <h2 class="text-center text-white">S'inscrire</h2>
-                <?php if (!empty($_POST) && (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']) || empty($_POST['fonction']))) : ?>
+                <?php if (!empty($_POST) && (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']))) : ?>
                     <div class="alert alert-danger" role="alert">
                         Veuillez compléter tous les champs
                     </div>
@@ -119,10 +119,10 @@ if (isset($_POST['submit'])) {
                         <label for="pwd" class="form-label text-white">Votre mot de passe:</label>
                         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
                     </div>
-                    <div class="mb-3">
+                    <!--<div class="mb-3">
                         <label for="fonction" class="form-label text-white">Votre fonction:</label>
                         <input type="text" class="form-control" id="fonction" name="fonction" placeholder="Fonction...">
-                    </div>
+                    </div>-->
                     <button type="submit" class="btn btn-primary" name="submit">S'enregistrer</button>
                     <p class="text-white mt-3">J'ai déjà un compte. <a href="connexion.php" class="text-white font-bold">Se connecter</a></p>
                 </form>

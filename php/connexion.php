@@ -15,7 +15,7 @@ if (isset($_POST['submit'])) {
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['pseudo'] = $pseudo;
+            $_SESSION['nickName'] = $pseudo;
             $_SESSION['pwd'] = $password;
             $_SESSION['id'] = $user['id'];
         } else {
@@ -31,6 +31,9 @@ if (isset($_POST['disconnect'])) {
     session_destroy();
     header('Location: connexion.php');
 }
+var_dump($_SESSION['nickName']);
+var_dump($pseudo);
+var_dump($password);
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +62,7 @@ if (isset($_POST['disconnect'])) {
 <div class="container mx-auto mt-5">
         <div class="blue-bg p-4 rounded-lg shadow-lg">
         <h2 class="text-center text-white">Se connecter</h2>
-        <?php if (!isset($_SESSION['pseudo'])) { ?>
+        <?php if (!isset($_SESSION['nickName'])) { ?>
             <div id="wrapper" class="mt-5">
                 <form method="POST" action="">
                     <div class="mb-3">
