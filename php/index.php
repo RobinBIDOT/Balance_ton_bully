@@ -1,6 +1,7 @@
 <?php
 include('tools/functions.php');
 $dbConnect = dbConnexion();
+session_start();
 
 
 
@@ -21,6 +22,10 @@ $dbConnect = dbConnexion();
     <title>Balance Ton Bully - Accueil</title>
 </head>
 <body>
+    <?php if (isset($_SESSION['nickName'])){ ?>
+       <h1>bienvenue <?php echo $_SESSION['nickName'] ?></h1>
+    <?php } ?>
+
     <div class="container-stats">
         <div class="statistiques">
             <div class="first-stat">
