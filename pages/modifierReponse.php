@@ -1,73 +1,80 @@
 <?php
-include('../php/tools/functions.php');
-$dbh = dbConnexion();
+// Vérifier si l'utilisateur est connecté
 session_start();
-
-// Redirection si l'utilisateur n'est pas connecté
 if (!isset($_SESSION['pseudo'])) {
     header("Location: ../php/connexion.php");
-    exit();
+    exit;
 }
 
-// Vérification de la présence des paramètres d'URL
-if (!isset($_GET['id']) || !isset($_GET['idSujet']) || !is_numeric($_GET['id']) || !is_numeric($_GET['idSujet'])) {
-    header("Location: ../pages/accueilForum.php");
-    exit();
-}
+// Vérifier si l'ID de la réponse et l'ID du sujet sont définis dans l'URL
+if (isset($_GET['id']) && isset($_GET['idSujet'])) {
+    $idReponse = $_GET['id'];
+    $idSujet = $_GET['idSujet'];
 
-$idReponse = $_GET['id'];
-$idSujet = $_GET['idSujet'];
+    // Inclure le fichier de connexion à la base de données
+    include('../php/tools/functions.php');
+    $dbh = dbConnexion();
 
-try {
-    // Récupération de la réponse
-    $sql = "SELECT id_utilisateur, contenu FROM reponses_forum WHERE id_reponse = :id";
+    // Vérifier si l'utilisateur est l'auteur de la réponse
+    $sql = "SELECT * FROM reponses_forum WHERE id_reponse = :idReponse AND id_utilisateur = :idUtilisateur";
     $stmt = $dbh->prepare($sql);
-    $stmt->bindParam(':id', $idReponse, PDO::PARAM_INT);
+    $stmt->bindParam(':idReponse', $idReponse, PDO::PARAM_INT);
+    $stmt->bindParam(':idUtilisateur', $_SESSION['id'], PDO::PARAM_INT);
     $stmt->execute();
 
+    // Vérifier si la réponse existe et si l'utilisateur est l'auteur
     if ($stmt->rowCount() > 0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $idUtilisateur = $row['id_utilisateur'];
-        $contenuReponse = $row['contenu'];
+        // Récupérer les données de la réponse
+        $reponse = $stmt->fetch(PDO::FETCH_ASSOC);
+        $contenuReponse = $reponse['contenu'];
 
-        // Vérification si l'utilisateur connecté est l'auteur de la réponse
-        if ($_SESSION['id'] === $idUtilisateur) {
-            // Afficher le formulaire de modification de réponse
-            ?>
-            <!DOCTYPE html>
-            <html lang="fr">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Modifier la réponse</title>
-                <!-- Inclure les CDN pour Bootstrap -->
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-            </head>
-            <body>
-            <div class="container mt-5">
-                <h2>Modifier la réponse</h2>
-                <form action="modifierReponseTraitement.php" method="post">
-                    <input type="hidden" name="idReponse" value="<?= $idReponse ?>">
-                    <input type="hidden" name="idSujet" value="<?= $idSujet ?>">
-                    <div class="mb-3">
-                        <label for="contenuReponse" class="form-label">Contenu de la réponse :</label>
-                        <textarea class="form-control" id="contenuReponse" name="contenuReponse" rows="4" required><?= $contenuReponse ?></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                </form>
-            </div>
-            </body>
-            </html>
-            <?php
-        } else {
-            header("Location: ../pages/sujet.php?id=" . $idSujet . "&error=1");
-            exit();
+        // Vérifier si le formulaire de modification a été soumis
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Récupérer le nouveau contenu de la réponse depuis le formulaire
+            $nouveauContenu = $_POST['nouveauContenu'];
+
+            // Mettre à jour le contenu de la réponse dans la base de données
+            $sqlUpdate = "UPDATE reponses_forum SET contenu = :contenu WHERE id_reponse = :idReponse";
+            $stmtUpdate = $dbh->prepare($sqlUpdate);
+            $stmtUpdate->bindParam(':contenu', $nouveauContenu, PDO::PARAM_STR);
+            $stmtUpdate->bindParam(':idReponse', $idReponse, PDO::PARAM_INT);
+            $stmtUpdate->execute();
+
+            // Rediriger l'utilisateur vers la page du sujet après la modification
+            header("Location: sujet.php?id=$idSujet");
+            exit;
         }
     } else {
-        header("Location: ../pages/sujet.php?id=" . $idSujet . "&error=2");
-        exit();
+        // Rediriger l'utilisateur vers la page du sujet avec un message d'erreur si la réponse n'existe pas ou s'il n'est pas l'auteur
+        header("Location: sujet.php?id=$idSujet&erreur=1");
+        exit;
     }
-} catch (PDOException $e) {
-    echo "Erreur : " . $e->getMessage();
+
+//else {
+//    // Rediriger l'utilisateur vers la page du sujet si les paramètres requis ne sont pas fournis dans l'URL
+//    header("Location: sujet.php?id=$idSujet&erreur=2");
+//    exit;
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier la Réponse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Modifier la Réponse</h2>
+    <form action="" method="post">
+        <div class="form-group">
+            <label for="nouveauContenu">Nouveau Contenu de la Réponse :</label>
+            <textarea class="form-control" id="nouveauContenu" name="nouveauContenu" rows="4" required><?= $contenuReponse ?></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+    </form>
+</div>
+</body>
+</html>

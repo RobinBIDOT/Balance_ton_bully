@@ -115,7 +115,7 @@ try {
                         } else {
                             // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
-                            echo '<a href="modifierReponse.php?id=[ID_REPONSE]&idSujet=[ID_SUJET]" class="btn btn-outline-info">Modifier</a>';
+                            echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-info">Modifier</a>';
                             echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
                         }
