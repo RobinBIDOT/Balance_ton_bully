@@ -1,58 +1,92 @@
 <?php
-try {
-    // Inclusion du fichier de connexion à la base de données
-    include('../../php/tools/functions.php');
-    $dbh = dbConnexion();
-    session_start();
 
-    // Pagination
-    $limit = 10; // Nombre de sujets par page
-    $page = isset($_GET['page']) ? $_GET['page'] : 1; // Page actuelle
-
-    // Comptage total des sujets
+/**
+ * Compte le nombre total de sujets dans la base de données.
+ *
+ * @param PDO $dbh Connexion à la base de données.
+ * @return int Nombre total de sujets.
+ */
+function compterSujets($dbh) {
     $countSql = "SELECT COUNT(*) AS total FROM sujets_forum";
     $stmt = $dbh->query($countSql);
-    $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+}
 
-    // Calcul du nombre total de pages
-    $totalPages = ceil($totalRows / $limit);
-
-    // Offset
-    $offset = ($page - 1) * $limit;
-
-    // Récupération des sujets du forum pour la page actuelle
+/**
+ * Récupère les sujets du forum pour la page donnée.
+ *
+ * @param PDO $dbh Connexion à la base de données.
+ * @param int $limit Nombre de sujets par page.
+ * @param int $offset Décalage pour la pagination.
+ * @param string $searchTitle Titre à rechercher.
+ * @param string $searchUser Utilisateur à rechercher.
+ * @return PDOStatement Résultat de la requête.
+ */
+function recupererSujets($dbh, $limit, $offset, $searchTitle, $searchUser) {
     $sql = "SELECT sujets_forum.*, COUNT(reponses_forum.id_reponse) AS nombre_reponses, utilisateurs.pseudo, utilisateurs.photo_avatar
             FROM sujets_forum
             LEFT JOIN reponses_forum ON sujets_forum.id_sujet = reponses_forum.id_sujet
             LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id_utilisateur";
 
-    // Construction de la clause WHERE pour la recherche
-    $searchTitle = isset($_GET['searchTitle']) ? trim($_GET['searchTitle']) : '';
-    $searchUser = isset($_GET['searchUser']) ? trim($_GET['searchUser']) : '';
     if (!empty($searchTitle) || !empty($searchUser)) {
         $sql .= " WHERE ";
         $conditions = [];
         if (!empty($searchTitle)) {
-            $conditions[] = "titre LIKE '%$searchTitle%'";
+            $conditions[] = "titre LIKE :searchTitle";
         }
         if (!empty($searchUser)) {
-            $conditions[] = "utilisateurs.pseudo LIKE '%$searchUser%'";
+            $conditions[] = "utilisateurs.pseudo LIKE :searchUser";
         }
         $sql .= implode(" AND ", $conditions);
     }
 
     $sql .= " GROUP BY sujets_forum.id_sujet
               ORDER BY sujets_forum.date_creation DESC
-              LIMIT $limit OFFSET $offset";
+              LIMIT :limit OFFSET :offset";
 
-    $result = $dbh->query($sql);
+    $stmt = $dbh->prepare($sql);
+    if (!empty($searchTitle)) {
+        $stmt->bindValue(':searchTitle', "%$searchTitle%", PDO::PARAM_STR);
+    }
+    if (!empty($searchUser)) {
+        $stmt->bindValue(':searchUser', "%$searchUser%", PDO::PARAM_STR);
+    }
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt;
+}
+
+try {
+    include('../php/tools/functions.php');
+    $dbh = dbConnexion();
+    session_start();
+
+    // Afficher les informations de session
+    echo "<pre>";
+    var_dump($_SESSION);
+    echo "</pre>";
+
+    $limit = 10; // Nombre de sujets par page
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $offset = ($page - 1) * $limit;
+
+    // Utilisation de la fonction compterSujets pour obtenir le nombre total de sujets
+    $totalRows = compterSujets($dbh);
+    $totalPages = ceil($totalRows / $limit);
+
+    $searchTitle = isset($_GET['searchTitle']) ? trim($_GET['searchTitle']) : '';
+    $searchUser = isset($_GET['searchUser']) ? trim($_GET['searchUser']) : '';
+
+    // Utilisation de la fonction recupererSujets pour obtenir les sujets du forum
+    $result = recupererSujets($dbh, $limit, $offset, $searchTitle, $searchUser);
+
 } catch (PDOException $e) {
-    // Gestion des erreurs PDO
     echo "Erreur PDO : " . $e->getMessage();
-    exit(); // Arrêt du script en cas d'erreur
+    exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -62,38 +96,11 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/style.css">
-    <style>
-        .jumbotron-primary {
-            background-color: #8BBFFE;
-            color: white;
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .sujet {
-            margin-bottom: 20px;
-        }
-
-        .nombre-reponses {
-            margin-left: auto;
-        }
-
-        .sujets-container {
-            background-color: #0854C7;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styleForum.css">
 </head>
 <body>
-<?php include('../../includes/headerNav.php')?>
+<?php include('../includes/headerNav.php') ?>
 <div class="container mt-5">
     <div class="jumbotron jumbotron-primary">
         <h1 class="display-4">Bienvenue sur le forum de Balance ton bully</h1>
@@ -185,27 +192,37 @@ try {
     <div class="transition"></div>
 </div>
 
-<div class="container mt-5">
-    <!-- Formulaire de création de sujet -->
-    <div class="card">
-        <div class="card-header">
-            Créer un nouveau sujet
-        </div>
-        <div class="card-body">
-            <form method="post" action="ajouterSujet.php">
-                <div class="form-group">
-                    <label for="titre">Titre du sujet</label>
-                    <input type="text" class="form-control" id="titre" name="titre" required>
-                </div>
-                <div class="form-group">
-                    <label for="contenu">Contenu du sujet</label>
-                    <textarea class="form-control" id="contenu" name="contenu" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Créer</button>
-            </form>
+<?php
+// Vérifier si l'utilisateur est connecté pour afficher le formulaire de création de sujet
+if(isset($_SESSION['pseudo'])) :
+    ?>
+    <div class="container mt-5">
+        <!-- Formulaire de création de sujet -->
+        <div class="card">
+            <div class="card-header">
+                Créer un nouveau sujet
+            </div>
+            <div class="card-body">
+                <form method="post" action="../pages/ajouterSujet.php">
+                    <div class="form-group">
+                        <label for="titre">Titre du sujet</label>
+                        <input type="text" class="form-control" id="titre" name="titre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contenu">Contenu du sujet</label>
+                        <textarea class="form-control" id="contenu" name="contenu" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
+<?php else : ?>
+    <div class="container mt-5">
+        <div class="alert alert-warning" role="alert">
+            Connectez-vous pour pouvoir ajouter une réponse. <a href="../php/connexion.php" class="alert-link">Se connecter</a>.
+        </div>
+    </div>
+<?php endif; ?>
 </body>
 </html>

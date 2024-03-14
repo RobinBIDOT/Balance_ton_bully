@@ -11,7 +11,7 @@ CREATE TABLE utilisateurs (
                               pseudo VARCHAR(255) NOT NULL,
                               nom_utilisateur VARCHAR(255) NOT NULL,
                               prenom_utilisateur VARCHAR(255) NOT NULL,
-                              fonction VARCHAR(255) NOT NULL,
+                              fonction VARCHAR(255),
                               email VARCHAR(255) NOT NULL,
                               photo_avatar VARCHAR(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',
                               mot_de_passe_hash VARCHAR(255) NOT NULL,
