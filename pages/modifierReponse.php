@@ -65,6 +65,7 @@ if (isset($_GET['id']) && isset($_GET['idSujet'])) {
     <title>Modifier la Réponse</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<?php include('../includes/headerNav.php')?>
 <body>
 <div class="container mt-5">
     <h2 class="mb-4">Modifier la Réponse</h2>

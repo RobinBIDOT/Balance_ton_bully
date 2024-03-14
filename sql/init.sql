@@ -148,7 +148,7 @@ CREATE TABLE reponses_forum (
                                 id_utilisateur INT NOT NULL,
                                 contenu TEXT NOT NULL,
                                 date_creation DATETIME NOT NULL,
-                                FOREIGN KEY (id_sujet) REFERENCES sujets_forum(id_sujet)  ON DELETE CASCADE,
+                                FOREIGN KEY (id_sujet) REFERENCES sujets_forum(id_sujet),
                                 FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
 );
 
@@ -338,16 +338,16 @@ CREATE TABLE actualites (
 
 -- Insertion de données dans la table `actualites`
 INSERT INTO actualites (titre, photo, contenu, lien_article, date_publication) VALUES
-                                                                                   ('Titre de l''actualité 1', 'photo1.jpg', 'Contenu de l''actualité 1', 'lien1', '2024-01-01 00:00:00'),
-                                                                                   ('Titre de l''actualité 2', 'photo2.jpg', 'Contenu de l''actualité 2', 'lien2', '2024-01-02 00:00:00'),
-                                                                                   ('Titre de l''actualité 3', 'photo3.jpg', 'Contenu de l''actualité 3', 'lien3', '2024-01-03 00:00:00'),
-                                                                                   ('Titre de l''actualité 4', 'photo4.jpg', 'Contenu de l''actualité 4', 'lien4', '2024-01-04 00:00:00'),
-                                                                                   ('Titre de l''actualité 5', 'photo5.jpg', 'Contenu de l''actualité 5', 'lien5', '2024-01-05 00:00:00'),
-                                                                                   ('Titre de l''actualité 6', 'photo6.jpg', 'Contenu de l''actualité 6', 'lien6', '2024-01-06 00:00:00'),
-                                                                                   ('Titre de l''actualité 7', 'photo7.jpg', 'Contenu de l''actualité 7', 'lien7', '2024-01-07 00:00:00'),
-                                                                                   ('Titre de l''actualité 8', 'photo8.jpg', 'Contenu de l''actualité 8', 'lien8', '2024-01-08 00:00:00'),
-                                                                                   ('Titre de l''actualité 9', 'photo9.jpg', 'Contenu de l''actualité 9', 'lien9', '2024-01-09 00:00:00'),
-                                                                                   ('Titre de l''actualité 10', 'photo10.jpg', 'Contenu de l''actualité 10', 'lien10', '2024-01-10 00:00:00');
+    ('Titre de l''actualité 1', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 1', 'lien1', '2024-01-01 00:00:00'),
+    ('Titre de l''actualité 2', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 2', 'lien2', '2024-01-02 00:00:00'),
+    ('Titre de l''actualité 3', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 3', 'lien3', '2024-01-03 00:00:00'),
+    ('Titre de l''actualité 4', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 4', 'lien4', '2024-01-04 00:00:00'),
+    ('Titre de l''actualité 5', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 5', 'lien5', '2024-01-05 00:00:00'),
+    ('Titre de l''actualité 6', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 6', 'lien6', '2024-01-06 00:00:00'),
+    ('Titre de l''actualité 7', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 7', 'lien7', '2024-01-07 00:00:00'),
+    ('Titre de l''actualité 8', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 8', 'lien8', '2024-01-08 00:00:00'),
+    ('Titre de l''actualité 9', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 9', 'lien9', '2024-01-09 00:00:00'),
+    ('Titre de l''actualité 10', '/Balance_ton_bully/assets/actu.jpg', 'Contenu de l''actualité 10', 'lien10', '2024-01-10 00:00:00');
 
 
 -- Création de la table `dons`
