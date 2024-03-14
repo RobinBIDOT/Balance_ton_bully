@@ -62,13 +62,13 @@ $actualities = getActualites($dbh, $offset, $elementsParPage);
             <div class="col-12 col-md-auto text-center">
                 <img src="<?php echo htmlspecialchars($actu['photo']); ?>" style="height: 250px;" alt="photo actu" class="my-3">
             </div>
-            <div class="col p-4 <?php echo $key % 2 == 0 ? '' : 'text-md-end'; ?>">
+            <div class="col p-4">
                 <div class="bg-white p-3 rounded">
                     <h5 class="card-title"><?php echo htmlspecialchars($actu['titre']); ?></h5>
-                    <p class="card-text"><?php echo htmlspecialchars($actu['contenu']); ?></p>
+                    <p class="card-text text-start"><?php echo htmlspecialchars($actu['contenu']); ?></p>
                     <p class="card-text"><small class="text-muted"><?php echo htmlspecialchars($actu['date_publication']); ?></small></p>
-                    <div class="<?php echo $key % 2 == 0 ? 'd-flex justify-content-end' : 'd-flex justify-content-start'; ?>">
-                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" class="btn btn-link"><?php echo $key % 2 == 0 ? 'Voir l\'article...' : '...Voir l\'article'; ?></a>
+                    <div class="d-flex justify-content-end">
+                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" class="btn btn-link">...Voir l'article</a>
                     </div>
                 </div>
             </div>
