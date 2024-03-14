@@ -148,7 +148,7 @@ CREATE TABLE reponses_forum (
                                 id_utilisateur INT NOT NULL,
                                 contenu TEXT NOT NULL,
                                 date_creation DATETIME NOT NULL,
-                                FOREIGN KEY (id_sujet) REFERENCES sujets_forum(id_sujet),
+                                FOREIGN KEY (id_sujet) REFERENCES sujets_forum(id_sujet)  ON DELETE CASCADE,
                                 FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur)
 );
 

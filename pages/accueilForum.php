@@ -134,6 +134,7 @@ try {
     <div class="sujets-container">
         <div class="list-group">
             <?php if ($result->rowCount() > 0) : ?>
+                <!-- Boucle pour afficher les sujets -->
                 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) : ?>
                     <a href="sujet.php?id=<?php echo $row['id_sujet']; ?>" class="list-group-item sujet">
                         <div class="d-flex align-items-center">
@@ -145,9 +146,17 @@ try {
                             <div class="nombre-reponses">
                                 <span class="badge bg-primary"><?php echo $row['nombre_reponses']; ?> Réponses</span>
                             </div>
+                            <!-- Bouton Supprimer -->
+                            <?php if(isset($_SESSION['pseudo']) && $_SESSION['pseudo'] === $row['pseudo']) : ?>
+                                <form action="supprimerSujet.php" method="post">
+                                    <input type="hidden" name="id_sujet" value="<?php echo $row['id_sujet']; ?>">
+                                    <button type="submit" class="btn btn-danger btn-sm ms-2">Supprimer</button>
+                                </form>
+                            <?php endif; ?>
                         </div>
                     </a>
                 <?php endwhile; ?>
+
             <?php else : ?>
                 <p>Aucun sujet trouvé.</p>
             <?php endif; ?>
