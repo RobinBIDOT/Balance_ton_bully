@@ -1,7 +1,9 @@
 
 <?php
 
-include('../../php/tools/functions.php');
+include('../php/tools/functions.php');
+$dbh = dbConnexion();
+
 function getActualites($dbh) {
     $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC");
     $stmt->execute();
