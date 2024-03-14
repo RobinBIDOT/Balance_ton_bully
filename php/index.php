@@ -1,12 +1,3 @@
-<?php
-include('tools/functions.php');
-$dbConnect = dbConnexion();
-session_start();
-
-
-
-
-?>
 
 <!doctype html>
 <html lang="fr">
@@ -22,6 +13,7 @@ session_start();
     <title>Balance Ton Bully - Accueil</title>
 </head>
 <body>
+
     <?php include('../includes/headerNav.php')?>
     <?php if (isset($_SESSION['nickName'])){ ?>
        <h1>Bienvenue <?php echo ucfirst($_SESSION['nickName']) ?></h1>
@@ -67,3 +59,5 @@ session_start();
     <div class="transition"></div>
 </body>
 </html>
+
+
