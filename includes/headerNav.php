@@ -29,9 +29,17 @@
 
             <div class='col-auto text-right pt-1 pr-4 connexion-section '>
                 <div class="d-flex justify-content-center custom-bg-logo rounded-top" >
-                    <a href="../php/connexion.php" class="d-block" style="max-width: 50px;">
-                        <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
-                    </a>
+                    <?php
+                        if(!isset($_SESSION['nickName'])){ ?>
+                            <a href="../php/connexion.php" class="d-block" style="max-width: 50px;">
+                                <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
+                            </a>
+                        <?php } else { ?>
+                            <a href="../php/account.php" class="d-block" style="max-width: 50px;">
+                                <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
+                            </a>
+                        <?php } ?>
+
                 </div>
                 <div>
                     <div class="dropdown custom-bg-dropdown rounded-bottom">
@@ -46,45 +54,46 @@
                 </div>
             </div>
         </div>
+        <div class="container p-0 rounded">
+            <nav class="navbar navbar-expand-md navbar-light bg-light rounded-bottom">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="">Actualités</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="../pages/forum/accueilForum.php">Forum</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="">Rendez-vous</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="">Qui sommes-nous ?</a>
+                        </li>
+                        <?php
+                        if(isset($_SESSION['nickName'])){
+                            if($user['id_role'] = 1){ ?>
+                                <li class="nav-item">
+                                    <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
+                                </li>
+                                <?php
+                            }
+                        } ?>
+
+
+
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
     </header>
 </div>
-<div class="container p-0 rounded">
-    <nav class="navbar navbar-expand-md navbar-light bg-light rounded-bottom">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link text-black text-center mx-5" href="">Actualités</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black text-center mx-5" href="../pages/forum/accueilForum.php">Forum</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black text-center mx-5" href="">Rendez-vous</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-black text-center mx-5" href="">Qui sommes-nous ?</a>
-                </li>
-                <?php
-                if(isset($_SESSION['nickName'])){
-                    if($user['id_role'] = 1){ ?>
-                        <li class="nav-item">
-                            <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
-                        </li>
-                <?php
-                    }
-                } ?>
-
-
-
-            </ul>
-        </div>
-
-    </nav>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

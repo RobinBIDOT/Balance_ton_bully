@@ -65,5 +65,6 @@ session_start();
         </div>
     </div>
     <div class="transition"></div>
+<?php include('../includes/footer.php') ?>
 </body>
 </html>
