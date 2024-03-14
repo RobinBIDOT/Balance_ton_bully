@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demande de formation</title>
-  <link rel="stylesheet" href="style-formations.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+  <?php include('../includes/headerNav.php')?>
     <img src="/ressources/discrimination.png" alt="Image gauche" class="image-gauche">
   <h1>Formations de sensibilisation à la lutte contre le harcèlement scolaire</h1>
     <img src="/ressources/stop-bullying-2.png" alt="Image droite" class="image-droite">
