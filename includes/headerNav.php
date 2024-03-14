@@ -60,7 +60,7 @@
                         Vous êtes une école
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="">Formation</a></li>
+                        <li><a class="dropdown-item" href="../pages/formations.php">Formation</a></li>
                         <li><a class="dropdown-item" href="">Intervention</a></li>
                     </ul>
                 </div>
@@ -77,7 +77,7 @@
         <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-black text-center mx-5" href="">Actualités</a>
+                    <a class="nav-link text-black text-center mx-5" href="../pages/Actualites.php">Actualités</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-black text-center mx-5" href="../pages/accueilForum.php">Forum</a>

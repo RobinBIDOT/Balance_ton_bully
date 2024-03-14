@@ -88,6 +88,8 @@ try {
                     $reponses = $stmtReponses->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach($reponses as $rowReponse) {
+                        // Vérifier si l'utilisateur connecté est l'auteur de la réponse
+                        $estAuteur = isset($_SESSION['pseudo']) && $_SESSION['pseudo'] === $rowReponse['nom_auteur_reponse'];
                         echo '<div class="response-item d-flex mb-4">';
                         echo '<div class="avatar-container mr-3">';
                         echo '<img src="' . $rowReponse['photo_avatar'] . '" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">';
@@ -107,13 +109,14 @@ try {
                         echo '<div class="bg-white shadow-md rounded-md p-4">';
                         echo '<p class="mb-2">' . $rowReponse['contenu'] . '</p>';
                         echo '<div class="flex justify-end">';
-                        if ($rowReponse['id_utilisateur'] !== $row['id_utilisateur']) {
+                        // Afficher le bouton de signalement si l'utilisateur n'est pas l'auteur de la réponse
+                        if (!$estAuteur) {
                             echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
-                        }
-                        if ($rowReponse['id_utilisateur'] === $row['id_utilisateur']) {
+                        } else {
+                            // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
-                            echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '" class="btn btn-modifier btn btn-outline-info">Modifier</a>';
-                            echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '" class="btn btn-supprimer btn-outline-danger">Supprimer</a>';
+                            echo '<a href="modifierReponse.php?id=[ID_REPONSE]&idSujet=[ID_SUJET]" class="btn btn-outline-info">Modifier</a>';
+                            echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
                         }
                         echo '</div>';
