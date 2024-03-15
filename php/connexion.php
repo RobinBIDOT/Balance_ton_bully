@@ -1,6 +1,8 @@
 <?php
 // Inclusion du fichier de fonctions et démarrage de la session
+
 include 'tools/functions.php';
+
 session_start();
 
 // Connexion à la base de données
