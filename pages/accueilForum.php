@@ -137,13 +137,13 @@ try {
                             <img src="<?php echo $row['photo_avatar']; ?>" alt="Avatar" class="avatar mr-3">
                             <div>
                                 <h5 class="mb-1"><?php echo $row['titre']; ?></h5>
-                                <small><?php echo $row['pseudo']; ?> - <?php echo $row['date_creation']; ?> </small>
+                                <small><?php echo $row['userName']; ?> - <?php echo $row['date_creation']; ?> </small>
                             </div>
                             <div class="nombre-reponses">
                                 <span class="badge bg-primary"><?php echo $row['nombre_reponses']; ?> Réponses</span>
                             </div>
                             <!-- Bouton Supprimer -->
-                            <?php if(isset($_SESSION['nickName']) && $_SESSION['nickName'] === $row['pseudo']) : ?>
+                            <?php if(isset($_SESSION['nickName']) && $_SESSION['nickName'] === $row['userName']) : ?>
                                 <form action="supprimerSujet.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                     <button type="submit" class="btn btn-danger btn-sm ms-2">Supprimer</button>
