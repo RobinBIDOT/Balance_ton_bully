@@ -6,6 +6,13 @@
 -- Généré le : mer. 13 mars 2024 à 21:00
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
+CREATE DATABASE IF NOT EXISTS balance_ton_bully;
+
+USE balance_ton_bully;
+
+-- Suppression des tables si elles existent déjà
+DROP TABLE IF EXISTS roles, reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites,
+    administrateurs;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
