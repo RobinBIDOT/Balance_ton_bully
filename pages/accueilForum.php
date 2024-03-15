@@ -233,5 +233,6 @@ if(isset($_SESSION['pseudo'])) :
         </div>
     </div>
 <?php endif; ?>
+<?php include('../includes/footer.php') ?>
 </body>
 </html>

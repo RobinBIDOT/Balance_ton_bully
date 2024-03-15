@@ -43,5 +43,6 @@
   </form>
 
   <p>Nous vous recontacterons dans les meilleurs délais pour vous fournir un devis.</p>
+  <?php include('../includes/footer.php') ?>
 </body>
 </html>

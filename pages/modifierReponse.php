@@ -77,5 +77,6 @@ if (isset($_GET['id']) && isset($_GET['idSujet'])) {
         <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
     </form>
 </div>
+<?php include('../includes/footer.php') ?>
 </body>
 </html>

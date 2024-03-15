@@ -14,11 +14,16 @@
 .custom-bg-logo{
     background-color: #58C1F5;
     padding: 5px;
-    
+
 }
 .custom-bg-dropdown{
     background-color: #A42AF0;
-    padding: 5px;  
+    padding: 5px;
+}
+
+header a:hover{
+    text-decoration: underline;
+    transition: 1s;
 }
 
 
@@ -118,17 +123,22 @@
     grid-column: 4/5;
     grid-row: 3/4;
 }
+footer div a:hover{
+    font-size: 1.1rem;
+    transition: 1s;
+}
 
-.nav-item a:hover {
-    background-color: #f8f9fa !important;
-    color: #007bff !important;
-    border-radius: 5px !important;
+footer div{
+    background-color: #A42AF0;
+    color: white;
+}
+footer div a{
+    color: white;
+    transition: font-size 1.2ms;
 }
 
 @media screen and (max-width:900px) {
 
-    
+
 
 }
-
-

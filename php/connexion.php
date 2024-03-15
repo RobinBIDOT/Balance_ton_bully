@@ -81,6 +81,6 @@ if (isset($_POST['disconnect'])) {
         <?php } ?>
     </div>
 </div>
+<?php include('../includes/footer.php') ?>
 </body>
-
 </html>

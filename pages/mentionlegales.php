@@ -54,5 +54,6 @@
     <p>
         Le Client est informé des réglementations concernant la communication marketing, la loi du 21 Juin 2014 pour la confiance dans l’Economie Numérique, la Loi Informatique et Liberté du 06 Août 2004 ainsi que du Règlement Général sur la Protection des Données (RGPD : n° 2016-679).
     </p>
+    <?php include('../includes/footer.php') ?>
 </body>
 </html>
