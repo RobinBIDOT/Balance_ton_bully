@@ -49,16 +49,16 @@ CREATE TABLE `actualites` (
 --
 
 INSERT INTO `actualites` (`id_actualite`, `titre`, `photo`, `contenu`, `lien_article`, `date_publication`) VALUES
-(1, 'Titre de l\'actualité 1', 'photo1.jpg', 'Contenu de l\'actualité 1', 'lien1', '2024-01-01 00:00:00'),
-(2, 'Titre de l\'actualité 2', 'photo2.jpg', 'Contenu de l\'actualité 2', 'lien2', '2024-01-02 00:00:00'),
-(3, 'Titre de l\'actualité 3', 'photo3.jpg', 'Contenu de l\'actualité 3', 'lien3', '2024-01-03 00:00:00'),
-(4, 'Titre de l\'actualité 4', 'photo4.jpg', 'Contenu de l\'actualité 4', 'lien4', '2024-01-04 00:00:00'),
-(5, 'Titre de l\'actualité 5', 'photo5.jpg', 'Contenu de l\'actualité 5', 'lien5', '2024-01-05 00:00:00'),
-(6, 'Titre de l\'actualité 6', 'photo6.jpg', 'Contenu de l\'actualité 6', 'lien6', '2024-01-06 00:00:00'),
-(7, 'Titre de l\'actualité 7', 'photo7.jpg', 'Contenu de l\'actualité 7', 'lien7', '2024-01-07 00:00:00'),
-(8, 'Titre de l\'actualité 8', 'photo8.jpg', 'Contenu de l\'actualité 8', 'lien8', '2024-01-08 00:00:00'),
-(9, 'Titre de l\'actualité 9', 'photo9.jpg', 'Contenu de l\'actualité 9', 'lien9', '2024-01-09 00:00:00'),
-(10, 'Titre de l\'actualité 10', 'photo10.jpg', 'Contenu de l\'actualité 10', 'lien10', '2024-01-10 00:00:00');
+(1, 'Titre de l''actualité 1', 'photo1.jpg', 'Contenu de l''actualité 1', 'lien1', '2024-01-01 00:00:00'),
+(2, 'Titre de l''actualité 2', 'photo2.jpg', 'Contenu de l''actualité 2', 'lien2', '2024-01-02 00:00:00'),
+(3, 'Titre de l''actualité 3', 'photo3.jpg', 'Contenu de l''actualité 3', 'lien3', '2024-01-03 00:00:00'),
+(4, 'Titre de l''actualité 4', 'photo4.jpg', 'Contenu de l''actualité 4', 'lien4', '2024-01-04 00:00:00'),
+(5, 'Titre de l''actualité 5', 'photo5.jpg', 'Contenu de l''actualité 5', 'lien5', '2024-01-05 00:00:00'),
+(6, 'Titre de l''actualité 6', 'photo6.jpg', 'Contenu de l''actualité 6', 'lien6', '2024-01-06 00:00:00'),
+(7, 'Titre de l''actualité 7', 'photo7.jpg', 'Contenu de l''actualité 7', 'lien7', '2024-01-07 00:00:00'),
+(8, 'Titre de l''actualité 8', 'photo8.jpg', 'Contenu de l''actualité 8', 'lien8', '2024-01-08 00:00:00'),
+(9, 'Titre de l''actualité 9', 'photo9.jpg', 'Contenu de l''actualité 9', 'lien9', '2024-01-09 00:00:00'),
+(10, 'Titre de l''actualité 10', 'photo10.jpg', 'Contenu de l''actualité 10', 'lien10', '2024-01-10 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -123,7 +123,6 @@ CREATE TABLE `sujets_forum` (
   `date_mise_a_jour` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
 --
 -- Structure de la table `utilisateurs`
@@ -146,6 +145,7 @@ CREATE TABLE `utilisateurs` (
 
 INSERT INTO `utilisateurs` (`id`, `firstName`, `name`, `userName`, `mail`, `photo_avatar`, `password`, `id_role`) VALUES
 (40, 'Kevin', 'Pereira', 'Xalos', 'aze@xyz.fr', NULL, '$2y$10$/nEHgBSMp4gS5P2UcGPj8uZECP9UV3/MVMhlQV76owIarC12h7Yre', 1);
+
 
 --
 -- Index pour les tables déchargées
