@@ -3,7 +3,20 @@ CREATE DATABASE IF NOT EXISTS balance_ton_bully;
 USE balance_ton_bully;
 
 -- Suppression des tables si elles existent déjà
-DROP TABLE IF EXISTS reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites, administrateurs;
+DROP TABLE IF EXISTS roles, reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites,
+    administrateurs;
+
+-- Création de la table `roles`
+CREATE TABLE `roles` (
+                         `id` INT AUTO_INCREMENT PRIMARY KEY,
+                         `role` VARCHAR(255) NOT NULL
+);
+
+-- Insertion des données de la table `roles`
+INSERT INTO `roles` (`role`) VALUES
+                                 ('Admin'),
+                                 ('User'),
+                                 ('Pro');
 
 -- Création de la table `utilisateurs`
 CREATE TABLE utilisateurs (
@@ -17,8 +30,20 @@ CREATE TABLE utilisateurs (
                               mot_de_passe_hash VARCHAR(255) NOT NULL,
                               professionnel_de_sante BOOLEAN NOT NULL,
                               date_creation DATETIME NOT NULL,
-                              derniere_connexion DATETIME
+                              derniere_connexion DATETIME,
+                              role INT NOT NULL DEFAULT 2,
+                              FOREIGN KEY (role) REFERENCES roles(id)
 );
+
+-- Insertion de deux administrateurs dans la table 'utilisateurs'
+-- https://phppasswordhash.com/ mot de passe : administrateur
+INSERT INTO utilisateurs (pseudo,nom_utilisateur,prenom_utilisateur, fonction, email, mot_de_passe_hash, professionnel_de_sante,
+                          date_creation, role)
+VALUES
+    ('admin1','nomAdmin1','prenomAdmin1','fonctionAdmin1', 'admin1@email.fr',
+     '$2y$10$Qp/BmnoWpXkbQ8FO1jmR.eEE2EFK5qKFXxqFBkI/FU6GxW1fuJLli',0, '2024-01-01 00:00:00',1),
+    ('admin2','nomAdmin2','prenomAdmin2','fonctionAdmin2', 'admin2@email.fr',
+     '$2y$10$Qp/BmnoWpXkbQ8FO1jmR.eEE2EFK5qKFXxqFBkI/FU6GxW1fuJLli',0, '2024-02-01 00:00:00',1);
 
 -- Insertion de 30 utilisateurs dans la table 'utilisateurs'
 -- https://phppasswordhash.com/ mot de passe : password
@@ -383,17 +408,3 @@ INSERT INTO dons (id_utilisateur, montant, date_don, recurrent) VALUES
                                                                     (19, 50.00, '2024-01-19 12:00:00', 1),
                                                                     (20, 100.00, '2024-01-20 12:00:00', 0);
 
--- Création de la table `administrateurs`
-CREATE TABLE administrateurs (
-                                 id_administrateur INT AUTO_INCREMENT PRIMARY KEY,
-                                 nom_administrateur VARCHAR(255) NOT NULL,
-                                 email VARCHAR(255) NOT NULL,
-                                 mot_de_passe_hash VARCHAR(255) NOT NULL,
-                                 date_creation DATETIME NOT NULL
-);
-
--- Insertion de deux administrateurs dans la table 'administrateurs'
--- https://phppasswordhash.com/ mot de passe : administrateur
-INSERT INTO administrateurs (nom_administrateur, email, mot_de_passe_hash, date_creation) VALUES
-                                                                                              ('Admin1', 'admin1@email.fr', '$2y$10$Qp/BmnoWpXkbQ8FO1jmR.eEE2EFK5qKFXxqFBkI/FU6GxW1fuJLli', '2024-01-01 00:00:00'),
-                                                                                              ('Admin2', 'admin2@email.fr', '$2y$10$vAsCqertK6ec6NeKkt5R1.efqnV9xPFXGsz0McdeaBlYpeYQxWFja', '2024-01-02 00:00:00');
