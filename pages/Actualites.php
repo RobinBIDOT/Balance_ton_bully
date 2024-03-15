@@ -1,27 +1,17 @@
 
 <?php
-
-include('/Applications/MAMP/htdocs/Balance_ton_bully/php/tools/functions.php');
+include('../php/tools/functions.php');
 $dbh = dbConnexion();
-
+session_start();
 
 function getActualites($dbh) {
     $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC");
     $stmt->execute();
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
-
 $actualities = getActualites($dbh)
-
 ?>
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
