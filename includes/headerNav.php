@@ -57,7 +57,7 @@
                 </div>
 
                 <!-- Menu déroulant (toujours visible) -->
-                <div class="dropdown custom-bg-dropdown rounded-bottom mt-2">
+                <div class="dropdown custom-bg-dropdown rounded-bottom ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Vous êtes une école
                     </a>
@@ -69,9 +69,9 @@
                 </div>
             </header>
         </div>
-        <div class="container p-0 rounded">
+        <div class="container-fluid p-0 rounded">
             <nav class="navbar navbar-expand-md navbar-light bg-light rounded-bottom">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
@@ -88,6 +88,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-black text-center mx-5" href="">Qui sommes-nous ?</a>
                         </li>
+                        <div class="d-md-none">
+                            <div class="mt-2">
+                                <a href="" class="d-block nav-link text-black text-center mx-5">
+                                    Connexion
+                                </a>
+                            </div>
+                            <div class="dropdown mt-2">
+                                <a class="nav-link dropdown-toggle nav-link text-black text-center mx-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Vous êtes une école
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item text-center" href="../pages/formations.php">Formation</a></li>
+                                    <li><a class="dropdown-item text-center" href="">Intervention</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         <?php
                         if(isset($_SESSION['nickName'])){
                             if($user['id_role'] = 1){ ?>
