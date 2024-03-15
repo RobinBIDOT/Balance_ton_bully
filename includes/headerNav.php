@@ -37,7 +37,7 @@
                     <!-- Si l'utilisateur est connecté, afficher le message de bienvenue et les options de profil et de déconnexion -->
                     <?php if (isset($_SESSION['nickName'])) { ?>
                         <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
-                        <a href="../pages/profil.php" class="btn btn-primary my-2">Votre profil</a>
+                        <a href="../php/account.php" class="btn btn-primary my-2">Votre profil</a>
 
                         <?php
                         // Bouton pour accéder à la page de profil administrateur
@@ -75,7 +75,7 @@
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-black text-center mx-5" href="">Actualités</a>
+                            <a class="nav-link text-black text-center mx-5" href="../pages/actualites.php">Actualités</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-black text-center mx-5" href="../pages/accueilForum.php">Forum</a>

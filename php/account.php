@@ -53,7 +53,7 @@ if(isset($_POST['suppr'])){
     header('Location: connexion.php');
     exit();
 }
-var_dump($user["role"]);
+
 if(isset($_POST['modName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
     $stmt->execute([$newName, $userId]);

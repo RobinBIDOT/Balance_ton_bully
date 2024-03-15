@@ -22,10 +22,10 @@ try {
     // Vérification de l'existence et de la validité de l'ID du sujet
     if(isset($_GET['id']) && is_numeric($_GET['id'])) {
         $idSujet = $_GET['id'];
-        $sql = "SELECT sujets_forum.*, utilisateurs.pseudo AS nom_auteur
+        $sql = "SELECT sujets_forum.*, utilisateurs.userName AS nom_auteur
                 FROM sujets_forum
-                LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id_utilisateur
-                WHERE id_sujet = :id";
+                LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id
+                WHERE id = :id";
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $idSujet, PDO::PARAM_INT);
         $stmt->execute();
@@ -66,9 +66,9 @@ try {
                 <?php
                 // Récupération et affichage des réponses pour ce sujet
                 echo '<div style="background-color: #0854C7;" class="p-4 rounded-md mb-4">';
-                $sqlReponses = "SELECT reponses_forum.*, utilisateurs.pseudo AS nom_auteur_reponse, utilisateurs.fonction AS fonction_auteur, utilisateurs.photo_avatar
+                $sqlReponses = "SELECT reponses_forum.*, utilisateurs.userName AS nom_auteur_reponse, utilisateurs.photo_avatar
                                 FROM reponses_forum
-                                LEFT JOIN utilisateurs ON reponses_forum.id_utilisateur = utilisateurs.id_utilisateur
+                                LEFT JOIN utilisateurs ON reponses_forum.id_utilisateur = utilisateurs.id
                                 WHERE id_sujet = :id
                                 ORDER BY reponses_forum.date_creation ASC
                                 LIMIT :offset, :elementsParPage";

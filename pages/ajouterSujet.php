@@ -4,7 +4,7 @@ $dbh = dbConnexion();
 session_start();
 
 // Redirection si l'utilisateur n'est pas connecté
-if (!isset($_SESSION['pseudo'])) {
+if (!isset($_SESSION['nickName'])) {
     header("Location: ../php/connexion.php");
     exit();
 }
@@ -19,7 +19,7 @@ if (!isset($_SESSION['pseudo'])) {
  * @return void
  */
 function insererSujet($dbh, $titre, $contenu, $idUtilisateur) {
-    $sql = "INSERT INTO sujets_forum (titre, contenu, id_utilisateur, date_creation)
+    $sql = "INSERT INTO sujets_forum (titre, contenu, id, date_creation)
             VALUES (:titre, :contenu, :idUtilisateur, NOW())";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);

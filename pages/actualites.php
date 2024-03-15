@@ -4,11 +4,6 @@ include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
 
-// Afficher les informations de session
-echo "<pre>";
-var_dump($_SESSION);
-echo "</pre>";
-
 // Définition des paramètres de pagination
 $elementsParPage = 5;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
