@@ -66,6 +66,43 @@
                 </div>
             </div>
         </div>
+        <div class="container p-0 rounded">
+            <nav class="navbar navbar-expand-md navbar-light bg-light rounded-bottom">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="">Actualités</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="../pages/forum/accueilForum.php">Forum</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="">Rendez-vous</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-black text-center mx-5" href="">Qui sommes-nous ?</a>
+                        </li>
+                        <?php
+                        if(isset($_SESSION['nickName'])){
+                            if($user['id_role'] = 1){ ?>
+                                <li class="nav-item">
+                                    <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
+                                </li>
+                                <?php
+                            }
+                        } ?>
+
+
+
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
     </header>
 </div>
 <div class="container-fluid p-0 rounded">

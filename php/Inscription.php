@@ -1,6 +1,6 @@
 <?php
 // Inclusion du fichier de fonctions et démarrage de la session
-include 'c:/xampp/htdocs/Balance_ton_bully/php/tools/functions.php';
+include './tools/functions.php';
 session_start();
 
 // Connexion à la base de données

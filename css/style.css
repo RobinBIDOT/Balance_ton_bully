@@ -26,6 +26,11 @@ header a:hover{
     transition: 1s;
 }
 
+header a:hover{
+    text-decoration: underline;
+    transition: 1s;
+}
+
 
 /* css acceuil */
 .container-stats{
