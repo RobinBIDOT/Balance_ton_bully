@@ -63,6 +63,7 @@ try {
     $dbh = dbConnexion();
     session_start();
 
+
     $limit = 10; // Nombre de sujets par page
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
