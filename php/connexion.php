@@ -1,6 +1,6 @@
 <?php
 // Inclusion du fichier de fonctions et démarrage de la session
-include 'c:/xampp/htdocs/Balance_ton_bully/php/tools/functions.php';
+include 'tools/functions.php';
 session_start();
 
 // Connexion à la base de données
@@ -11,13 +11,13 @@ if (isset($_POST['submit'])) {
     if (!empty($_POST['pseudo']) && !empty($_POST['pwd'])) {
         $pseudo = htmlspecialchars($_POST['pseudo']);
         $password = $_POST['pwd'];
-        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE pseudo = ?');
+        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE userName = ?');
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user && password_verify($password, $user['mot_de_passe_hash'])) {
-            $_SESSION['pseudo'] = $pseudo;
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['nickName'] = $pseudo;
             $_SESSION['pwd'] = $password;
-            $_SESSION['id'] = $user['id_utilisateur'];
+            $_SESSION['id'] = $user['id'];
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }
@@ -59,7 +59,7 @@ if (isset($_POST['disconnect'])) {
 <div class="container mx-auto mt-5">
     <div class="blue-bg p-4 rounded-lg shadow-lg">
         <h2 class="text-center text-white">Se connecter</h2>
-        <?php if (!isset($_SESSION['pseudo'])) { ?>
+        <?php if (!isset($_SESSION['nickName'])) { ?>
             <div id="wrapper" class="mt-5">
                 <form method="POST" action="">
                     <div class="mb-3">

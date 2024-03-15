@@ -35,8 +35,8 @@
                     </a>
 
                     <!-- Si l'utilisateur est connecté, afficher le message de bienvenue et les options de profil et de déconnexion -->
-                    <?php if (isset($_SESSION['pseudo'])) { ?>
-                        <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['pseudo']); ?></p>
+                    <?php if (isset($_SESSION['nickName'])) { ?>
+                        <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                         <a href="../pages/profil.php" class="btn btn-primary my-2">Votre profil</a>
 
                         <?php

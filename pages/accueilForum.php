@@ -23,10 +23,10 @@ function compterSujets($dbh) {
  * @return PDOStatement Résultat de la requête.
  */
 function recupererSujets($dbh, $limit, $offset, $searchTitle, $searchUser) {
-    $sql = "SELECT sujets_forum.*, COUNT(reponses_forum.id_reponse) AS nombre_reponses, utilisateurs.pseudo, utilisateurs.photo_avatar
+    $sql = "SELECT sujets_forum.*, COUNT(reponses_forum.id_reponse) AS nombre_reponses, utilisateurs.userName, utilisateurs.photo_avatar
             FROM sujets_forum
-            LEFT JOIN reponses_forum ON sujets_forum.id_sujet = reponses_forum.id_sujet
-            LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id_utilisateur";
+            LEFT JOIN reponses_forum ON sujets_forum.id = reponses_forum.id_sujet
+            LEFT JOIN utilisateurs ON sujets_forum.id = utilisateurs.id";
 
     if (!empty($searchTitle) || !empty($searchUser)) {
         $sql .= " WHERE ";
@@ -35,12 +35,12 @@ function recupererSujets($dbh, $limit, $offset, $searchTitle, $searchUser) {
             $conditions[] = "titre LIKE :searchTitle";
         }
         if (!empty($searchUser)) {
-            $conditions[] = "utilisateurs.pseudo LIKE :searchUser";
+            $conditions[] = "utilisateurs.userName LIKE :searchUser";
         }
         $sql .= implode(" AND ", $conditions);
     }
 
-    $sql .= " GROUP BY sujets_forum.id_sujet
+    $sql .= " GROUP BY sujets_forum.id
               ORDER BY sujets_forum.date_creation DESC
               LIMIT :limit OFFSET :offset";
 
@@ -63,11 +63,7 @@ try {
     $dbh = dbConnexion();
     session_start();
 
-    // Afficher les informations de session
-    echo "<pre>";
-    var_dump($_SESSION);
-    echo "</pre>";
-
+    
     $limit = 10; // Nombre de sujets par page
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
@@ -136,7 +132,7 @@ try {
             <?php if ($result->rowCount() > 0) : ?>
                 <!-- Boucle pour afficher les sujets -->
                 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) : ?>
-                    <a href="sujet.php?id=<?php echo $row['id_sujet']; ?>" class="list-group-item sujet">
+                    <a href="sujet.php?id=<?php echo $row['id']; ?>" class="list-group-item sujet">
                         <div class="d-flex align-items-center">
                             <img src="<?php echo $row['photo_avatar']; ?>" alt="Avatar" class="avatar mr-3">
                             <div>
@@ -147,9 +143,9 @@ try {
                                 <span class="badge bg-primary"><?php echo $row['nombre_reponses']; ?> Réponses</span>
                             </div>
                             <!-- Bouton Supprimer -->
-                            <?php if(isset($_SESSION['pseudo']) && $_SESSION['pseudo'] === $row['pseudo']) : ?>
+                            <?php if(isset($_SESSION['nickName']) && $_SESSION['nickName'] === $row['pseudo']) : ?>
                                 <form action="supprimerSujet.php" method="post">
-                                    <input type="hidden" name="id_sujet" value="<?php echo $row['id_sujet']; ?>">
+                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                     <button type="submit" class="btn btn-danger btn-sm ms-2">Supprimer</button>
                                 </form>
                             <?php endif; ?>
@@ -203,7 +199,7 @@ try {
 
 <?php
 // Vérifier si l'utilisateur est connecté pour afficher le formulaire de création de sujet
-if(isset($_SESSION['pseudo'])) :
+if(isset($_SESSION['nickName'])) :
     ?>
     <div class="container mt-5">
         <!-- Formulaire de création de sujet -->
