@@ -1,9 +1,14 @@
 <?php
 try {
     // Inclusion du fichier de connexion à la base de données
-    include('../../php/tools/functions.php');
+    include('../php/tools/functions.php');
     $dbh = dbConnexion();
     session_start();
+
+    // Afficher les informations de session
+    echo "<pre>";
+    var_dump($_SESSION);
+    echo "</pre>";
 
     // Définition du nombre d'éléments par page
     $elementsParPage = 8;
@@ -50,7 +55,7 @@ try {
                 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
                 <link rel="stylesheet" href="../../css/style.css">
             </head>
-            <?php include('../../includes/headerNav.php')?>
+            <?php include('../includes/headerNav.php')?>
             <body>
             <div class="container mt-5 mx-auto max-w-6xl">
                 <h1 class="text-3xl font-bold mb-4"><?= $row['titre'] ?></h1>
@@ -65,7 +70,7 @@ try {
                                 FROM reponses_forum
                                 LEFT JOIN utilisateurs ON reponses_forum.id_utilisateur = utilisateurs.id_utilisateur
                                 WHERE id_sujet = :id
-                                ORDER BY reponses_forum.date_creation DESC
+                                ORDER BY reponses_forum.date_creation ASC
                                 LIMIT :offset, :elementsParPage";
                 $stmtReponses = $dbh->prepare($sqlReponses);
                 $stmtReponses->bindParam(':id', $idSujet, PDO::PARAM_INT);
@@ -83,6 +88,8 @@ try {
                     $reponses = $stmtReponses->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach($reponses as $rowReponse) {
+                        // Vérifier si l'utilisateur connecté est l'auteur de la réponse
+                        $estAuteur = isset($_SESSION['pseudo']) && $_SESSION['pseudo'] === $rowReponse['nom_auteur_reponse'];
                         echo '<div class="response-item d-flex mb-4">';
                         echo '<div class="avatar-container mr-3">';
                         echo '<img src="' . $rowReponse['photo_avatar'] . '" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">';
@@ -102,13 +109,14 @@ try {
                         echo '<div class="bg-white shadow-md rounded-md p-4">';
                         echo '<p class="mb-2">' . $rowReponse['contenu'] . '</p>';
                         echo '<div class="flex justify-end">';
-                        if ($rowReponse['id_utilisateur'] !== $row['id_utilisateur']) {
-                            echo '<a href="#" class="inline-block bg-red-500 text-white px-2 py-1 rounded-md">Signaler</a>';
-                        }
-                        if ($rowReponse['id_utilisateur'] === $row['id_utilisateur']) {
+                        // Afficher le bouton de signalement si l'utilisateur n'est pas l'auteur de la réponse
+                        if (!$estAuteur) {
+                            echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
+                        } else {
+                            // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
-                            echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '" class="btn btn-modifier btn btn-outline-info">Modifier</a>';
-                            echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '" class="btn btn-supprimer btn-outline-danger">Supprimer</a>';
+                            echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-info">Modifier</a>';
+                            echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
                         }
                         echo '</div>';
@@ -186,20 +194,8 @@ try {
                 echo '</div>'; // Fermeture de la div de fond
                 ?>
                 <div class="transition"></div>
-
                 <!-- Formulaire d'ajout de réponse -->
-                <?php if (isset($_SESSION['user_id'])) : ?>
-
-                    <div class="response-item d-flex">
-                        <div class="response-content">
-                            <h5 class="response-author"><?= $rowReponse['nom_auteur_reponse'] ?></h5>
-                            <p class="response-info"><?= $rowReponse['date_creation'] ?> | <?= $rowReponse['fonction'] ?></p>
-                            <div class="response-text bg-white p-4">
-                                <?= $rowReponse['contenu'] ?>
-                            </div>
-                        </div>
-                    </div>
-
+                <?php if (isset($_SESSION['pseudo'])) : ?>
                     <div class="mt-5">
                         <h2 class="text-2xl font-bold mb-4">Ajouter une réponse</h2>
                         <form action="ajouterReponse.php" method="post">
@@ -212,9 +208,14 @@ try {
                         </form>
                     </div>
                 <?php else : ?>
-                    <p class="text-gray-500 mt-5">Connectez-vous pour pouvoir ajouter une réponse.</p>
+                    <div class="container mt-5">
+                        <div class="alert alert-warning" role="alert">
+                            Connectez-vous pour pouvoir ajouter une réponse. <a href="../php/connexion.php" class="alert-link">Se connecter</a>.
+                        </div>
+                    </div>
                 <?php endif; ?>
             </div>
+            <?php include('../includes/footer.php') ?>
             </body>
             </html>
             <?php

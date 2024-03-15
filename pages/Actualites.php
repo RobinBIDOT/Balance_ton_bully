@@ -1,17 +1,46 @@
-
 <?php
+// Inclusion du fichier de connexion à la base de données
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
 
-function getActualites($dbh) {
-    $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC");
+// Afficher les informations de session
+echo "<pre>";
+var_dump($_SESSION);
+echo "</pre>";
+
+// Définition des paramètres de pagination
+$elementsParPage = 5;
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $elementsParPage;
+
+// Fonction pour obtenir le nombre total d'actualités
+function getTotalActualites($dbh) {
+    $stmt = $dbh->prepare("SELECT COUNT(*) AS total FROM actualites");
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['total'];
+}
+
+// Obtenir le nombre total d'actualités
+$totalActualites = getTotalActualites($dbh);
+
+// Calculer le nombre total de pages
+$totalPages = ceil($totalActualites / $elementsParPage);
+
+// Fonction pour récupérer les actualités pour une page donnée
+function getActualites($dbh, $offset, $elementsParPage) {
+    $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC LIMIT :offset, :elementsParPage");
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindParam(':elementsParPage', $elementsParPage, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-$actualities = getActualites($dbh)
+
+$actualities = getActualites($dbh, $offset, $elementsParPage);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,30 +53,92 @@ $actualities = getActualites($dbh)
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-
 <body>
-    <div class="container mt-4">
-        <h2 class="mb-3 text-center">Toute l'actualité</h2>
-        <?php $key = 0;?>
-        <?php foreach ($actualities as $actu): ?>
-            <div class="row no-gutters border rounded overflow-hidden mb-4 <?php echo $key % 2 == 0 ? '' : 'flex-md-row-reverse'; ?>">
-           
-                <div class="col-12 col-md-auto text-center">
-                    <img src="<?php echo htmlspecialchars($actu['photo']); ?>" style="height: 250px;" alt="photo actu">
-                </div>
-                <div class="col p-4 d-flex flex-column position-static <?php echo $key % 2 == 0 ? '' : 'text-md-end'; ?>">
+<?php include('../includes/headerNav.php')?>
+<div class="container mt-4">
+    <h2 class="mb-3 text-center">Toute l'actualité</h2>
+    <?php foreach ($actualities as $key => $actu): ?>
+        <div class="row no-gutters border rounded overflow-hidden mb-4 <?php echo $key % 2 == 0 ? '' : 'flex-md-row-reverse'; ?>" style="background-color: #0854C7;">
+            <div class="col-12 col-md-auto text-center">
+                <img src="<?php echo htmlspecialchars($actu['photo']); ?>" style="height: 250px;" alt="photo actu" class="my-3">
+            </div>
+            <div class="col p-4">
+                <div class="bg-white p-3 rounded">
                     <h5 class="card-title"><?php echo htmlspecialchars($actu['titre']); ?></h5>
-                    <p class="card-text"><?php echo htmlspecialchars($actu['contenu']); ?></p>
+                    <p class="card-text text-start"><?php echo htmlspecialchars($actu['contenu']); ?></p>
                     <p class="card-text"><small class="text-muted"><?php echo htmlspecialchars($actu['date_publication']); ?></small></p>
-                </div>
-                <div class="mt-auto <?php echo $key % 2 == 0 ? 'd-flex justify-content-end' : 'd-flex justify-content-start'; ?>">
-                    <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" class="btn btn-link"><?php echo $key % 2 == 0 ? 'Voir l\'article...' : '...Voir l\'article'; ?></a>
+                    <div class="d-flex justify-content-end">
+                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" class="btn btn-link">...Voir l'article</a>
+                    </div>
                 </div>
             </div>
-        <?php endforeach; ?>
-           
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <?php endforeach; ?>
+    <?php
+    // Affichage de la pagination
+    if ($totalPages > 1) {
+        echo '<nav aria-label="Pagination">';
+        echo '<ul class="pagination justify-content-center">';
+
+        // Bouton Précédent
+        echo '<li class="page-item '.($page <= 1 ? 'disabled' : '').'">';
+        echo '<a class="page-link" href="?page='.($page - 1).'" tabindex="-1">Précédent</a>';
+        echo '</li>';
+
+        // Affichage des pages
+        $threshold = 5; // Seuil pour afficher les points de suspension
+        if ($totalPages <= $threshold) {
+            // Afficher toutes les pages si le nombre total est inférieur ou égal au seuil
+            for ($i = 1; $i <= $totalPages; $i++) {
+                echo '<li class="page-item '.($page == $i ? 'active' : '').'">';
+                echo '<a class="page-link" href="?page='.$i.'">'.$i.'</a>';
+                echo '</li>';
+            }
+        } else {
+            // Afficher les pages avec les points de suspension
+            $start = max(1, $page - floor($threshold / 2));
+            $end = min($totalPages, $start + $threshold - 1);
+
+            if ($start > 1) {
+                echo '<li class="page-item">';
+                echo '<a class="page-link" href="?page=1">1</a>';
+                echo '</li>';
+                if ($start > 2) {
+                    echo '<li class="page-item disabled">';
+                    echo '<span class="page-link">...</span>';
+                    echo '</li>';
+                }
+            }
+
+            for ($i = $start; $i <= $end; $i++) {
+                echo '<li class="page-item '.($page == $i ? 'active' : '').'">';
+                echo '<a class="page-link" href="?page='.$i.'">'.$i.'</a>';
+                echo '</li>';
+            }
+
+            if ($end < $totalPages) {
+                if ($end < $totalPages - 1) {
+                    echo '<li class="page-item disabled">';
+                    echo '<span class="page-link">...</span>';
+                    echo '</li>';
+                }
+                echo '<li class="page-item">';
+                echo '<a class="page-link" href="?page='.$totalPages.'">'.$totalPages.'</a>';
+                echo '</li>';
+            }
+        }
+
+        // Bouton Suivant
+        echo '<li class="page-item '.($page >= $totalPages ? 'disabled' : '').'">';
+        echo '<a class="page-link" href="?page='.($page + 1).'">Suivant</a>';
+        echo '</li>';
+
+        echo '</ul>';
+        echo '</nav>';
+    }
+    ?>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<?php include('../includes/footer.php') ?>
 </body>
 </html>
