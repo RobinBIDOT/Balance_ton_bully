@@ -93,4 +93,5 @@ if (isset($_POST['disconnect'])) {
 </div>
 <?php include('../includes/footer.php') ?>
 </body>
+
 </html>

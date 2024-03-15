@@ -407,4 +407,3 @@ INSERT INTO dons (id_utilisateur, montant, date_don, recurrent) VALUES
                                                                     (18, 300.00, '2024-01-18 12:00:00', 0),
                                                                     (19, 50.00, '2024-01-19 12:00:00', 1),
                                                                     (20, 100.00, '2024-01-20 12:00:00', 0);
-
