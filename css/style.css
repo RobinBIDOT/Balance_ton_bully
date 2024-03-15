@@ -137,6 +137,12 @@ footer div a{
     transition: font-size 1.2ms;
 }
 
+.nav-item a:hover {
+    background-color: #f8f9fa !important;
+    color: #007bff !important;
+    border-radius: 5px !important;
+}
+
 @media screen and (max-width:900px) {
 
 

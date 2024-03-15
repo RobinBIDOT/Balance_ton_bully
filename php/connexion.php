@@ -11,22 +11,13 @@ if (isset($_POST['submit'])) {
     if (!empty($_POST['pseudo']) && !empty($_POST['pwd'])) {
         $pseudo = htmlspecialchars($_POST['pseudo']);
         $password = $_POST['pwd'];
-
-        // Vérification dans la table utilisateurs
-        $stmtUser = $pdo->prepare('SELECT * FROM utilisateurs WHERE pseudo = ?');
-        $stmtUser->execute([$pseudo]);
-        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
-
+        $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE pseudo = ?');
+        $stmt->execute([$pseudo]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($user && password_verify($password, $user['mot_de_passe_hash'])) {
-            // Connexion réussie
             $_SESSION['pseudo'] = $pseudo;
             $_SESSION['pwd'] = $password;
             $_SESSION['id'] = $user['id_utilisateur'];
-            $_SESSION['role'] = $user['role'] == 1 ? 'administrateur' : 'utilisateur';
-
-            // Redirection vers la page d'accueil ou le tableau de bord admin
-            header('Location: ' . ($_SESSION['role'] == 'administrateur' ? 'admin_dashboard.php' : 'index.php'));
-            exit;
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }
