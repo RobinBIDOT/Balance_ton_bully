@@ -1,6 +1,6 @@
 <?php
 // Inclusion du fichier de fonctions et démarrage de la session
-include 'c:/xampp/htdocs/Balance_ton_bully/php/tools/functions.php';
+include './tools/functions.php';
 session_start();
 
 // Connexion à la base de données
@@ -72,7 +72,7 @@ if (isset($_POST['disconnect'])) {
                         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
                     </div>
                     <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
-                    <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php">S'inscrire</a></p>
+                    <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
                 </form>
             </div>
         <?php } else { ?>

@@ -41,7 +41,7 @@ echo '<div class="modal" id="alertModal">
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var myModal = new bootstrap.Modal(document.getElementById("alertModal"));
+            let myModal = new bootstrap.Modal(document.getElementById("alertModal"));
             myModal.show();
         });</script>';
 }
@@ -53,7 +53,7 @@ if(isset($_POST['suppr'])){
     header('Location: connexion.php');
     exit();
 }
-
+var_dump($user["role"]);
 if(isset($_POST['modName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
     $stmt->execute([$newName, $userId]);
