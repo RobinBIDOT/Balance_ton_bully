@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
 </head>
+
 <body>
 <div class='container-fluid p-0 mt-2 rounded'>
     <header class='bg-light text-black rounded-top'>
@@ -109,31 +110,7 @@
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-=======
 
-                <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-black text-center mx-5" href="">Actualités</a>   
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-black text-center mx-5" href="">Forum</a>   
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-black text-center mx-5" href="">Rendez-vous</a>   
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-black text-center mx-5" href="">Qui sommes-nous ?</a>   
-                        </li>
-                       
-                    </ul>
-                </div>
-
-            </nav>
-        </div>
-
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
 
