@@ -57,6 +57,7 @@ if(isset($_POST['suppr'])){
 if(isset($_POST['modName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
     $stmt->execute([$newName, $userId]);
+    $user['name'] = $_POST['newName'];
 }
 if(isset($_POST['modFName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET firstName = ? WHERE id = ?');
