@@ -4,6 +4,7 @@
     box-sizing: border-box;
     padding: 0;
 }
+
 /* css header-navbar */
 .perso_logoSize{
     width: 200px;
@@ -39,12 +40,11 @@ header a:hover{
     display: grid;
     grid-template-columns: repeat(6, 1fr);
 }
-
 .statistiques{
-    grid-column: 2/4;
+    grid-column: 2/ span 2;
     display: flex;
     flex-direction: column;
-    justify-items: center;
+    /* justify-items: center; */
     align-items: center;
 }
 
@@ -59,7 +59,7 @@ header a:hover{
 }
 
 .video-container{
-    grid-column: 4/6;
+    grid-column: 4/ span 2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -68,12 +68,14 @@ header a:hover{
 .video{
     -webkit-box-shadow: 5px 5px 15px 5px #000000;
     box-shadow: 5px 5px 15px 5px #000000;
-}
-
-.video{
-    width: 640px;
+    width: 100%;
     height: 360px;
 }
+
+/* .video{
+    width: 640px;
+    height: 360px;
+} */
 
 
 .transition{
@@ -117,6 +119,7 @@ header a:hover{
 
 .illustrations img{
     max-width: 130px;
+    
 }
 
 .third-solution{
@@ -148,8 +151,47 @@ footer div a{
     border-radius: 5px !important;
 }
 
-@media screen and (max-width:900px) {
 
 
 
+
+
+@media screen and (max-width: 950px) {
+    .container-stats {
+        grid-template-columns: 1fr; 
+    }
+
+    .statistiques, .video-container {
+        grid-column: 1 / -1; 
+    }
+    .video {
+        margin: 6.5rem;
+    }
+
+    .first-stat, .second-stat, .first-solution, .second-solution, .third-solution, .fourth-solution {
+        text-align: center; 
+    }
+
+    .first-percent, .second-percent {
+        font-size: 3rem; 
+    }
+
+    .harassment, .high-school-harassment {
+        font-size: 1.5rem; 
+    }
+
+    .solutions {
+        display: block;
+        grid-template-columns: 1fr; 
+        grid-template-rows: minmax(min-content, max-content); 
+        gap: 3rem;
+    }
+
+    .first-solution, .second-solution, .third-solution, .fourth-solution {
+        margin: 1.5rem;
+    }
+    .illustrations {
+        grid-column: 1; 
+    }
 }
+
