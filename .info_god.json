@@ -1,8 +1,0 @@
-{
-    "host": "127.0.0.1",
-    "database": "balance_ton_bully",
-    "user": "root",
-    "pwd": "root",
-    "port": "8889",
-    "charset": "utf8mb4"
-  }
