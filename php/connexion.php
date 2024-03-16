@@ -44,7 +44,7 @@ if (isset($_POST['disconnect'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Se connecter - MovEase</title>
     <!-- Liens vers les styles CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/login_authentification.css">
@@ -58,8 +58,8 @@ if (isset($_POST['disconnect'])) {
 
 <body>
 <?php include('../includes/headerNav.php') ?>
-<div class="container mx-auto mt-5">
-    <div class="blue-bg p-4 rounded-lg shadow-lg">
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
         <h2 class="text-center text-white">Se connecter</h2>
         <?php if (!isset($_SESSION['nickName'])) { ?>
             <div id="wrapper" class="mt-5">

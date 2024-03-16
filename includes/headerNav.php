@@ -16,7 +16,7 @@
 <div class='container-fluid p-0 mt-2 rounded'>
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
-            <div class='col-auto p-2 text-center'>
+            <div class='col-12 col-md-auto p-2 text-center'>
                 <a href='../php/index.php'>
                     <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
                 </a>
@@ -29,9 +29,9 @@
                     </a>
                 </form>
             </div>
-            <div class='col-auto text-right pt-1 pr-4 connexion-section'>
+            <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section '>
                 <!-- Icône de connexion et navigation (toujours visible) -->
-                <div class="d-flex flex-column align-items-center custom-bg-logo rounded-top">
+                <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top">
                     <a href="../php/connexion.php" class="d-block mb-2" style="max-width: 50px;">
                         <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
@@ -57,7 +57,7 @@
                 </div>
 
                 <!-- Menu déroulant (toujours visible) -->
-                <div class="dropdown custom-bg-dropdown rounded-bottom ">
+                <div class="d-none d-md-block dropdown custom-bg-dropdown rounded-bottom ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Vous êtes une école
                     </a>
@@ -65,7 +65,6 @@
                         <li><a class="dropdown-item" href="../pages/formations.php">Formation</a></li>
                         <li><a class="dropdown-item" href="">Intervention</a></li>
                     </ul>
-
                 </div>
             </header>
         </div>
