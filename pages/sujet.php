@@ -25,7 +25,7 @@ try {
         $sql = "SELECT sujets_forum.*, utilisateurs.userName AS nom_auteur
                 FROM sujets_forum
                 LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id
-                WHERE id = :id";
+                WHERE  sujets_forum.id = :id";
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $idSujet, PDO::PARAM_INT);
         $stmt->execute();
@@ -89,7 +89,7 @@ try {
 
                     foreach($reponses as $rowReponse) {
                         // Vérifier si l'utilisateur connecté est l'auteur de la réponse
-                        $estAuteur = isset($_SESSION['pseudo']) && $_SESSION['pseudo'] === $rowReponse['nom_auteur_reponse'];
+                        $estAuteur = isset($_SESSION['nickName']) && $_SESSION['nickName'] === $rowReponse['nom_auteur_reponse'];
                         echo '<div class="response-item d-flex mb-4">';
                         echo '<div class="avatar-container mr-3">';
                         echo '<img src="' . $rowReponse['photo_avatar'] . '" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">';
@@ -98,14 +98,14 @@ try {
                         echo '<div class="d-flex">';
 
                         echo '<div class="auteur-info text-white">';
-                        if ($rowReponse['id_utilisateur'] === $row['id_utilisateur']) {
+                        if ($rowReponse['id_sujet'] === $row['id']) {
                             echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'] . ' - Auteur ';
                         } else {
                             echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'];
                         }
                         echo '</div>';
                         echo '</div>';
-                        echo '<p class="text-white mb-2">' . $rowReponse['fonction_auteur'] . '</p>';
+                        // echo '<p class="text-white mb-2">' . $rowReponse['fonction_auteur'] . '</p>';
                         echo '<div class="bg-white shadow-md rounded-md p-4">';
                         echo '<p class="mb-2">' . $rowReponse['contenu'] . '</p>';
                         echo '<div class="flex justify-end">';
@@ -197,7 +197,7 @@ try {
                 ?>
                 <div class="transition"></div>
                 <!-- Formulaire d'ajout de réponse -->
-                <?php if (isset($_SESSION['pseudo'])) : ?>
+                <?php if (isset($_SESSION['nickName'])) : ?>
                     <div class="mt-5">
                         <h2 class="text-2xl font-bold mb-4">Ajouter une réponse</h2>
                         <form action="ajouterReponse.php" method="post">

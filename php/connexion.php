@@ -73,15 +73,19 @@ if (isset($_POST['disconnect'])) {
                         <label for="pwd" class="form-label text-white">Votre mot de passe:</label>
                         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
                     </div>
-                    <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
-                    <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
+                    </div>        
+                        <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
                 </form>
             </div>
         <?php } else { ?>
             <p class="text-center">Vous êtes déjà connecté</p>
-            <form method="post" action="">
-                <button type="submit" class="btn btn-danger" name="disconnect">Déconnexion</button>
-            </form>
+            <div class="d-flex justify-content-center align-items-center">
+                <form method="post" action="">
+                    <button type="submit" class="btn btn-danger" name="disconnect">Déconnexion</button>
+                </form>
+            </div>
         <?php } ?>
     </div>
 </div>
