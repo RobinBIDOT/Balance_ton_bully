@@ -104,15 +104,17 @@ try {
                         echo '<div class="bg-white shadow-md rounded-md p-4">';
                         echo '<p class="mb-2">' . $rowReponse['contenu'] . '</p>';
                         echo '<div class="flex justify-end">';
+
                         // Afficher le bouton de signalement si l'utilisateur n'est pas l'auteur de la réponse
-                        if (!$estAuteur) {
-                            echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
-                        } else {
+                        if ($estAuteur || $_SESSION['id_role'] == 1) {
                             // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
                             echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-info">Modifier</a>';
                             echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
+
+                        } else {
+                            echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
                         }
                         echo '</div>';
                         echo '</div>';

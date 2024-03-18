@@ -55,7 +55,7 @@ if (isset($_POST['submit'])) {
             // Insertion des données dans la base de données
             $stmt = $pdo->prepare('INSERT INTO utilisateurs (mail, password, userName) VALUES (?,?,?)');
             $stmt->execute([$mail, $hashedPassword, $pseudo]);
-            echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
+            //echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
         } catch (PDOException $e) {
             echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
         }
