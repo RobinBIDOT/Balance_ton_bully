@@ -71,7 +71,7 @@ session_start()
                         clearInterval(interval);
                         $element.text(pourcentageCible + '%'); // Assurez-vous que le pourcentage final est correct
                     }
-                }, 20); // Vitesse de l'incrémentation (plus bas = plus rapide)
+                }, 70); // Vitesse de l'incrémentation (plus bas = plus rapide)
             }
 
             // Appel de la fonction pour chaque élément
@@ -79,5 +79,6 @@ session_start()
             incrementerPourcentage($('.second-percent'), 22); // Deuxième valeur cible: 22%
         });
     </script>
+    
 </body>
-</html> 
+</html>

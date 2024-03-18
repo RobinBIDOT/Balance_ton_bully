@@ -186,6 +186,7 @@ footer div a{
         grid-template-columns: 1fr; 
         grid-template-rows: minmax(min-content, max-content); 
         gap: 3rem;
+        
     }
 
     .first-solution, .second-solution, .third-solution, .fourth-solution {
