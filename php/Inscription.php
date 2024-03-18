@@ -89,19 +89,24 @@ if (isset($_POST['submit'])) {
     <div class="row justify-content-center">
         <div class="blue-bg p-4 rounded-lg shadow-lg">
             <h2 class="text-center text-white">S'inscrire</h2>
-            <?php if (!empty($_POST) && empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])) : ?>
-                <div class="alert alert-danger" role="alert">
-                    Veuillez compléter tous les champs
-                </div>
-            <?php elseif (!empty($_POST) && isset($e)) : ?>
-                <div class="alert alert-danger" role="alert">
-                    Erreur: <?php echo $e->getMessage(); ?>
-                </div>
-            <?php elseif (!empty($_POST)) : ?>
-                <div class="alert alert-success" role="alert">
-                    Utilisateur enregistré avec succès
-                </div>
-            <?php endif; ?>
+            <<?php
+            if(isset($_POST['submit'])){
+                if(empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])){ ?>
+                    <div class="alert alert-danger" role="alert">
+                        Veuillez compléter tous les champs
+                    </div>
+                    <?php } elseif (isset($e)) { ?>
+                    <div class="alert alert-danger" role="alert">
+                        Erreur: <?php echo $e->getMessage(); ?>
+                    </div>
+                    <?php } else { ?>
+                    <div class="alert alert-success" role="alert">
+                        Utilisateur enregistré avec succès
+                    </div>
+                    <?php
+                }
+            } ?>
+
             <form method="POST" action="">
                 <!--<div class="mb-3">
                     <label for="name" class="form-label text-white">Votre prénom:</label>

@@ -4,19 +4,20 @@ $dbh = dbConnexion();
 session_start();
 
 // Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['pseudo'])) {
+if (!isset($_SESSION['nickName'])) {
     header("Location: ../php/connexion.php");
     exit();
 }
-
+var_dump($_POST['contenuReponse']);
+var_dump($_POST['id']);
 // Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if(isset($_POST['contenuReponse']) && isset($_POST['idSujet'])) {
-        $idSujet = $_POST['idSujet'];
+    if(isset($_POST['contenuReponse']) && isset($_POST['id'])) {
+        $idSujet = $_POST['id'];
         $contenu = $_POST['contenuReponse'];
 
         try {
-            ajouterReponse($dbh, $idSujet, $contenu, $_SESSION['pseudo']);
+            ajouterReponse($dbh, $idSujet, $contenu, $_SESSION['nickName']);
             // Rediriger vers la page du sujet après l'ajout de la réponse
             header("Location: sujet.php?id=" . $idSujet);
             exit();
@@ -25,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         // Si les données du formulaire sont manquantes, rediriger vers la page d'accueil
-        header("Location: accueilForum.php");
+        //header("Location: accueilForum.php");
         exit();
     }
 } else {
@@ -48,7 +49,7 @@ function ajouterReponse($dbh, $idSujet, $contenu, $pseudo) {
     $stmtUserId = $dbh->prepare($sqlUserId);
     $stmtUserId->bindParam(':pseudo', $pseudo, PDO::PARAM_STR);
     $stmtUserId->execute();
-    $userId = $stmtUserId->fetch(PDO::FETCH_ASSOC)['id_utilisateur'];
+    $userId = $stmtUserId->fetchColumn();
 
     // Insérer la réponse dans la base de données
     $sql = "INSERT INTO reponses_forum (id_sujet, contenu, id_utilisateur, date_creation)
