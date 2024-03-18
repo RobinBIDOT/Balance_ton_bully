@@ -10,14 +10,14 @@ $pdo = dbConnexion();
 // Vérification de la soumission du formulaire d'inscription
 if (isset($_POST['submit'])) {
     // Vérification de la saisie des champs requis
-    if (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']) || empty($_POST['fonction'])) {
+    if (empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])) {
         $errors = array();
-        if (empty($_POST['name'])) {
+        /* if (empty($_POST['name'])) {
             $errors[] = "Veuillez saisir votre prénom";
         }
         if (empty($_POST['lastName'])) {
             $errors[] = "Veuillez saisir votre nom";
-        }
+        }*/
         if (empty($_POST['pseudo'])) {
             $errors[] = "Veuillez saisir votre pseudo";
         }
@@ -27,15 +27,15 @@ if (isset($_POST['submit'])) {
         if (empty($_POST['pwd'])) {
             $errors[] = "Veuillez saisir un mot de passe";
         }
-        if (empty($_POST['fonction'])) {
+        /*if (empty($_POST['fonction'])) {
             $errors[] = "Veuillez sélectionner votre fonction";
-        }
+        }*/
         // Vérifier si les mots de passe correspondent
         if (!empty($_POST['pwd']) && ($_POST['pwd'] != $_POST['pwd_confirm'])) {
             $errors[] = "Les mots de passe ne correspondent pas";
         }
         // Vérifier si l'utilisateur est un professionnel de la santé
-        $isProfessional = isset($_POST['is_professional']) ? 1 : 0;
+        $isProfessional = isset($_POST['is_professional']) ? true : false;
 
         // Affichage des erreurs
         foreach ($errors as $error) {
@@ -43,20 +43,18 @@ if (isset($_POST['submit'])) {
         }
     } else {
         // Récupération des données saisies dans le formulaire
-        $name = $_POST['name'];
-        $lastName = $_POST['lastName'];
         $mail = $_POST['mail'];
         $password = $_POST['pwd'];
         $pseudo = $_POST['pseudo'];
-        $fonction = $_POST['fonction'];
+
 
         // Hashage du mot de passe
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
             // Insertion des données dans la base de données
-            $stmt = $pdo->prepare('INSERT INTO utilisateurs (nom_utilisateur, prenom_utilisateur, email, mot_de_passe_hash, pseudo, fonction) VALUES (?,?,?,?,?,?)');
-            $stmt->execute([$lastName, $name, $mail, $hashedPassword, $pseudo, $fonction]);
+            $stmt = $pdo->prepare('INSERT INTO utilisateurs (mail, password, userName) VALUES (?,?,?)');
+            $stmt->execute([$mail, $hashedPassword, $pseudo]);
             echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
         } catch (PDOException $e) {
             echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
@@ -91,7 +89,7 @@ if (isset($_POST['submit'])) {
     <div class="row justify-content-center">
         <div class="blue-bg p-4 rounded-lg shadow-lg">
             <h2 class="text-center text-white">S'inscrire</h2>
-            <?php if (!empty($_POST) && (empty($_POST['name']) || empty($_POST['lastName']) || empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd']) || empty($_POST['fonction']))) : ?>
+            <?php if (!empty($_POST) && empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])) : ?>
                 <div class="alert alert-danger" role="alert">
                     Veuillez compléter tous les champs
                 </div>
@@ -105,14 +103,14 @@ if (isset($_POST['submit'])) {
                 </div>
             <?php endif; ?>
             <form method="POST" action="">
-                <div class="mb-3">
+                <!--<div class="mb-3">
                     <label for="name" class="form-label text-white">Votre prénom:</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Nom...">
                 </div>
                 <div class="mb-3">
                     <label for="lastName" class="form-label text-white">Votre nom:</label>
                     <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Nom de famille...">
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label for="pseudo" class="form-label text-white">Votre pseudo:</label>
                     <input type="text" class="form-control" id="pseudo" name="pseudo" placeholder="Pseudo...">
@@ -121,10 +119,10 @@ if (isset($_POST['submit'])) {
                     <label for="mail" class="form-label text-white">Votre adresse mail:</label>
                     <input type="email" class="form-control" id="mail" name="mail" placeholder="E-mail...">
                 </div>
-                <div class="mb-3">
+                <!--<div class="mb-3">
                     <label for="fonction" class="form-label text-white">Votre fonction:</label>
                     <input type="text" class="form-control" id="fonction" name="fonction" placeholder="Fonction...">
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label for="pwd" class="form-label text-white">Votre mot de passe:</label>
                     <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
