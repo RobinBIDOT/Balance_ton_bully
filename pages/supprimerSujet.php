@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['pseudo'])) {
+if (!isset($_SESSION['nickName'])) {
     // Rediriger l'utilisateur vers la page de connexion s'il n'est pas connecté
     header("Location: ../php/connexion.php");
     exit;
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_sujet']) && is_nume
     $stmtDeleteReponses->execute();
 
     // Supprimer le sujet
-    $sqlDeleteSujet = "DELETE FROM sujets_forum WHERE id_sujet = :idSujet";
+    $sqlDeleteSujet = "DELETE FROM sujets_forum WHERE id = :idSujet";
     $stmtDeleteSujet = $dbh->prepare($sqlDeleteSujet);
     $stmtDeleteSujet->bindParam(':idSujet', $idSujet, PDO::PARAM_INT);
     $stmtDeleteSujet->execute();

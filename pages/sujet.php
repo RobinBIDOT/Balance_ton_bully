@@ -25,7 +25,7 @@ try {
         $sql = "SELECT sujets_forum.*, utilisateurs.userName AS nom_auteur
                 FROM sujets_forum
                 LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id
-                WHERE id = :id";
+                WHERE sujets_forum.id = :id";
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $idSujet, PDO::PARAM_INT);
         $stmt->execute();
@@ -98,7 +98,7 @@ try {
                         echo '<div class="d-flex">';
 
                         echo '<div class="auteur-info text-white">';
-                        if ($rowReponse['id_utilisateur'] === $row['id_utilisateur']) {
+                        if ($rowReponse['id'] === $row['id']) {
                             echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'] . ' - Auteur ';
                         } else {
                             echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'];
@@ -189,13 +189,13 @@ try {
                         echo '</nav>';
                     }
                 } else {
-                    echo "<p class='text-gray-500'>Aucune réponse trouvée pour ce sujet.</p>";
+                    echo "<p class='text-white-500'>Aucune réponse trouvée pour ce sujet.</p>";
                 }
                 echo '</div>'; // Fermeture de la div de fond
                 ?>
                 <div class="transition"></div>
                 <!-- Formulaire d'ajout de réponse -->
-                <?php if (isset($_SESSION['pseudo'])) : ?>
+                <?php if (isset($_SESSION['nickName'])) : ?>
                     <div class="mt-5">
                         <h2 class="text-2xl font-bold mb-4">Ajouter une réponse</h2>
                         <form action="ajouterReponse.php" method="post">

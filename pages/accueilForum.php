@@ -82,6 +82,8 @@ try {
     echo "Erreur PDO : " . $e->getMessage();
     exit();
 }
+var_dump($_POST['id_sujet']);
+var_dump($_SESSION['id_sujet']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">

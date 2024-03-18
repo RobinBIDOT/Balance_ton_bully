@@ -19,7 +19,7 @@ if (!isset($_SESSION['nickName'])) {
  * @return void
  */
 function insererSujet($dbh, $titre, $contenu, $idUtilisateur) {
-    $sql = "INSERT INTO sujets_forum (titre, contenu, id, date_creation)
+    $sql = "INSERT INTO sujets_forum (titre, contenu, id_utilisateur, date_creation)
             VALUES (:titre, :contenu, :idUtilisateur, NOW())";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);

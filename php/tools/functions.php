@@ -1,6 +1,8 @@
 <?php
 function dbConnexion(){
+
     $file_path = '../php/tools/info.json';
+
     $tool = json_decode(file_get_contents($file_path), true);
     $dsn = "mysql:host=" . $tool['host'] . ";dbname=". $tool['database'] . ";port=". $tool['port'] . ";charset=". $tool['charset'];
     $user = $tool['user'];
