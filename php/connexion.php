@@ -5,6 +5,7 @@ include 'tools/functions.php';
 
 session_start();
 
+
 // Connexion à la base de données
 $pdo = dbConnexion();
 
@@ -17,9 +18,10 @@ if (isset($_POST['submit'])) {
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['nickName'] = $pseudo;
-            $_SESSION['pwd'] = $password;
+            $_SESSION['nickName'] = $user['userName'];
             $_SESSION['id'] = $user['id'];
+            $_SESSION['id_role'] = $user['id_role'];
+
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }
