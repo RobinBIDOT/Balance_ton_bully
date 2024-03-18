@@ -62,7 +62,7 @@
                         Vous êtes une école
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="../pages/formations.php">Formation</a></li>
+                        <li><a class="dropdown-item" href="../pages/formations.php">Formations</a></li>
                         <li><a class="dropdown-item" href="">Intervention</a></li>
                     </ul>
                 </div>
