@@ -72,7 +72,7 @@
                         clearInterval(interval);
                         $element.text(pourcentageCible + '%'); // Assurez-vous que le pourcentage final est correct
                     }
-                }, 20); // Vitesse de l'incrémentation (plus bas = plus rapide)
+                }, 70); // Vitesse de l'incrémentation (plus bas = plus rapide)
             }
 
             // Appel de la fonction pour chaque élément
@@ -80,5 +80,24 @@
             incrementerPourcentage($('.second-percent'), 22); // Deuxième valeur cible: 22%
         });
     </script>
+    
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js"></script>
+   <script>
+    // Initialiser ScrollMagic
+    var controller = new ScrollMagic.Controller();
+
+    // Créer une nouvelle scène pour déclencher l'animation lorsque la section "Nos solutions" devient visible
+    var scene = new ScrollMagic.Scene({
+        triggerElement: '.solutions',
+        triggerHook: 0.7, // Déclenche l'animation lorsque 70% de la section est visible
+        reverse: false // Ne pas inverser l'animation lorsque l'utilisateur fait défiler vers le haut
+    })
+    .setTween(".solutions > div", { opacity: 1, y: 0, duration: 0.5, stagger: 0.2 }) // Animation fadeIn pour chaque élément avec un délai
+    .addTo(controller);
+    </script>
+
+
 </body>
-</html> 
+</html>
