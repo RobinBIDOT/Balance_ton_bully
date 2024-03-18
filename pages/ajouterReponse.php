@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
  */
 function ajouterReponse($dbh, $idSujet, $contenu, $pseudo) {
     // Récupérer l'ID de l'utilisateur à partir de son pseudo
-    $sqlUserId = "SELECT id_utilisateur FROM utilisateurs WHERE pseudo = :pseudo";
+    $sqlUserId = "SELECT id FROM utilisateurs WHERE userName = :pseudo";
     $stmtUserId = $dbh->prepare($sqlUserId);
     $stmtUserId->bindParam(':pseudo', $pseudo, PDO::PARAM_STR);
     $stmtUserId->execute();

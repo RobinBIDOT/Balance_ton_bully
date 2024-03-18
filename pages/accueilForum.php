@@ -26,7 +26,7 @@ function recupererSujets($dbh, $limit, $offset, $searchTitle, $searchUser) {
     $sql = "SELECT sujets_forum.*, COUNT(reponses_forum.id_reponse) AS nombre_reponses, utilisateurs.userName, utilisateurs.photo_avatar
             FROM sujets_forum
             LEFT JOIN reponses_forum ON sujets_forum.id = reponses_forum.id_sujet
-            LEFT JOIN utilisateurs ON sujets_forum.id = utilisateurs.id";
+            LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id";
 
     if (!empty($searchTitle) || !empty($searchUser)) {
         $sql .= " WHERE ";
@@ -82,8 +82,6 @@ try {
     echo "Erreur PDO : " . $e->getMessage();
     exit();
 }
-var_dump($_POST['id_sujet']);
-var_dump($_SESSION['id_sujet']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -147,7 +145,7 @@ var_dump($_SESSION['id_sujet']);
                             <!-- Bouton Supprimer -->
                             <?php if(isset($_SESSION['nickName']) && $_SESSION['nickName'] === $row['userName']) : ?>
                                 <form action="supprimerSujet.php" method="post">
-                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                    <input type="hidden" name="id_sujet" value="<?php echo $row['id']; ?>">
                                     <button type="submit" class="btn btn-danger btn-sm ms-2">Supprimer</button>
                                 </form>
                             <?php endif; ?>

@@ -34,4 +34,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_sujet']) && is_nume
     header("Location: accueilForum.php?erreur=2");
     exit;
 }
+
 ?>
