@@ -23,6 +23,10 @@ session_start()
        <!-- Si un surnom est défini, affiche un message de bienvenue -->
        <h1>Bienvenue <?php echo ucfirst($_SESSION['nickName']) ?></h1>
     <?php } ?>
+
+
+    <!-- Section pour afficher les statistiques -->
+
     <div class="container-stats">
         <div class="statistiques">
             <div class="first-stat">
