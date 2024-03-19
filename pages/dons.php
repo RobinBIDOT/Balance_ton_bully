@@ -6,20 +6,20 @@ error_reporting(E_ALL);
 
 include('../php/tools/functions.php');
 
-// Vérifier si un message d'erreur est défini dans la session
-if (isset($_SESSION['errorMessage'])) {
-    echo "<p style='color: red;'>" . $_SESSION['errorMessage'] . "</p>";
-    // Effacer le message d'erreur de la session pour qu'il ne s'affiche pas indéfiniment
-    unset($_SESSION['errorMessage']);
+// Vérifie si l'utilisateur est connecté avant de procéder
+if (!isset($_SESSION['nickName'])) {
+    // Redirige vers la page de connexion si non connecté
+    header('Location: ../php/connexion.php');
+    exit;
 }
 
-// Traitement du formulaire lorsqu'il est soumis
+// Traitement du formulaire de don
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collecter les données du formulaire
+    // Récupération et nettoyage des données du formulaire
     $donData = [
         'typeDon' => $_POST['typeDon'] ?? 'Don ponctuel',
-        'montant' => isset($_POST['montant']) ? $_POST['montant'] : 0,
-        'montantLibre' => isset($_POST['montantLibre']) ? $_POST['montantLibre'] : 0,
+        'montant' => $_POST['montant'] ?? 0,
+        'montantLibre' => $_POST['montantLibre'] ?? 0,
         'prenom' => $_POST['prenom'] ?? '',
         'nom' => $_POST['nom'] ?? '',
         'email' => $_POST['email'] ?? '',
@@ -28,27 +28,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'codePostal' => $_POST['codePostal'] ?? '',
         'ville' => $_POST['ville'] ?? '',
         'pays' => $_POST['pays'] ?? '',
-        'estOrganisme' => isset($_POST['payerOrganisme']) ? true : false,
-        'raisonSociale' => isset($_POST['raisonSociale']) ? $_POST['raisonSociale'] : '',
-        'siren' => isset($_POST['siren']) ? $_POST['siren'] : '',
-        'formeJuridique' => isset($_POST['formeJuridique']) ? $_POST['formeJuridique'] : ''
+        'estOrganisme' => isset($_POST['payerOrganisme']),
+        'raisonSociale' => $_POST['raisonSociale'] ?? '',
+        'siren' => $_POST['siren'] ?? '',
+        'formeJuridique' => $_POST['formeJuridique'] ?? ''
     ];
 
-    // Validation des données
+    // Validation des données, par exemple, validation de l'email
     if (!filter_var($donData['email'], FILTER_VALIDATE_EMAIL)) {
+        // Afficher un message d'erreur ou le traiter comme nécessaire
         echo "<script>alert('Adresse email non valide');</script>";
-    } elseif (floatval($donData['montant']) <= 0 && floatval($donData['montantLibre']) <= 0) {
-        echo "<script>alert('Le montant doit être positif');</script>";
     } else {
-        // Enregistrer les données dans la session
+        // Stocker les données de don dans la session
         $_SESSION['donData'] = $donData;
 
-        // Rediriger vers la page de paiement
-        header('Location: paiementDon.php');
+        // Rediriger vers la page de traitement du paiement
+        header('Location: ../pages/traitementPaiement.php');
         exit;
     }
 }
+// Débogage
+echo "<pre>Session Data : ";
+var_dump($_SESSION);
+echo "</pre>";
+echo "<pre>Données du formulaire : ";
 var_dump($_POST);
+echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -63,7 +68,7 @@ var_dump($_POST);
 <body>
 <?php include('../includes/headerNav.php'); ?>
 <div class="container-fluid mt-5 custom-container">
-    <form id="formDon" action="traitementPaiement.php" method="post">
+    <form id="formDon" action="../pages/traitementPaiement.php" method="post">
         <div class="row">
             <!-- Colonne de gauche (Type de don, Montant) -->
             <div class="col-md-4">
@@ -181,7 +186,6 @@ var_dump($_POST);
         </div>
     </form>
 </div>
-
 <?php include('../includes/footer.php'); ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/scriptDons.js"></script>

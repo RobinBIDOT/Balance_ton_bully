@@ -92,68 +92,6 @@ $(document).ready(function() {
     $('#validerPayer').prop('disabled', true);
 
 
-    // /**
-    //  * Intercepte l'événement de soumission du formulaire et le soumet via AJAX.
-    //  *
-    //  * Cette fonction intercepte l'événement de soumission standard du formulaire
-    //  * et le remplace par un appel AJAX. L'appel AJAX envoie les données du
-    //  * formulaire de manière asynchrone au script PHP spécifié, permettant
-    //  * une interaction plus dynamique sans recharger la page.
-    //  *
-    //  * @param {Event} event - L'événement de soumission du formulaire.
-    //  */
-    // // Ajout d'un gestionnaire d'événement pour la soumission du formulaire
-    // $('#formPaiement').submit(function(event) {
-    //     event.preventDefault(); // Empêche la soumission classique du formulaire
-    //
-    //     // Validation du formulaire avant soumission
-    //     if (validerFormulairePaiement()) {
-    //         // Soumission du formulaire via AJAX
-    //         var formData = $(this).serialize(); // Sérialise les données du formulaire
-    //         /**
-    //          * Envoie une requête AJAX au serveur.
-    //          * @param {object} options Les options de la requête AJAX.
-    //          */
-    //         $.ajax({
-    //             type: 'POST',
-    //             url: 'traitementPaiement.php', // Le script PHP qui traitera les données
-    //             data: formData,
-    //             success: function(response) {
-    //                 // Traiter la réponse
-    //                 if (response.success) {
-    //                     // Afficher le message de confirmation
-    //                     $('#confirmationMessage').show();
-    //                     $('#formPaiement').hide();
-    //                 } else {
-    //                     // Afficher un message d'erreur
-    //                     alert("Une erreur s'est produite lors du traitement du paiement.");
-    //                 }
-    //             },
-    //             error: function() {
-    //                 alert("Une erreur s'est produite lors du traitement du paiement.");
-    //             }
-    //         });
-    //     }
-    // });
-
-    // /**
-    //  * Fonction qui valide le formulaire de paiement.
-    //  * Cette fonction vérifie si tous les champs obligatoires sont remplis.
-    //  * @return {boolean} True si le formulaire est valide, false sinon.
-    //  */
-    // function validerFormulairePaiement() {
-    //     var estValide = true;
-    //
-    //     // Vérifier si tous les champs du formulaire de paiement sont remplis
-    //     $('#formPaiement input[required]').each(function() {
-    //         if ($(this).val() === '') {
-    //             estValide = false;
-    //         }
-    //     });
-    //
-    //     return estValide;
-    // }
-
     /**
      * Met à jour le récapitulatif avec le type de don spécifié.
      *
@@ -359,15 +297,3 @@ $(document).ready(function() {
         validerPayer.prop('disabled', !$(this).is(':checked'));
     });
 });
-// $('#validerPayer').click(function() {
-//     // Récupérer les informations de don
-//     let typeDon = $('#typeDon').text();
-//     let montantTotal = $('#montantTotal').text();
-//
-//     // Mettre à jour le contenu de la modale
-//     $('#modalTypeDon').text(typeDon);
-//     $('#modalMontantTotal').text(montantTotal);
-//
-//     // Afficher la modale
-//     $('#staticBackdrop').modal('show');
-// });
