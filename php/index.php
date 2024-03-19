@@ -25,7 +25,9 @@ session_start()
     <?php } ?>
 
 
+
     <!-- Section pour afficher les statistiques -->
+
 
     <div class="container-stats">
         <div class="statistiques">
