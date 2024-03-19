@@ -1,0 +1,10 @@
+.blue-background {
+    background-color: #0854C7;
+    padding: 20px;
+    color: white;
+    border-radius: 10px;
+}
+.btn-selected {
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+}
