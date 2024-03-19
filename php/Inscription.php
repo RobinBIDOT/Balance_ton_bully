@@ -80,21 +80,21 @@ if (isset($_POST['submit'])) {
         .blue-bg {
             background-color: #0854C7;
         }
-        /* .full-height {
+        .full-height {
             min-height: 100vh; 
             display: flex;
             justify-content: center;
             align-items: center;
-        } */
+        } 
 
     </style>
 </head>
 
 <body>
 <?php include('../includes/headerNav.php') ?>
-<div class="container mt-5 mx-auto vh-100">
-    <div class="row">
-        <div class="col-12 blue-bg p-4 rounded-lg shadow-lg">
+<!-- <div class="container full-height"> -->
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
             <h2 class="text-center text-white">S'inscrire</h2>
             <?php
             if(isset($_POST['submit'])){
@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
             </form>
         </div>
     </div>
-</div>
+<!-- </div> -->
 <?php include('../includes/footer.php') ?>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 </body>
