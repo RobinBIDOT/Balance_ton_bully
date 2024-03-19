@@ -80,19 +80,19 @@ if (isset($_POST['submit'])) {
         .blue-bg {
             background-color: #0854C7;
         }
-        .full-height {
+        /* .full-height {
             min-height: 100vh; 
             display: flex;
             justify-content: center;
             align-items: center;
-        }
+        } */
 
     </style>
 </head>
 
 <body>
 <?php include('../includes/headerNav.php') ?>
-<div class="container full-height">
+<div class="container mt-5 mx-auto vh-100">
     <div class="row">
         <div class="col-12 blue-bg p-4 rounded-lg shadow-lg">
             <h2 class="text-center text-white">S'inscrire</h2>
