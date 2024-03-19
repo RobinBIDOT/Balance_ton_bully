@@ -82,13 +82,15 @@
                         </div>
                     </div>
                     <!-- Fin du formulaire pour les organismes -->
-                    <div class="mb-3">
-                        <label for="prenom" class="form-label">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" required>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="col">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom" required>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
@@ -102,13 +104,15 @@
                         <label for="adresse" class="form-label">Adresse</label>
                         <input type="text" class="form-control" id="adresse" name="adresse" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="codePostal" class="form-label">Code postal</label>
-                        <input type="text" class="form-control" id="codePostal" name="codePostal" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ville" class="form-label">Ville</label>
-                        <input type="text" class="form-control" id="ville" name="ville" required>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="codePostal" class="form-label">Code postal</label>
+                            <input type="text" class="form-control" id="codePostal" name="codePostal" required>
+                        </div>
+                        <div class="col">
+                            <label for="ville" class="form-label">Ville</label>
+                            <input type="text" class="form-control" id="ville" name="ville" required>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="pays" class="form-label">Pays</label>
@@ -161,6 +165,7 @@
         let payerOrganismeCheckbox = $('#payerOrganisme');
         let champsOrganisme = $('#champsOrganisme');
         let infoReductionCategorie = $('#infoReductionCategorie');
+        let montantChoisi = NaN;
 
         // Fonction pour ajouter des champs pour les organismes
         function afficherChampsOrganisme() {
@@ -206,9 +211,13 @@
         });
 
 
-        // Fonction pour mettre à jour les informations de réduction fiscale en fonction du type de don sélectionné
+        // Fonction pour mettre à jour le montant choisi
+        function mettreAJourMontantChoisi(montant) {
+            montantChoisi = montant;
+        }
+
+        // Mettez à jour la fonction mettreAJourReductionFiscale pour utiliser le montant choisi
         function mettreAJourReductionFiscale() {
-            let montantChoisi = parseFloat($('input[name="montant"]:checked').val());
             let montantReduit = calculerReductionFiscale(montantChoisi);
             infoReduction.text(`Votre don ne vous coûtera que ${montantReduit} € après réduction fiscale`);
         }
@@ -229,7 +238,14 @@
             afficherInfosReductionCategorie("Particulier : vous pouvez bénéficier d’une réduction d’impôt égale à 66 % du montant de votre don , dans la limite de 20 % de votre revenu imposable.");
             payerOrganismeCheckbox.prop('checked', false);
             cacherChampsOrganisme();
-            mettreAJourReductionFiscale(); // Mettre à jour la réduction fiscale
+            // Mettre à jour le montant choisi avec le montant libre si défini
+            if (!isNaN(montantLibreChoisi)) {
+                montantChoisi = montantLibreChoisi;
+            } else {
+                montantChoisi = parseFloat($('input[name="montant"]:checked').val());
+            }
+            mettreAJourMontantChoisi(parseFloat($('input[name="montant"]:checked').val()));
+            mettreAJourReductionFiscale();
         });
 
         btnOrganisme.click(function() {
@@ -238,7 +254,14 @@
             afficherInfosReductionCategorie("Entreprise : l’ensemble des versements à notre association permet de bénéficier d’une réduction d’impôt sur les sociétés de 60 % du montant de ces versements, plafonnée à 20 000 € ou 5 ‰ (5 pour mille) du chiffre d'affaires annuel hors taxe de l’entreprise. En cas de dépassement de plafond, l'excédent est reportable sur les 5 exercices suivants.");
             payerOrganismeCheckbox.prop('checked', true);
             afficherChampsOrganisme();
-            mettreAJourReductionFiscale(); // Mettre à jour la réduction fiscale
+            // Mettre à jour le montant choisi avec le montant libre si défini
+            if (!isNaN(montantLibreChoisi)) {
+                montantChoisi = montantLibreChoisi;
+            } else {
+                montantChoisi = parseFloat($('input[name="montant"]:checked').val());
+            }
+            mettreAJourMontantChoisi(parseFloat($('input[name="montant"]:checked').val()));
+            mettreAJourReductionFiscale();
         });
 
         // Événement pour la case à cocher "Payer en tant qu'organisme"
@@ -250,6 +273,7 @@
                 btnParticulier.trigger('click');
                 champsOrganisme.hide(); // Sinon, les masquer
             }
+            mettreAJourReductionFiscale();
         });
 
         btnDonMensuel.click(function() {
@@ -288,15 +312,31 @@
             infoReduction.text(`Votre don ne vous coûtera que ${montantReduit} € après réduction fiscale`);
         });
 
+
+        // Fonction pour réinitialiser le champ de saisie du montant libre
+        function reinitialiserMontantLibre() {
+            montantLibre.val('');
+        }
+
         // Gestionnaire d'événement pour le bouton de confirmation du montant libre
         $('#confirmMontantLibre').click(function() {
-            let montantLibreChoisi = parseFloat(montantLibre.val());
+            montantLibreChoisi = parseFloat(montantLibre.val());
             if (!isNaN(montantLibreChoisi)) {
                 $('input[name="montant"]').prop('checked', false); // Désélectionner les autres montants
+                montantChoisi = montantLibreChoisi; // Mettre à jour le montant choisi avec le montant libre
                 mettreAJourMontantTotal(montantLibreChoisi);
-                let montantReduit = calculerReductionFiscale(montantLibreChoisi);
-                infoReduction.text(`Votre don ne vous coûtera que ${montantReduit} € après réduction fiscale`);
+                mettreAJourReductionFiscale(); // Mettre à jour la réduction fiscale
             }
+        });
+
+        // Gestionnaire d'événement pour les boutons radio des montants prédéfinis
+        $('input[name="montant"]').change(function() {
+            // Réinitialiser le champ de saisie du montant libre lorsqu'un montant prédéfini est sélectionné
+            reinitialiserMontantLibre();
+            // Mettre à jour le montant choisi avec le montant prédéfini sélectionné
+            montantChoisi = parseFloat($(this).val());
+            mettreAJourMontantTotal(montantChoisi);
+            mettreAJourReductionFiscale(); // Mettre à jour la réduction fiscale
         });
 
         $('#acceptConditions').change(function() {
