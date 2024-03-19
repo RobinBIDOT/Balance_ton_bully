@@ -136,7 +136,7 @@
                 </form>
             </div>
             <div class="text-center mt-5">
-                <button type="submit" class="btn btn-primary" disabled id="validerPayer">Valider et payer</button>
+                <button type="button" class="btn btn-primary" disabled id="validerPayer" data-toggle="modal" data-target="#staticBackdrop">Valider et payer</button>
             </div>
             <div class="blue-background mt-5">
                 <form>
@@ -145,38 +145,88 @@
                 </form>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Confirmation de Paiement</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Type de don: <span id="modalTypeDon"></span></p>
+                        <p><span id="modalMontantTotal"></span></p>
+                        <!-- Ici, vous pouvez ajouter votre formulaire de paiement -->
+                        <form id="formPaiement" action="traitementPaiement.php" method="post">
+                            <div class="mb-3">
+                                <label for="nomCarte" class="form-label">Nom sur la carte</label>
+                                <input type="text" class="form-control" id="nomCarte" name="nomCarte" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numeroCarte" class="form-label">Numéro de la carte</label>
+                                <input type="text" class="form-control" id="numeroCarte" name="numeroCarte" required>
+                            </div>
+                            <div class="mb-3 row">
+                                <div class="col">
+                                    <label for="dateExpiration" class="form-label">Date d'expiration</label>
+                                    <input type="text" class="form-control" id="dateExpiration" name="dateExpiration" placeholder="MM/AA" pattern="\d{2}/\d{2}" title="Format MM/AA" required>
+                                </div>
+                                <div class="col">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" name="cvv" pattern="\d{3}" title="Le CVV doit être composé de 3 chiffres" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Confirmer le Paiement</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    /**
+     * Initialise le script et configure les gestionnaires d'événements.
+     */
     $(document).ready(function() {
-        // Récupération des éléments du DOM
-        let btnParticulier = $('#btnParticulier');
-        let btnOrganisme = $('#btnOrganisme');
-        let btnDonUneFois = $('#donUneFois');
-        let btnDonMensuel = $('#donMensuel');
-        let infoReduction = $('#infoReduction');
-        let montants = $('input[name="montant"]');
-        let montantLibre = $('#montantLibre');
-        let typeDon = $('#typeDon');
-        let montantTotal = $('#montantTotal');
-        let validerPayer = $('#validerPayer');
-        let payerOrganismeCheckbox = $('#payerOrganisme');
-        let champsOrganisme = $('#champsOrganisme');
-        let infoReductionCategorie = $('#infoReductionCategorie');
-        let montantChoisi = NaN;
+        // Déclaration des variables
+        let btnParticulier = $('#btnParticulier'); // Bouton pour les particuliers
+        let btnOrganisme = $('#btnOrganisme'); // Bouton pour les organismes
+        let btnDonUneFois = $('#donUneFois'); // Bouton pour un don ponctuel
+        let btnDonMensuel = $('#donMensuel'); // Bouton pour un don mensuel
+        let infoReduction = $('#infoReduction'); // Informations sur la réduction fiscale
+        let montants = $('input[name="montant"]'); // Options de montant
+        let montantLibre = $('#montantLibre'); // Champ de saisie pour un montant libre
+        let typeDon = $('#typeDon'); // Affichage du type de don sélectionné
+        let montantTotal = $('#montantTotal'); // Affichage du montant total du don
+        let validerPayer = $('#validerPayer'); // Bouton de validation du paiement
+        let payerOrganismeCheckbox = $('#payerOrganisme'); // Case à cocher pour payer en tant qu'organisme
+        let champsOrganisme = $('#champsOrganisme'); // Champs supplémentaires pour les organismes
+        let infoReductionCategorie = $('#infoReductionCategorie'); // Informations sur la réduction fiscale en fonction de la catégorie
+        let montantChoisi = NaN; // Montant choisi pour le don
+        let montantLibreChoisi = NaN; // Montant libre choisi
 
-        // Fonction pour ajouter des champs pour les organismes
+        /**
+         * Affiche les champs supplémentaires pour les organismes.
+         */
         function afficherChampsOrganisme() {
             champsOrganisme.show();
         }
 
+        /**
+         * Cache les champs supplémentaires pour les organismes.
+         */
         function cacherChampsOrganisme() {
             champsOrganisme.hide();
         }
 
-        // Mise à jour de l'affichage en fonction du type de paiement
+        /**
+         * Met à jour l'affichage en fonction du type de paiement (particulier ou organisme).
+         */
         function miseAJourAffichagePaiement() {
             if (payerOrganismeCheckbox.is(':checked')) {
                 afficherChampsOrganisme();
@@ -185,21 +235,22 @@
             }
         }
 
-        // Fonction pour calculer la réduction fiscale en fonction du type de paiement
+        /**
+         * Calcule la réduction fiscale en fonction du montant du don et du type de paiement.
+         * @param {number} montant - Le montant du don.
+         * @returns {string} - Le montant après réduction fiscale formaté en chaîne de caractères.
+         */
         function calculerReductionFiscale(montant) {
-            // Vérifier si un montant valide est saisi
             if (!isNaN(montant)) {
                 let reduction;
                 if (payerOrganismeCheckbox.is(':checked')) {
-                    // Si le paiement est fait en tant qu'organisme
                     reduction = montant * 0.60; // 60% de réduction pour les organismes
                 } else {
-                    // Si le paiement est fait en tant que particulier
                     reduction = montant * 0.66; // 66% de réduction pour les particuliers
                 }
                 return (montant - reduction).toFixed(2);
             } else {
-                return "0.00"; // Retourner 0 si aucun montant n'est saisi
+                return "0.00";
             }
         }
 
@@ -211,12 +262,17 @@
         });
 
 
-        // Fonction pour mettre à jour le montant choisi
+        /**
+         * Met à jour le montant choisi pour le don.
+         * @param {number} montant - Le montant du don choisi.
+         */
         function mettreAJourMontantChoisi(montant) {
             montantChoisi = montant;
         }
 
-        // Mettez à jour la fonction mettreAJourReductionFiscale pour utiliser le montant choisi
+        /**
+         * Met à jour les informations sur la réduction fiscale en fonction du montant choisi.
+         */
         function mettreAJourReductionFiscale() {
             let montantReduit = calculerReductionFiscale(montantChoisi);
             infoReduction.text(`Votre don ne vous coûtera que ${montantReduit} € après réduction fiscale`);
@@ -232,7 +288,9 @@
         }
 
         // Événements pour les boutons de type de don
+
         btnParticulier.click(function() {
+            // Sélectionne le mode particulier
             $(this).addClass('btn-selected');
             btnOrganisme.removeClass('btn-selected');
             afficherInfosReductionCategorie("Particulier : vous pouvez bénéficier d’une réduction d’impôt égale à 66 % du montant de votre don , dans la limite de 20 % de votre revenu imposable.");
@@ -249,6 +307,7 @@
         });
 
         btnOrganisme.click(function() {
+            // Sélectionne le mode organisme
             $(this).addClass('btn-selected');
             btnParticulier.removeClass('btn-selected');
             afficherInfosReductionCategorie("Entreprise : l’ensemble des versements à notre association permet de bénéficier d’une réduction d’impôt sur les sociétés de 60 % du montant de ces versements, plafonnée à 20 000 € ou 5 ‰ (5 pour mille) du chiffre d'affaires annuel hors taxe de l’entreprise. En cas de dépassement de plafond, l'excédent est reportable sur les 5 exercices suivants.");
@@ -276,12 +335,14 @@
             mettreAJourReductionFiscale();
         });
 
+        // Gestionnaire d'événement pour le bouton de don mensuel
         btnDonMensuel.click(function() {
             $(this).addClass('btn-selected');
             btnDonUneFois.removeClass('btn-selected');
             typeDon.text("Don mensuel");
         });
 
+        // Gestionnaire d'événement pour le bouton de don ponctuel
         btnDonUneFois.click(function() {
             $(this).addClass('btn-selected');
             btnDonMensuel.removeClass('btn-selected');
@@ -293,7 +354,9 @@
             montantTotal.text(`Montant total : ${montant} €`);
         }
 
-        // Fonction pour gérer le changement de montant choisi
+        /**
+         * Gère le changement du montant choisi et met à jour les informations de réduction fiscale.
+         */
         function gererChangementMontantChoisi() {
             let montantChoisi = parseFloat($('input[name="montant"]:checked').val());
             mettreAJourMontantTotal(montantChoisi);
@@ -313,7 +376,9 @@
         });
 
 
-        // Fonction pour réinitialiser le champ de saisie du montant libre
+        /**
+         * Réinitialise le champ de saisie du montant libre.
+         */
         function reinitialiserMontantLibre() {
             montantLibre.val('');
         }
@@ -339,9 +404,22 @@
             mettreAJourReductionFiscale(); // Mettre à jour la réduction fiscale
         });
 
+        // Gestionnaire d'événement pour la case à cocher d'acceptation des conditions
         $('#acceptConditions').change(function() {
             validerPayer.prop('disabled', !$(this).is(':checked'));
         });
+    });
+    $('#validerPayer').click(function() {
+        // Récupérer les informations de don
+        let typeDon = $('#typeDon').text();
+        let montantTotal = $('#montantTotal').text();
+
+        // Mettre à jour le contenu de la modale
+        $('#modalTypeDon').text(typeDon);
+        $('#modalMontantTotal').text(montantTotal);
+
+        // Afficher la modale
+        $('#staticBackdrop').modal('show');
     });
 </script>
 </body>
