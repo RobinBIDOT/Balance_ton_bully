@@ -93,11 +93,44 @@ try {
     <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/styleForum.css">
+
+    <!-- <style>
+        /* Styles globaux */
+        .container {
+            margin-top: 20px;
+        }
+
+        /* Styles spécifiques à la jumbotron */
+        .jumbotron {
+            padding: 2rem; 
+            margin: 1rem 0; 
+            border-radius: 15px; 
+            /* background-color: #007bff;  */
+            color: white; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+
+        h1, h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        hr.my-4 {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-color: #fff; 
+        }
+    </style> -->
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
 <div class="container mt-5">
     <div class="jumbotron jumbotron-fluid jumbotron-primary text-white rounded-3 p-5 shadow">
+
         <h1 class="display-4">Bienvenue sur le forum de Balance ton bully</h1>
         <p class="lead">Voici un espace d'échange pour discuter des différents sujets concernant le phénomène de harcèlement et de cyber-harcèlement. Respectez les règles du forum et contribuez à créer un environnement sûr et bienveillant pour tous.</p>
         <hr class="my-4 bg-light">
@@ -106,6 +139,7 @@ try {
         <p>2. Évitez les propos offensants, agressifs ou discriminatoires.</p>
         <p>3. N'abusez pas des majuscules ni des caractères spéciaux.</p>
         <p>4. Signalez tout contenu inapproprié ou non conforme aux règles.</p>
+
     </div>
     <br>
     <!-- Formulaire de recherche -->
