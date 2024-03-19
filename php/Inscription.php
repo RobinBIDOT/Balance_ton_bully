@@ -80,16 +80,23 @@ if (isset($_POST['submit'])) {
         .blue-bg {
             background-color: #0854C7;
         }
+        .full-height {
+            min-height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
     </style>
 </head>
 
 <body>
 <?php include('../includes/headerNav.php') ?>
-<div class="container mx-auto my-5 vh-100">
-    <div class="row justify-content-center">
-        <div class="col-sm-10 col-md-10 col-lg-6 blue-bg p-4 rounded-lg shadow-lg">
+<div class="container full-height">
+    <div class="row">
+        <div class="col-12 blue-bg p-4 rounded-lg shadow-lg">
             <h2 class="text-center text-white">S'inscrire</h2>
-            <<?php
+            <?php
             if(isset($_POST['submit'])){
                 if(empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])){ ?>
                     <div class="alert alert-danger" role="alert">
@@ -151,6 +158,7 @@ if (isset($_POST['submit'])) {
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 </body>
 
 </html>
