@@ -145,7 +145,6 @@ CREATE TABLE Dons (
     type_don ENUM('Don ponctuel', 'Don mensuel') NOT NULL,
     montant DECIMAL(10, 2) NOT NULL,
     montant_libre DECIMAL(10, 2),
-    reduction_fiscale DECIMAL(10, 2),
     prenom VARCHAR(50) NOT NULL,
     nom VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
