@@ -140,41 +140,26 @@ INSERT INTO `actualites` (`id_actualite`, `titre`, `photo`, `contenu`, `lien_art
 -- Structure de la table `dons`
 --
 
-CREATE TABLE `dons` (
-    `id_don` int(11) NOT NULL AUTO_INCREMENT,
-    `id_utilisateur` int(11) NOT NULL,
-    `montant` decimal(10,2) NOT NULL,
-    `date_don` datetime NOT NULL,
-    `recurrent` tinyint(1) NOT NULL,
-    PRIMARY KEY (`id_don`),
-    FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
+CREATE TABLE Dons (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type_don ENUM('Don ponctuel', 'Don mensuel') NOT NULL,
+    montant DECIMAL(10, 2) NOT NULL,
+    montant_libre DECIMAL(10, 2),
+    reduction_fiscale DECIMAL(10, 2),
+    prenom VARCHAR(50) NOT NULL,
+    nom VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    date_naissance DATE NOT NULL,
+    adresse VARCHAR(255) NOT NULL,
+    code_postal VARCHAR(10) NOT NULL,
+    ville VARCHAR(100) NOT NULL,
+    pays VARCHAR(100) NOT NULL,
+    est_organisme BOOLEAN NOT NULL,
+    raison_sociale VARCHAR(100),
+    siren VARCHAR(20),
+    forme_juridique VARCHAR(100),
+    date_paiement DATE DEFAULT CURRENT_DATE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- Insertion de données dans la table `dons`
-INSERT INTO dons (id_utilisateur, montant, date_don, recurrent) VALUES
-    (1, 100.00, '2024-01-01 12:00:00', 1),
-    (2, 50.00, '2024-01-02 12:00:00', 0),
-    (3, 200.00, '2024-01-03 12:00:00', 1),
-    (4, 75.00, '2024-01-04 12:00:00', 0),
-    (5, 150.00, '2024-01-05 12:00:00', 1),
-    (6, 300.00, '2024-01-06 12:00:00', 0),
-    (7, 25.00, '2024-01-07 12:00:00', 1),
-    (8, 100.00, '2024-01-08 12:00:00', 0),
-    (9, 200.00, '2024-01-09 12:00:00', 1),
-    (10, 150.00, '2024-01-10 12:00:00', 0),
-    (11, 75.00, '2024-01-11 12:00:00', 1),
-    (12, 300.00, '2024-01-12 12:00:00', 0),
-    (13, 50.00, '2024-01-13 12:00:00', 1),
-    (14, 100.00, '2024-01-14 12:00:00', 0),
-    (15, 200.00, '2024-01-15 12:00:00', 1),
-    (16, 150.00, '2024-01-16 12:00:00', 0),
-    (17, 75.00, '2024-01-17 12:00:00', 1),
-    (18, 300.00, '2024-01-18 12:00:00', 0),
-    (19, 50.00, '2024-01-19 12:00:00', 1),
-    (20, 100.00, '2024-01-20 12:00:00', 0);
-
-
 
 
 -- --------------------------------------------------------
