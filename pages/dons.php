@@ -1,50 +1,138 @@
 <?php
-session_start();
+// Activation de l'affichage des erreurs pour le débogage
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Inclusion des fonctions et connexion à la base de données
 include('../php/tools/functions.php');
+$dbh = dbConnexion();
+session_start();
 
-// Vérifie si l'utilisateur est connecté avant de procéder
-if (!isset($_SESSION['nickName'])) {
-    // Redirige vers la page de connexion si non connecté
-    header('Location: ../php/connexion.php');
-    exit;
-}
+// Initialisation de la variable de message d'erreur
+$errorMessage = '';
 
 // Traitement du formulaire de don
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupération et nettoyage des données du formulaire
-    $donData = [
-        'typeDon' => $_POST['typeDon'] ?? 'Don ponctuel',
-        'montant' => $_POST['montant'] ?? 0,
-        'montantLibre' => $_POST['montantLibre'] ?? 0,
-        'prenom' => $_POST['prenom'] ?? '',
-        'nom' => $_POST['nom'] ?? '',
-        'email' => $_POST['email'] ?? '',
-        'dateNaissance' => $_POST['dateNaissance'] ?? '',
-        'adresse' => $_POST['adresse'] ?? '',
-        'codePostal' => $_POST['codePostal'] ?? '',
-        'ville' => $_POST['ville'] ?? '',
-        'pays' => $_POST['pays'] ?? '',
-        'estOrganisme' => isset($_POST['payerOrganisme']),
-        'raisonSociale' => $_POST['raisonSociale'] ?? '',
-        'siren' => $_POST['siren'] ?? '',
-        'formeJuridique' => $_POST['formeJuridique'] ?? ''
-    ];
-
-    // Validation des données, par exemple, validation de l'email
-    if (!filter_var($donData['email'], FILTER_VALIDATE_EMAIL)) {
-        // Afficher un message d'erreur ou le traiter comme nécessaire
-        echo "<script>alert('Adresse email non valide');</script>";
+    $typeDon =
+        $_POST['typeDon']
+        ??
+        'Don ponctuel';
+    $montant =
+        isset($_POST['montant']) ?
+            filter_var($_POST['montant'],
+                FILTER_SANITIZE_NUMBER_FLOAT,
+                FILTER_FLAG_ALLOW_FRACTION) :
+            0;
+    $montantLibre =
+        isset($_POST['montantLibre']) ?
+            filter_var($_POST['montantLibre'],
+                FILTER_SANITIZE_NUMBER_FLOAT,
+                FILTER_FLAG_ALLOW_FRACTION) :
+            0;
+    $prenom =
+        htmlspecialchars(trim($_POST['prenom']));
+    $nom =
+        htmlspecialchars(trim($_POST['nom']));
+    // Validation de l'email
+    $email =
+        filter_var($_POST['email'],
+            FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email,
+        FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Adresse email non valide.\\n');</script>";
+    }
+    $dateNaissance =
+        $_POST['dateNaissance'];
+    $adresse =
+        htmlspecialchars(trim($_POST['adresse']));
+    // Validation du code postal
+    $codePostal =
+        trim($_POST['codePostal']);
+    if (!preg_match("/^\d{5}$/",
+        $codePostal)) {
+        echo "<script>alert('Le code postal doit contenir exactement 5 chiffres.\\n');</script>";
     } else {
-        // Stocker les données de don dans la session
-        $_SESSION['donData'] = $donData;
+        $codePostal =
+            htmlspecialchars($codePostal);
+    }
+    $ville =
+        htmlspecialchars(trim($_POST['ville']));
+    $pays =
+        htmlspecialchars(trim($_POST['pays']));
+    $estOrganisme =
+        isset($_POST['payerOrganisme']) ?
+            1 :
+            0;
+    $raisonSociale =
+        htmlspecialchars(trim($_POST['raisonSociale']));
+    // Validation du SIREN pour les organismes
+    $siren =
+        trim($_POST['siren']);
+    if (!preg_match("/^\d{9}$/",
+        $siren)) {
+        echo "<script>alert('Le numéro SIREN doit contenir exactement 9 chiffres.\\n');</script>";
+    }
+    $formeJuridique =
+        htmlspecialchars(trim($_POST['formeJuridique']));
 
-        // Rediriger vers la page de traitement du paiement
-        header('Location: ../pages/traitementPaiement.php');
-        exit;
+    // S'il y a des erreurs, les afficher et arrêter l'exécution du script
+    if (!empty($errorMessage)) {
+        echo "<script>alert('$errorMessage');</script>";
+    } else {
+        // Insertion des données dans la base de données
+        try {
+            $query = "INSERT INTO Dons (type_don, montant, montant_libre, prenom, nom, email, date_naissance, adresse, code_postal, ville, pays, est_organisme, raison_sociale, siren, forme_juridique) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $dbh->prepare($query);
+
+            // Liaison des paramètres
+            $stmt->bindParam(1,
+                $typeDon);
+            $stmt->bindParam(2,
+                $montant);
+            $stmt->bindParam(3,
+                $montantLibre);
+            $stmt->bindParam(4,
+                $prenom);
+            $stmt->bindParam(5,
+                $nom);
+            $stmt->bindParam(6,
+                $email);
+            $stmt->bindParam(7,
+                $dateNaissance);
+            $stmt->bindParam(8,
+                $adresse);
+            $stmt->bindParam(9,
+                $codePostal);
+            $stmt->bindParam(10,
+                $ville);
+            $stmt->bindParam(11,
+                $pays);
+            $stmt->bindParam(12,
+                $estOrganisme);
+            $stmt->bindParam(13,
+                $raisonSociale);
+            $stmt->bindParam(14,
+                $siren);
+            $stmt->bindParam(15,
+                $formeJuridique);
+
+            if ($stmt->execute()) {
+                // Stockage de l'ID du don dans la session
+                $_SESSION['donId'] =
+                    $dbh->lastInsertId();
+                header('Location: ../pages/traitementPaiement.php');
+                exit;
+            } else {
+                echo "<script>alert('Erreur lors de l\'enregistrement du don.');</script>";
+            }
+        } catch (PDOException $e) {
+            // Gestion des erreurs de base de données
+            echo "<script>alert('Erreur de base de données: " .
+                $e->getMessage() .
+                "');</script>";
+        }
     }
 }
 // Débogage
@@ -189,7 +277,6 @@ echo "</pre>";
 <?php include('../includes/footer.php'); ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/scriptDons.js"></script>
-<!--<script>alert('Valeur du champ "email" : ' + document.getElementById('email').value);-->
 </script>
 </body>
 </html>

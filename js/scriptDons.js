@@ -26,7 +26,7 @@ $(document).ready(function() {
     $('input[name="montant"][value="5"]').prop('checked', true).trigger('change');
     // Mettre à jour les informations de réduction fiscale et les détails spécifiques aux particuliers
     let montantChoisi = parseFloat($('input[name="montant"]:checked').val());
-    mettreAJourMontantTotal(montantChoisi); // Assurez-vous que cette fonction existe dans votre script
+    mettreAJourMontantTotal(montantChoisi);
     afficherInfosReductionCategorie("Particulier : vous pouvez bénéficier d’une réduction d’impôt égale à 66 % du montant de votre don , dans la limite de 20 % de votre revenu imposable.");
     // Mettre à jour directement le texte de récapitulatif
     updateRecapitulatif('Don ponctuel');
@@ -38,14 +38,31 @@ $(document).ready(function() {
      * @returns {boolean} Vrai si tous les champs requis sont remplis, sinon faux.
      */
     function sontTousLesChampsRemplis() {
-        var sontRemplis = true;
+        let sontRemplis = true;
         $('#mesCoordonnees input[required]').each(function() {
             if ($(this).val() === '') {
                 sontRemplis = false;
             }
         });
+        if (payerOrganismeCheckbox.is(':checked')) {
+            let siren = $('#siren').val();
+            if (!/^\d{9}$/.test(siren)) {
+                sontRemplis = false;
+            }
+        }
         return sontRemplis;
     }
+    /**
+     * Vérifie si tous les champs requis sont remplis et si les conditions générales d'utilisation
+     * sont acceptées, et active ou désactive le bouton 'Valider et payer' en conséquence.
+     */
+    function evaluerEtatBoutonPaiement() {
+        let estValide = sontTousLesChampsRemplis() && $('#acceptConditions').is(':checked');
+        $('#validerPayer').prop('disabled', !estValide);
+    }
+
+    // Appeler immédiatement pour évaluer l'état initial du formulaire
+    evaluerEtatBoutonPaiement();
 
     // Gestionnaire d'événement pour la modification des champs requis et la case à cocher 'acceptConditions'
     $('#mesCoordonnees input[required], #acceptConditions').on('change', function() {
@@ -55,37 +72,14 @@ $(document).ready(function() {
     // Désactiver le bouton "Valider et payer" par défaut jusqu'à la validation du formulaire.
     $('#validerPayer').prop('disabled', true);
 
-    /**
-     * Vérifie si tous les champs requis sont remplis et si les conditions générales d'utilisation
-     * sont acceptées, et active ou désactive le bouton 'Valider et payer' en conséquence.
-     */
-    function evaluerEtatBoutonPaiement() {
-        var estValide = sontTousLesChampsRemplis() && $('#acceptConditions').is(':checked');
-        $('#validerPayer').prop('disabled', !estValide);
-    }
-
-    /**
-     * Valide les champs du formulaire dans la section "Mes coordonnées".
-     * Si tous les champs requis sont remplis, active le bouton "Valider et payer".
-     */
-    function validerFormulaireCoordonnees() {
-        var estValide = true;
-        $('#mesCoordonnees input[required]').each(function() {
-            if ($(this).val() === '') {
-                estValide = false;
-            }
-        });
-        $('#validerPayer').prop('disabled', !estValide);
-    }
-
 
     /**
      * Gestionnaire d'événements pour la modification des champs requis.
      * Appelle validerFormulaireCoordonnees à chaque modification pour vérifier
      * la validité de tous les champs requis.
      */
-    $('#mesCoordonnees input[required]').on('change', function() {
-        validerFormulaireCoordonnees();
+    $('#mesCoordonnees input, #acceptConditions, #payerOrganisme').on('change', function() {
+        evaluerEtatBoutonPaiement();
     });
 
     // Désactiver le bouton 'Valider et payer' par défaut.

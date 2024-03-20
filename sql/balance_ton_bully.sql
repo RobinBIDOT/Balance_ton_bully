@@ -157,7 +157,8 @@ CREATE TABLE Dons (
     raison_sociale VARCHAR(100),
     siren VARCHAR(20),
     forme_juridique VARCHAR(100),
-    date_paiement DATE DEFAULT CURRENT_DATE
+    date_paiement DATE DEFAULT CURRENT_DATE,
+    est_paye BOOLEAN NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
