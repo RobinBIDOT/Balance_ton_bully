@@ -155,12 +155,14 @@ CREATE TABLE Dons (
     pays VARCHAR(100) NOT NULL,
     est_organisme BOOLEAN NOT NULL,
     raison_sociale VARCHAR(100),
-    siren VARCHAR(20),
+    siren VARCHAR(9),
     forme_juridique VARCHAR(100),
     date_paiement DATE DEFAULT CURRENT_DATE,
-    est_paye BOOLEAN NOT NULL DEFAULT FALSE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+    est_paye BOOLEAN NOT NULL DEFAULT FALSE,
+    CONSTRAINT CHK_SirenLength CHECK (
+        (est_organisme = TRUE AND LENGTH(siren) = 9) OR est_organisme = FALSE)
+    )
+    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 

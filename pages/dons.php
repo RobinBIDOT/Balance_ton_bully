@@ -15,67 +15,41 @@ $errorMessage = '';
 // Traitement du formulaire de don
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupération et nettoyage des données du formulaire
-    $typeDon =
-        $_POST['typeDon']
-        ??
-        'Don ponctuel';
-    $montant =
-        isset($_POST['montant']) ?
-            filter_var($_POST['montant'],
-                FILTER_SANITIZE_NUMBER_FLOAT,
-                FILTER_FLAG_ALLOW_FRACTION) :
-            0;
-    $montantLibre =
-        isset($_POST['montantLibre']) ?
-            filter_var($_POST['montantLibre'],
-                FILTER_SANITIZE_NUMBER_FLOAT,
-                FILTER_FLAG_ALLOW_FRACTION) :
-            0;
-    $prenom =
-        htmlspecialchars(trim($_POST['prenom']));
-    $nom =
-        htmlspecialchars(trim($_POST['nom']));
+    if (isset($_POST['donUneFois'])) {
+        $typeDon = 'Don ponctuel';
+    } elseif (isset($_POST['donMensuel'])) {
+        $typeDon = 'Don mensuel';
+    } else {
+        $typeDon = 'Don ponctuel';
+    }
+    $montant = isset($_POST['montant']) ? filter_var($_POST['montant'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
+    $montantLibre = isset($_POST['montantLibre']) ? filter_var($_POST['montantLibre'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
+    $prenom = htmlspecialchars(trim($_POST['prenom']));
+    $nom = htmlspecialchars(trim($_POST['nom']));
     // Validation de l'email
-    $email =
-        filter_var($_POST['email'],
-            FILTER_SANITIZE_EMAIL);
-    if (!filter_var($email,
-        FILTER_VALIDATE_EMAIL)) {
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "<script>alert('Adresse email non valide.\\n');</script>";
     }
-    $dateNaissance =
-        $_POST['dateNaissance'];
-    $adresse =
-        htmlspecialchars(trim($_POST['adresse']));
+    $dateNaissance = $_POST['dateNaissance'];
+    $adresse = htmlspecialchars(trim($_POST['adresse']));
     // Validation du code postal
-    $codePostal =
-        trim($_POST['codePostal']);
-    if (!preg_match("/^\d{5}$/",
-        $codePostal)) {
+    $codePostal = trim($_POST['codePostal']);
+    if (!preg_match("/^\d{5}$/", $codePostal)) {
         echo "<script>alert('Le code postal doit contenir exactement 5 chiffres.\\n');</script>";
     } else {
-        $codePostal =
-            htmlspecialchars($codePostal);
+        $codePostal = htmlspecialchars($codePostal);
     }
-    $ville =
-        htmlspecialchars(trim($_POST['ville']));
-    $pays =
-        htmlspecialchars(trim($_POST['pays']));
-    $estOrganisme =
-        isset($_POST['payerOrganisme']) ?
-            1 :
-            0;
-    $raisonSociale =
-        htmlspecialchars(trim($_POST['raisonSociale']));
+    $ville = htmlspecialchars(trim($_POST['ville']));
+    $pays = htmlspecialchars(trim($_POST['pays']));
+    $estOrganisme = isset($_POST['payerOrganisme']) ? 1 : 0;
+    $raisonSociale = htmlspecialchars(trim($_POST['raisonSociale']));
     // Validation du SIREN pour les organismes
-    $siren =
-        trim($_POST['siren']);
-    if (!preg_match("/^\d{9}$/",
-        $siren)) {
+    $siren =  trim($_POST['siren']);
+    if (!preg_match("/^\d{9}$/", $siren)) {
         echo "<script>alert('Le numéro SIREN doit contenir exactement 9 chiffres.\\n');</script>";
     }
-    $formeJuridique =
-        htmlspecialchars(trim($_POST['formeJuridique']));
+    $formeJuridique = htmlspecialchars(trim($_POST['formeJuridique']));
 
     // S'il y a des erreurs, les afficher et arrêter l'exécution du script
     if (!empty($errorMessage)) {
@@ -87,41 +61,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $dbh->prepare($query);
 
             // Liaison des paramètres
-            $stmt->bindParam(1,
-                $typeDon);
-            $stmt->bindParam(2,
-                $montant);
-            $stmt->bindParam(3,
-                $montantLibre);
-            $stmt->bindParam(4,
-                $prenom);
-            $stmt->bindParam(5,
-                $nom);
-            $stmt->bindParam(6,
-                $email);
-            $stmt->bindParam(7,
-                $dateNaissance);
-            $stmt->bindParam(8,
-                $adresse);
-            $stmt->bindParam(9,
-                $codePostal);
-            $stmt->bindParam(10,
-                $ville);
-            $stmt->bindParam(11,
-                $pays);
-            $stmt->bindParam(12,
-                $estOrganisme);
-            $stmt->bindParam(13,
-                $raisonSociale);
-            $stmt->bindParam(14,
-                $siren);
-            $stmt->bindParam(15,
-                $formeJuridique);
+            $stmt->bindParam(1,$typeDon);
+            $stmt->bindParam(2,$montant);
+            $stmt->bindParam(3,$montantLibre);
+            $stmt->bindParam(4,$prenom);
+            $stmt->bindParam(5,$nom);
+            $stmt->bindParam(6,$email);
+            $stmt->bindParam(7,$dateNaissance);
+            $stmt->bindParam(8,$adresse);
+            $stmt->bindParam(9,$codePostal);
+            $stmt->bindParam(10,$ville);
+            $stmt->bindParam(11,$pays);
+            $stmt->bindParam(12,$estOrganisme);
+            $stmt->bindParam(13,$raisonSociale);
+            $stmt->bindParam(14,$siren);
+            $stmt->bindParam(15,$formeJuridique);
 
             if ($stmt->execute()) {
                 // Stockage de l'ID du don dans la session
-                $_SESSION['donId'] =
-                    $dbh->lastInsertId();
+                $_SESSION['donId'] = $dbh->lastInsertId();
                 header('Location: ../pages/traitementPaiement.php');
                 exit;
             } else {
@@ -129,9 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } catch (PDOException $e) {
             // Gestion des erreurs de base de données
-            echo "<script>alert('Erreur de base de données: " .
-                $e->getMessage() .
-                "');</script>";
+            echo "<script>alert('Erreur de base de données: " . $e->getMessage() . "');</script>";
         }
     }
 }
@@ -156,7 +112,7 @@ echo "</pre>";
 <body>
 <?php include('../includes/headerNav.php'); ?>
 <div class="container-fluid mt-5 custom-container">
-    <form id="formDon" action="../pages/traitementPaiement.php" method="post">
+    <form id="formDon" method="post">
         <div class="row">
             <!-- Colonne de gauche (Type de don, Montant) -->
             <div class="col-md-4">
@@ -164,8 +120,8 @@ echo "</pre>";
                 <div class="blue-background">
                     <h3>Mon don</h3>
                     <div class="mb-3">
-                        <button type="button" id="donUneFois" class="btn btn-primary">Je donne une fois</button>
-                        <button type="button" id="donMensuel" class="btn btn-primary">Je donne tous les mois</button>
+                        <button type="button" class="btn btn-primary" id="donUneFois">Je donne une fois</button>
+                        <button type="button" class="btn btn-primary" id="donMensuel">Je donne tous les mois</button>
                     </div>
                     <div class="mb-3">
                         <label for="montant">Montant :</label><br>
@@ -216,16 +172,16 @@ echo "</pre>";
                     <div class="mb-3 row">
                         <div class="col">
                             <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" name="prenom" required>
+                            <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prénom" required>
                         </div>
                         <div class="col">
                             <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" name="nom" required>
+                            <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="exemple@exemple.fr" required>
                     </div>
                     <div class="mb-3">
                         <label for="dateNaissance" class="form-label">Date de naissance</label>
@@ -233,21 +189,21 @@ echo "</pre>";
                     </div>
                     <div class="mb-3">
                         <label for="adresse" class="form-label">Adresse</label>
-                        <input type="text" class="form-control" id="adresse" name="adresse" required>
+                        <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Adresse" required>
                     </div>
                     <div class="mb-3 row">
                         <div class="col">
                             <label for="codePostal" class="form-label">Code postal</label>
-                            <input type="text" class="form-control" id="codePostal" name="codePostal" required>
+                            <input type="text" class="form-control" id="codePostal" name="codePostal" placeholder="75000" required>
                         </div>
                         <div class="col">
                             <label for="ville" class="form-label">Ville</label>
-                            <input type="text" class="form-control" id="ville" name="ville" required>
+                            <input type="text" class="form-control" id="ville" name="ville" placeholder="Paris" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="pays" class="form-label">Pays</label>
-                        <input type="text" class="form-control" id="pays" name="pays" required>
+                        <input type="text" class="form-control" id="pays" name="pays" placeholder="France" required>
                     </div>
                 </div>
             </div>
