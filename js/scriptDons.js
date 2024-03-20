@@ -222,6 +222,8 @@ $(document).ready(function() {
         $(this).addClass('btn-selected');
         btnDonUneFois.removeClass('btn-selected');
         typeDon.text("Don mensuel");
+        // Mettre à jour la variable $typeDon
+        $typeDon = "Don mensuel";
     });
 
     // Gestionnaire d'événement pour le bouton de don ponctuel
@@ -229,6 +231,8 @@ $(document).ready(function() {
         $(this).addClass('btn-selected');
         btnDonMensuel.removeClass('btn-selected');
         typeDon.text("Don ponctuel");
+        // Mettre à jour la variable $typeDon
+        $typeDon = "Don ponctuel";
     });
 
     // Fonction pour mettre à jour le montant total dans le récapitulatif

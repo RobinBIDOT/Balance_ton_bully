@@ -15,48 +15,40 @@ echo "<pre>Données du formulaire : ";
 var_dump($_POST);
 echo "</pre>";
 
+// Vérification des données de session
+$donId = $_SESSION['donId'] ?? null;
 
-// Si le bouton "Confirmer le paiement" est cliqué
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmerPaiement'])) {
-    $donId = $_SESSION['donId'];
-    // Initialisation des variables
-    $nomCarte = $_POST['nomCarte'] ?? '';
-    $numeroCarte = $_POST['numeroCarte'] ?? '';
-    $dateExpiration = $_POST['dateExpiration'] ?? '';
-    $cvv = $_POST['cvv'] ?? '';
+if ($donId) {
+    try {
+        // Requête SQL pour récupérer les données du don en fonction de son ID
+        $query = "SELECT type_don, montant, montant_libre FROM Dons WHERE id = ?";
+        $stmt = $dbh->prepare($query);
+        $stmt->bindParam(1, $donId);
+        $stmt->execute();
 
-    // Validation des données de paiement
-    if (empty($nomCarte) || empty($numeroCarte) || empty($dateExpiration) || empty($cvv)) {
-        $errorMessage = "Veuillez remplir tous les champs du formulaire.";
-    } elseif (!preg_match("/^[a-zA-Z ]*$/", $nomCarte)) {
-        $errorMessage = "Le nom sur la carte est invalide.";
-    } elseif (!preg_match("/^\d{16}$/", $numeroCarte)) {
-        $errorMessage = "Le format du numéro de la carte est invalide.";
-    } elseif (!preg_match("/^\d{2}\/\d{4}$/", $dateExpiration)) {
-        $errorMessage = "Le format de la date d'expiration est invalide.";
-    } elseif (!preg_match("/^\d{3}$/", $cvv)) {
-        $errorMessage = "Le format du CVV est invalide.";
-    } else {
-        // Validation de la date d'expiration
-        list($expMonth, $expYear) = explode('/', $dateExpiration);
-        $currentYear = date('Y');
-        $currentMonth = date('m');
-        if ($expYear < $currentYear || ($expYear == $currentYear && $expMonth < $currentMonth)) {
-            $errorMessage = "La date d'expiration est invalide ou déjà expirée.";
+        // Récupération des résultats
+        $don = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($don) {
+            // Affichage des données du don
+            $typeDon = $don['type_don'];
+            $montant = $don['montant'];
+            $montantLibre = $don['montant_libre'];
+
+            // Si le montant est défini, il est utilisé, sinon c'est le montant libre
+            $montantFinal = ($montant !== null && $montant > 0) ? $montant : $montantLibre;
+
+            // Affichage des informations
+            echo "<p>Type de don : $typeDon</p>";
+            echo "<p>Montant total du don : $montantFinal €</p>";
+        } else {
+            echo "<p>Aucun don trouvé avec l'ID : $donId</p>";
         }
+    } catch (PDOException $e) {
+        echo "<p>Erreur lors de la récupération des données du don : " . $e->getMessage() . "</p>";
     }
-
-    // Requête pour mettre à jour le statut du paiement
-    $query = "UPDATE Dons SET est_paye = TRUE WHERE id = ?";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(1, $donId);
-
-    if ($stmt->execute()) {
-        $_SESSION['paiementEffectue'] = true;
-    } else {
-        $_SESSION['paiementEffectue'] = false;
-        echo "<script>alert('Erreur lors de la confirmation du paiement.');</script>";
-    }
+} else {
+    echo "<p>Aucun ID de don trouvé dans la session</p>";
 }
 ?>
 <!DOCTYPE html>
@@ -71,55 +63,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmerPaiement'])) 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styleDons.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=Aa3n6pC_-rkPL6a2XOijOnQFSMwBVz8RtpwX4qNjLtT17RPPG5TgdkxnXlTV1Ry1_vceUjJrpCWFBhJe"></script>
 </head>
 <body>
 <?php include('../includes/headerNav.php'); ?>
-<div class="container mt-5 mx-auto max-w-6xl blue-background">
-    <h2>Confirmation du Paiement</h2>
-    <?php
-        // Vérification des données du formulaire de don
-        $typeDon = $_POST['typeDon'] ?? 'Don ponctuel';
-        // Décider quel montant utiliser : montant fixe ou montant libre
-        $montant = $_POST['montant'] ?? 0;
-        $montantLibre = $_POST['montantLibre'] ?? 0;
-        $montantFinal = $montantLibre > 0 ? $montantLibre : $montant; // Utiliser montant libre si disponible, sinon montant fixe
-        echo "<p>Type de don: " . htmlspecialchars($typeDon) . "</p>";
-        echo "<p>Montant Total: " . htmlspecialchars($montantFinal) . " €</p>";
-        if (isset($_SESSION['paiementEffectue'])) {
-            if ($_SESSION['paiementEffectue'] === true) {
-                echo "<div class='alert alert-success'>Paiement effectué avec succès.</div>";
-            } else {
-                echo "<div class='alert alert-danger'>Échec du paiement. Veuillez réessayer.</div>";
-            }
-            unset($_SESSION['paiementEffectue']); // Nettoyer la variable de session après l'affichage
-        }
-    ?>
-    <form action="../pages/traitementPaiement.php" method="post">
-        <div class="mb-3">
-            <label for="nomCarte" class="form-label">Nom sur la carte</label>
-            <input type="text" class="form-control" id="nomCarte" name="nomCarte" placeholder="PRENOM NOM" required>
+<div class="container mt-5 mx-auto max-w-8xl border border-3 border-primary shadow">
+    <div class="text-center mt-5">
+        <h2>Confirmation du Paiement</h2>
+        <p>Type de don : <?php echo $typeDon; ?></p>
+        <p>Montant total du don : <?php echo $montantFinal; ?> €</p>
+        <div class="d-flex justify-content-center mt-3">
+            <div id="paypal-button-container" class="w-50"></div>
         </div>
-        <div class="mb-3">
-            <label for="numeroCarte" class="form-label">Numéro de la carte</label>
-            <input type="text" class="form-control" id="numeroCarte" name="numeroCarte" placeholder="XXXX XXXX XXXX XXXX" required>
+        <div class="d-flex justify-content-center mt-3">
+            <div id="paypal-button-container" class="w-50"></div>
         </div>
-        <div class="mb-3 row">
-            <div class="col">
-                <label for="dateExpiration" class="form-label">Date d'expiration</label>
-                <input type="text" class="form-control" id="dateExpiration" name="dateExpiration" placeholder="MM/AA" pattern="\d{2}/\d{2}" title="Format MM/AA" required>
-            </div>
-            <div class="col">
-                <label for="cvv" class="form-label">CVV</label>
-                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="XXX" pattern="\d{3}" title="Le CVV doit être composé de 3 chiffres" required>
-            </div>
+        <script>
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '<?php echo $montantFinal; ?>'
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions){
+                    return actions.order.capture().then(function(details){
+                        alert("Transaction OK : " + details.payer.name.given_name);
+                    });
+                },
+                onError: function (err){
+                    console.error('Payment Error :', err);
+                    alert ("Paiement échoué !");
+                }
+            }).render("#paypal-button-container");
+        </script>
+        <div class="text-center mt-3 mb-3">
+            <button class="btn btn-secondary" onclick="window.location.href='../pages/dons.php';">Annuler</button>
         </div>
-        <div class="modal-footer d-flex justify-content-around">
-            <button type="submit" class="btn btn-primary">Confirmer le paiement</button>
-            <!-- Bouton pour le paiement PayPal -->
-            <button type="button" class="btn btn-secondary me-2">Payer avec PayPal</button>
-            <button type="button" class="btn btn-secondary" onclick="window.history.back();">Annuler</button>
-        </div>
-    </form>
+    </div>
 </div>
 <?php include('../includes/footer.php'); ?>
 </body>
