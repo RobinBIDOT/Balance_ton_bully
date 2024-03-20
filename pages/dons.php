@@ -264,7 +264,7 @@ echo "</pre>";
                     </div>
                 </div>
                 <div class="text-center mt-5">
-                    <button type="submit" class="btn btn-primary">Valider et payer</button>
+                    <button type="submit" class="btn btn-primary" id="validerPayer" disabled>Valider et payer</button>
                 </div>
                 <div class="blue-background mt-5">
                     <p>Plateforme de paiement 100 % sécurisée</p>
