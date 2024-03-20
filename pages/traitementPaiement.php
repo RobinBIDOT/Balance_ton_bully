@@ -101,7 +101,11 @@ if ($donId) {
             }).render("#paypal-button-container");
         </script>
         <div class="text-center mt-3 mb-3">
-            <button class="btn btn-secondary" onclick="window.location.href='../pages/dons.php';">Annuler</button>
+            <form method="post" action="../php/update_est_paye.php">
+                <input type="hidden" name="donId" value="<?php echo $donId; ?>">
+                <button type="submit" class="btn btn-primary">Marquer comme payé</button>
+            </form>
+            <button class="btn btn-secondary mt-3" onclick="window.location.href='../pages/dons.php';">Annuler</button>
         </div>
     </div>
 </div>
