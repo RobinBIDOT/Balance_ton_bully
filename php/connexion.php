@@ -75,6 +75,7 @@ if (isset($_POST['disconnect'])) {
                     </div>
                     <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
                     <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
+                    <p class="text-center mt-3 text-white"><a href="Inscription.php" class="text-white font-bold">J'ai perdu mon mot de passe. </a></p>
                 </form>
             </div>
         <?php } else { ?>
