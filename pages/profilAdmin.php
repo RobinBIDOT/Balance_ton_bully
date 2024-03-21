@@ -33,9 +33,22 @@ if (isset($_POST['donId'])) {
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
-} else {
-    echo json_encode(['success' => false, 'error' => 'No donId provided']);
 }
+//else {
+//    echo json_encode(['success' => false, 'error' => 'No donId provided']);
+//}
+
+// Préparation des données des actualités pour JavaScript
+$actualitesData = [];
+if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
+    $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC");
+    $stmt->execute();
+    $actualitesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Convertit les données PHP en JSON pour JavaScript
+$jsonActualitesData = json_encode($actualitesData);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -71,12 +84,54 @@ if (isset($_POST['donId'])) {
         <!-- Le contenu sera chargé ici -->
     </div>
 </div>
-
+<!-- Modal pour la modification d'une actualité -->
+<div id="modalEditActu" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier l'actualité</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formEditActu" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- Champs du formulaire -->
+                    <input type="hidden" id="editActuId" name="id">
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" class="form-control" id="editActuTitre" name="titre">
+                    </div>
+                    <div class="form-group">
+                        <label>Contenu</label>
+                        <textarea class="form-control" id="editActuContenu" name="contenu"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Lien de l'article</label>
+                        <input type="text" class="form-control" id="editActuLien" name="lien_article">
+                    </div>
+                    <div class="form-group">
+                        <label>Photo</label>
+                        <input type="file" class="form-control" id="editActuPhoto" name="photo">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php include('../includes/footer.php') ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Rend les données PHP disponibles en tant qu'objet JavaScript
     var donsData = <?php echo $jsonDonsData; ?>;
+
+    // Données des actualités
+    var actualitesData = <?php echo $jsonActualitesData; ?>;
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -86,7 +141,7 @@ if (isset($_POST['donId'])) {
         var contentArea = document.querySelector('.content-area');
         switch (type) {
             case 'actualites':
-                contentArea.innerHTML = '<h2 class="text-center mb-4">Gestion des actualités</h2><p class="text-center mb-4">Ici, vous pouvez gérer les actualités du site.</p>';
+                displayActualites(contentArea);
                 break;
             case 'dons':
                 displayDons(contentArea);
@@ -105,6 +160,120 @@ if (isset($_POST['donId'])) {
         }
 
     }
+
+    /**
+     * Affiche les informations sur les actualités dans la zone de contenu.
+     *
+     * Cette fonction génère et affiche un tableau HTML contenant la liste des actualités.
+     * Chaque ligne du tableau inclut des données telles que le titre de l'actualité, une image,
+     * le contenu de l'actualité, un lien vers l'article complet, la date de publication,
+     * ainsi que des boutons pour modifier et supprimer l'actualité.
+     *
+     * @param {HTMLElement} contentArea - L'élément dans lequel afficher les données des actualités.
+     */
+    function displayActualites(contentArea) {
+        var tableHtml = '<h2 class="text-center mb-4">Gestion des actualités</h2>';
+        tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        tableHtml += '<th>Titre</th><th>Photo</th><th>Contenu</th><th>Lien article</th><th>Date de publication</th><th>Actions</th>';
+        tableHtml += '</tr></thead><tbody>';
+
+        actualitesData.forEach(function(actu) {
+            tableHtml += '<tr>';
+            tableHtml += "<td>" + actu.titre + "</td>";
+            tableHtml += "<td><img src='" + actu.photo + "' alt='Photo' style='width: 100px;'></td>";
+            tableHtml += "<td>" + actu.contenu + "</td>";
+            tableHtml += "<td><a href='" + actu.lien_article + "'>Lien</a></td>";
+            tableHtml += "<td>" + actu.date_publication + "</td>";
+            tableHtml += "<td>";
+            tableHtml += "<button class='btn btn-warning' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-danger' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
+            tableHtml += "</td>";
+            tableHtml += '</tr>';
+        });
+
+        tableHtml += '</tbody></table></div>';
+        contentArea.innerHTML = tableHtml;
+    }
+
+    /**
+     * Supprime une actualité spécifique de la base de données.
+     *
+     * Cette fonction envoie une requête POST à un script PHP pour supprimer l'actualité avec l'ID donné.
+     * Si la requête réussit, la liste des actualités est rechargée pour refléter les changements.
+     *
+     * @param {number} id - L'identifiant de l'actualité à supprimer.
+     */
+    function deleteActu(id) {
+        if(confirm('Voulez-vous vraiment supprimer cette actualité ?')) {
+            let formData = new FormData();
+            formData.append('id', id);
+
+            fetch('delete_actualite.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        alert('Actualité supprimée avec succès.');
+                        loadContent('actualites');
+                    } else {
+                        alert('Erreur lors de la suppression.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+    }
+
+    /**
+     * Affiche le formulaire de modification pour une actualité spécifique.
+     *
+     * Cette fonction ouvre un modal contenant le formulaire de modification.
+     * Elle doit également remplir les champs du formulaire avec les données de l'actualité.
+     *
+     * @param {number} id - L'identifiant de l'actualité à modifier.
+     */
+    function editActu(id) {
+        // Récupérez les données de l'actualité et préremplissez le formulaire
+        $('#modalEditActu').modal('show');
+        // Trouver les données de l'actualité à partir de son ID
+        const actu = actualitesData.find(actu => actu.id_actualite === id);
+        if (actu) {
+            // Préremplir le formulaire avec les données de l'actualité
+            document.getElementById('editActuId').value = actu.id_actualite;
+            document.getElementById('editActuTitre').value = actu.titre;
+            document.getElementById('editActuContenu').value = actu.contenu;
+            document.getElementById('editActuLien').value = actu.lien_article;
+
+            // Afficher le modal
+            $('#modalEditActu').modal('show');
+        } else {
+            alert("Actualité introuvable.");
+        }
+    }
+
+    // Gérer la soumission du formulaire de modification
+    document.getElementById('formEditActu').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+
+        fetch('update_actualite.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Actualité mise à jour avec succès.');
+                    $('#modalEditActu').modal('hide');
+                    loadContent('actualites');
+                } else {
+                    alert('Erreur lors de la mise à jour : ' + data.error);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    });
+
 
     /**
      * Affiche les informations sur les dons dans la zone de contenu.
