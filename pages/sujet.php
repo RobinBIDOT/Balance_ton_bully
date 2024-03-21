@@ -111,14 +111,18 @@ try {
                         echo '<div class="flex justify-end">';
 
                         // Afficher le bouton de signalement si l'utilisateur n'est pas l'auteur de la réponse
-                        if ($estAuteur || $_SESSION['id_role'] == 1) {
+
+                        if (!$estAuteur) {
+                            echo '<button onclick="signalerReponse(' . $rowReponse['id_reponse'] . ')" class="btn btn-danger btn-sm">Signaler</button>';
+                        } else {
+
                             // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
                             echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-info">Modifier</a>';
                             echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
 
-                        } else {
+                        
                             echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
                         }
                         echo '</div>';
@@ -232,3 +236,26 @@ try {
     echo "Erreur de connexion à la base de données : " . $e->getMessage();
 }
 ?>
+<script>
+    function signalerReponse(idReponse) {
+        if (confirm('Voulez-vous vraiment signaler cette réponse ?')) {
+            fetch('../pages/signalerReponse.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'idReponse=' + idReponse
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('La réponse a été signalée avec succès.');
+                    } else {
+                        alert('Erreur lors du signalement.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+    }
+
+</script>

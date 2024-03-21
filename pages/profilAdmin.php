@@ -171,6 +171,29 @@ $jsonUtilisateursData = json_encode($utilisateursData);
         </div>
     </div>
 </div>
+<!-- Modale pour la modification d'une réponse signalée par un utilisateur -->
+<div id="modalEditReponse" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier la réponse</h5>
+            </div>
+            <form id="formEditReponse">
+                <div class="modal-body">
+                    <input type="hidden" id="editReponseId" name="id">
+                    <div class="form-group">
+                        <label>Contenu de la réponse</label>
+                        <textarea class="form-control" id="editReponseContenu" name="contenu" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php include('../includes/footer.php') ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -197,7 +220,10 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 displayUtilisateurs(contentArea);
                 break;
             case 'signalements':
-                contentArea.innerHTML = '<h2 class="text-center mb-4">Voir les signalements</h2><p class="text-center mb-4">Ici, vous pouvez consulter les signalements.</p>';
+                fetch('load_signalements.php')
+                    .then(response => response.json())
+                    .then(data => displaySignalements(data, document.querySelector('.content-area')))
+                    .catch(error => console.error('Erreur:', error));
                 break;
             case 'pro_sante':
                 contentArea.innerHTML = '<h2 class="text-center mb-4">Gestion des professionnels de santé</h2><p class="text-center mb-4">Ici, vous pouvez gérer les professionnels de santé.</p>';
@@ -482,8 +508,114 @@ $jsonUtilisateursData = json_encode($utilisateursData);
         }
     }
 
+    /**
+     * Affiche les signalements dans la zone de contenu spécifiée.
+     *
+     * Cette fonction génère et affiche un tableau HTML contenant la liste des signalements.
+     * Chaque ligne du tableau inclut des informations sur le sujet signalé, l'auteur de la réponse,
+     * la date de la réponse, le contenu de la réponse, la date du signalement, ainsi que des boutons
+     * pour modifier ou supprimer la réponse signalée.
+     *
+     * @param {Array} data - Les données des signalements à afficher. Chaque élément de l'array doit contenir
+     *                       les propriétés : titreSujet, nomAuteurSujet, dateCreationSujet, nomAuteurReponse,
+     *                       dateReponse, contenuReponse, dateSignalement, et idReponse.
+     * @param {HTMLElement} contentArea - L'élément HTML où le tableau des signalements sera injecté.
+     */
+    function displaySignalements(data, contentArea) {
+        let tableHtml = '<h2 class="text-center mb-4">Gestion des Signalements</h2>';
+        tableHtml += '<table class="table table-striped"><thead><tr>';
+        tableHtml += '<th>Titre du sujet</th><th>Auteur du sujet</th><th>Date création sujet</th>';
+        tableHtml += '<th>Auteur réponse</th><th>Date réponse</th><th>Contenu réponse</th>';
+        tableHtml += '<th>Date signalement</th><th>Actions</th>';
+        tableHtml += '</tr></thead><tbody>';
+
+        data.forEach(signalement => {
+            tableHtml += `<tr>
+            <td>${signalement.titreSujet}</td>
+            <td>${signalement.nomAuteurSujet}</td>
+            <td>${signalement.dateCreationSujet}</td>
+            <td>${signalement.nomAuteurReponse}</td>
+            <td>${signalement.dateReponse}</td>
+            <td>${signalement.contenuReponse}</td>
+            <td>${signalement.dateSignalement}</td>
+            <td>
+                <button class='btn btn-outline-primary' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
+                <button class='btn btn-outline-danger' onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
+            </td>
+        </tr>`;
+        });
+
+        tableHtml += '</tbody></table>';
+        contentArea.innerHTML = tableHtml;
+    }
+
+    /**
+     * Ouvre une modale de modification pour une réponse spécifique.
+     * Récupère les données existantes de la réponse et les charge dans les champs du formulaire de la modale.
+     * @param {number} idReponse - L'identifiant de la réponse à modifier.
+     */
+    function editReponse(idReponse) {
+        // Ici, vous devez obtenir les données de la réponse par une requête AJAX ou en les stockant en JavaScript
+        // Pour l'exemple, les données sont saisies directement
+        fetch(`get_reponse_data.php?id=${idReponse}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('editReponseId').value = idReponse;
+                document.getElementById('editReponseContenu').value = data.contenu;
+                $('#modalEditReponse').modal('show');
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
 
 
+    /**
+     * Supprime une réponse de la base de données après confirmation.
+     * Envoie une requête POST au serveur pour effectuer la suppression.
+     * @param {number} idReponse - L'identifiant de la réponse à supprimer.
+     */
+    function deleteReponse(idReponse) {
+        if(confirm('Voulez-vous vraiment supprimer cette réponse ?')) {
+            fetch('delete_reponse.php', {
+                method: 'POST',
+                body: JSON.stringify({ id: idReponse })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        alert('Réponse supprimée avec succès.');
+                        loadContent('signalements');
+                    } else {
+                        alert('Erreur lors de la suppression.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+    }
+
+    // Gérer la soumission du formulaire de modification
+    document.getElementById('formEditReponse').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        formData.append('id', document.getElementById('editReponseId').value);
+        formData.append('contenu', document.getElementById('editReponseContenu').value);
+
+        fetch('update_reponse.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Réponse mise à jour avec succès.');
+                    $('#modalEditReponse').modal('hide');
+                    loadContent('signalements');
+                } else {
+                    alert('Erreur lors de la mise à jour.');
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    });
 
 
 
