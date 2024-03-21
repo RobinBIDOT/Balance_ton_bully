@@ -19,6 +19,7 @@ if ($mail) {
     <title>Document</title>
 </head>
 <body>
+<?php include('../includes/headerNav.php') ?>
 <h1>Récuperation de mot de passe</h1>
 <form method="post">
     <label for="newPwd">Nouveau mot de passe :</label>
@@ -26,6 +27,7 @@ if ($mail) {
     <input type="password" name="verifPwd">
     <input type="submit" name="submit" value="valider">
 </form>
+<?php include('../includes/footer.php') ?>
 </body>
 </html>
 <?php }
