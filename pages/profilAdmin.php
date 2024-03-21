@@ -49,6 +49,17 @@ if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
 // Convertit les données PHP en JSON pour JavaScript
 $jsonActualitesData = json_encode($actualitesData);
 
+// Préparation des données des utilisateurs pour JavaScript
+$utilisateursData = [];
+if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
+    $stmt = $dbh->prepare("SELECT utilisateurs.*, roles.role FROM utilisateurs JOIN roles ON utilisateurs.id_role = roles.id");
+    $stmt->execute();
+    $utilisateursData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Convertit les données PHP en JSON pour JavaScript
+$jsonUtilisateursData = json_encode($utilisateursData);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -84,15 +95,12 @@ $jsonActualitesData = json_encode($actualitesData);
         <!-- Le contenu sera chargé ici -->
     </div>
 </div>
-<!-- Modal pour la modification d'une actualité -->
+<!-- Modale pour la modification d'une actualité -->
 <div id="modalEditActu" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Modifier l'actualité</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <form id="formEditActu" enctype="multipart/form-data">
                 <div class="modal-body">
@@ -123,15 +131,54 @@ $jsonActualitesData = json_encode($actualitesData);
         </div>
     </div>
 </div>
+<!-- Modale pour la modification d'un utilisateur -->
+<div id="modalEditUser" class="modal" tabindex="-2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier l'utilisateur</h5>
+            </div>
+            <form id="formEditUser" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- Champs du formulaire -->
+                    <input type="hidden" id="editUserId" name="id">
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" class="form-control" id="editUserFirstName" name="firstName">
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" class="form-control" id="editUserName" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Pseudo</label>
+                        <input type="text" class="form-control" id="editUserUserName" name="userName">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" id="editUserMail" name="mail">
+                    </div>
+                    <div class="form-group">
+                        <label>Photo Avatar</label>
+                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php include('../includes/footer.php') ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Rend les données PHP disponibles en tant qu'objet JavaScript
     var donsData = <?php echo $jsonDonsData; ?>;
-
-    // Données des actualités
     var actualitesData = <?php echo $jsonActualitesData; ?>;
+    var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -147,7 +194,7 @@ $jsonActualitesData = json_encode($actualitesData);
                 displayDons(contentArea);
                 break;
             case 'utilisateurs':
-                contentArea.innerHTML = '<h2 class="text-center mb-4">Gestion des utilisateurs</h2><p class="text-center mb-4">Ici, vous pouvez gérer les utilisateurs.</p>';
+                displayUtilisateurs(contentArea);
                 break;
             case 'signalements':
                 contentArea.innerHTML = '<h2 class="text-center mb-4">Voir les signalements</h2><p class="text-center mb-4">Ici, vous pouvez consulter les signalements.</p>';
@@ -185,8 +232,8 @@ $jsonActualitesData = json_encode($actualitesData);
             tableHtml += "<td><a href='" + actu.lien_article + "'>Lien</a></td>";
             tableHtml += "<td>" + actu.date_publication + "</td>";
             tableHtml += "<td>";
-            tableHtml += "<button class='btn btn-warning' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
-            tableHtml += "<button class='btn btn-danger' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
+            tableHtml += "<button class='btn btn-outline-primary' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-outline-danger' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
         });
@@ -309,7 +356,7 @@ $jsonActualitesData = json_encode($actualitesData);
                 if (don.stopper_don_mensuel) {
                     tableHtml += "<td>Mensualités arrêtées le : " + don.date_arret_don_mensuel + "</td>";
                 } else {
-                    tableHtml += "<td><button class='btn btn-danger' onclick='stopDonMensuel(" + don.id + ")'>Arrêter les mensualités</button></td>";
+                    tableHtml += "<td><button class='btn btn-outline-danger' onclick='stopDonMensuel(" + don.id + ")'>Arrêter les mensualités</button></td>";
                 }
             } else {
                 tableHtml += "<td></td>";
@@ -352,6 +399,94 @@ $jsonActualitesData = json_encode($actualitesData);
                 console.error('Erreur:', error);
             });
     }
+
+    /**
+     * Affiche les informations sur les utilisateurs dans la zone de contenu.
+     *
+     * Cette fonction génère et affiche un tableau HTML contenant la liste des utilisateurs.
+     * Chaque ligne du tableau inclut des informations telles que le prénom, le nom, le pseudo,
+     * l'adresse e-mail, la photo de l'avatar, le rôle, ainsi que des boutons pour modifier et supprimer l'utilisateur.
+     *
+     * @param {HTMLElement} contentArea - L'élément dans lequel afficher les données des utilisateurs.
+     */
+    function displayUtilisateurs(contentArea) {
+        var tableHtml = '<h2 class="text-center mb-4">Gestion des utilisateurs</h2>';
+        tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        tableHtml += '<th>Prénom</th><th>Nom</th><th>Pseudo</th><th>Mail</th><th>Photo Avatar</th><th>Rôle</th><th>Actions</th>';
+        tableHtml += '</tr></thead><tbody>';
+
+        utilisateursData.forEach(function(user) {
+            tableHtml += '<tr>';
+            tableHtml += "<td>" + user.firstName + "</td>";
+            tableHtml += "<td>" + user.name + "</td>";
+            tableHtml += "<td>" + user.userName + "</td>";
+            tableHtml += "<td>" + user.mail + "</td>";
+            tableHtml += "<td><img src='" + user.photo_avatar + "' alt='Avatar' style='width: 50px;'></td>";
+            tableHtml += "<td>" + user.role + "</td>";
+            tableHtml += "<td>";
+            tableHtml += "<button class='btn btn-outline-primary' onclick='editUser(" + user.id + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-outline-danger' onclick='deleteUser(" + user.id + ")'>Supprimer</button>";
+            tableHtml += "</td>";
+            tableHtml += '</tr>';
+        });
+        tableHtml += '</tbody></table></div>';
+        contentArea.innerHTML = tableHtml;
+    }
+
+
+    /**
+     * Ouvre une modale de modification pour un utilisateur spécifique.
+     * Récupère les données existantes de l'utilisateur et les charge dans les champs du formulaire de la modale.
+     * @param {number} id - L'identifiant de l'utilisateur à modifier.
+     */
+    function editUser(id) {
+        // Trouver les données de l'utilisateur à partir de son ID
+        const user = utilisateursData.find(user => user.id === id);
+        if (user) {
+            // Préremplir le formulaire avec les données de l'utilisateur
+            document.getElementById('editUserId').value = user.id;
+            document.getElementById('editUserFirstName').value = user.firstName;
+            document.getElementById('editUserName').value = user.name;
+            document.getElementById('editUserUserName').value = user.userName;
+            document.getElementById('editUserMail').value = user.mail;
+            // Afficher le modal
+            $('#modalEditUser').modal('show');
+        } else {
+            alert("Utilisateur introuvable.");
+        }
+    }
+
+    /**
+     * Supprime un utilisateur de la base de données après confirmation.
+     * Envoie une requête POST au serveur pour effectuer la suppression.
+     * @param {number} id - L'identifiant de l'utilisateur à supprimer.
+     */
+    function deleteUser(id) {
+        if(confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
+            let formData = new FormData();
+            formData.append('id', id);
+            fetch("../pages/delete_user.php", {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        alert('Utilisateur supprimé avec succès.');
+                        loadContent('utilisateurs');
+                    } else {
+                        alert('Erreur lors de la suppression.');
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+    }
+
+
+
+
+
+
 </script>
 </body>
 </html>

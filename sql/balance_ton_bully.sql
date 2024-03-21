@@ -68,6 +68,7 @@ CREATE TABLE `utilisateurs` (
 
 --
 -- Déchargement des données de la table `utilisateurs`
+
 --
 
 INSERT INTO `utilisateurs` (`firstName`, `name`, `userName`, `mail`, `password`, `id_role`) VALUES
