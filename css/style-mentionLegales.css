@@ -1,4 +1,25 @@
-body {
+.custom-primary{color:#0854C7}
+.custom-secondary{color: #58C1F5;}
+.custom-tertiary{color:#A42AF0}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
@@ -30,4 +51,5 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
+} */
+

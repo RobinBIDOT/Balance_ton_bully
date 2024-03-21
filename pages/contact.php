@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div id="map" style="height: 100%;"></div>
+                    <div id="map" style="height: 100%; width: 100%"></div>
                 </div>
             </div>
         </div>
