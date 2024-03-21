@@ -16,13 +16,26 @@ if (!isset($_SESSION['nickName']) || $_SESSION['roleId'] != 1) {
 // Préparation des données des dons pour JavaScript
 $donsData = [];
 if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
-    $stmt = $dbh->prepare("SELECT * FROM Dons WHERE est_paye = TRUE");
+    $stmt = $dbh->prepare("SELECT * FROM Dons WHERE est_paye = TRUE ORDER BY date_paiement DESC");
     $stmt->execute();
     $donsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Convertit les données PHP en JSON pour JavaScript
 $jsonDonsData = json_encode($donsData);
+
+if (isset($_POST['donId'])) {
+    $donId = $_POST['donId'];
+    try {
+        $stmt = $dbh->prepare("UPDATE Dons SET stopper_don_mensuel = TRUE, date_arret_don_mensuel = CURDATE() WHERE id = ?");
+        $stmt->execute([$donId]);
+        echo json_encode(['success' => true]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+} else {
+    echo json_encode(['success' => false, 'error' => 'No donId provided']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -124,7 +137,11 @@ $jsonDonsData = json_encode($donsData);
             tableHtml += "<td>" + don.date_paiement + "</td>";
 
             if (don.type_don === 'Don mensuel') {
-                tableHtml += "<td><button class='btn btn-danger'>Arrêter les mensualités</button></td>";
+                if (don.stopper_don_mensuel) {
+                    tableHtml += "<td>Mensualités arrêtées le : " + don.date_arret_don_mensuel + "</td>";
+                } else {
+                    tableHtml += "<td><button class='btn btn-danger' onclick='stopDonMensuel(" + don.id + ")'>Arrêter les mensualités</button></td>";
+                }
             } else {
                 tableHtml += "<td></td>";
             }
@@ -135,6 +152,37 @@ $jsonDonsData = json_encode($donsData);
         contentArea.innerHTML = tableHtml;
     }
 
+    /**
+     * Arrête les mensualités d'un don mensuel et met à jour les informations dans la base de données.
+     *
+     * Cette fonction envoie une requête POST à un script PHP sur le serveur, en passant l'identifiant du don.
+     * Si la requête réussit, les mensualités du don spécifié sont arrêtées, et la page est rechargée pour afficher les changements.
+     * En cas d'erreur, une alerte est affichée avec le message d'erreur.
+     *
+     * @param {number} donId - L'identifiant du don dont les mensualités doivent être arrêtées.
+     */
+    function stopDonMensuel(donId) {
+        let formData = new FormData();
+        formData.append('donId', donId);
+
+        fetch('stop_don_mensuel.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Les mensualités ont été arrêtées.');
+                    // Rechargement de la page pour refléter les changements
+                    window.location.reload();
+                } else {
+                    alert('Erreur lors de l\'arrêt des mensualités : ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+            });
+    }
 </script>
 </body>
 </html>
