@@ -30,17 +30,31 @@ if (isset($_POST['sendMail'])) {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Récuperation Mot de Passe - Balance Ton Bully</title>
+    <style>
+        .blue-bg {
+            background-color: #0854C7;
+        }
+    </style>
 </head>
 <body>
     <?php include '../includes/headerNav.php'?>
-    <h2>Mot de passe oublié</h2>
-    <h6>Vous allez recevoir un mail à l'adresse que vous allez renseignez si un compte y est rattaché</h6>
-    <form method="post">
-        <label for="mail"> Mail
-            <input type="email" name="mailRetrieve" placeholder="mail...">
-            <input type="submit" name ="sendMail" value="Envoyer">
-        </label>
-    </form>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body blue-bg p-4 shadow-lg rounded text-white">
+                        <h2 class="card-title text-center">Mot de passe oublié</h2>
+                        <h6 class="text-center">Vous allez recevoir un mail à l'adresse que vous allez renseigner si un compte y est rattaché</h6>
+                        <form method="post" class="mt-4">
+                            <div class="form-group">
+                                <label for="mail">Adresse Mail</label>
+                                <input type="email" class="form-control my-2" name="mailRetrieve" placeholder="Entrez votre mail...">
+                            </div>
+                            <button type="submit" name="sendMail" class="btn btn-primary my-2">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php include '../includes/footer.php'?>
-</body>
-</html>

@@ -80,16 +80,23 @@ if (isset($_POST['submit'])) {
         .blue-bg {
             background-color: #0854C7;
         }
+        .full-height {
+            min-height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } 
+
     </style>
 </head>
 
 <body>
 <?php include('../includes/headerNav.php') ?>
-<div class="container mx-auto mt-5">
-    <div class="row justify-content-center">
-        <div class="blue-bg p-4 rounded-lg shadow-lg">
+<!-- <div class="container full-height"> -->
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
             <h2 class="text-center text-white">S'inscrire</h2>
-            <<?php
+            <?php
             if(isset($_POST['submit'])){
                 if(empty($_POST['pseudo']) || empty($_POST['mail']) || empty($_POST['pwd'])){ ?>
                     <div class="alert alert-danger" role="alert">
@@ -140,13 +147,18 @@ if (isset($_POST['submit'])) {
                     <input type="checkbox" class="form-check-input" id="is_professional" name="is_professional">
                     <label class="form-check-label text-white" for="is_professional">Êtes-vous un professionnel de santé ?</label>
                 </div>
-                <button type="submit" class="btn btn-primary" name="submit">S'enregistrer</button>
-                <p class="text-white mt-3">J'ai déjà un compte. <a href="connexion.php" class="text-white font-bold">Se connecter</a></p>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button type="submit" class="btn btn-primary" name="submit">S'enregistrer</button>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <p class="text-white mt-3">J'ai déjà un compte. <a href="connexion.php" class="text-white font-bold">Se connecter</a></p>
+                </div>
             </form>
         </div>
     </div>
-</div>
+<!-- </div> -->
 <?php include('../includes/footer.php') ?>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 </body>
 
 </html>
