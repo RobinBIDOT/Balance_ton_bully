@@ -404,3 +404,18 @@ INSERT INTO reponses_forum (id_sujet, id_utilisateur, contenu, date_creation) VA
     (30, 3, 'Lorem ipsum dolor sit amet', '2024-03-12 20:45:00'),
     (30, 4, 'Lorem ipsum dolor sit amet', '2024-03-12 21:00:00'),
     (30, 5, 'Lorem ipsum dolor sit amet','2024-03-12 21:15:00');
+
+CREATE TABLE `signalements` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `id_reponse` INT(11) NOT NULL,
+    `date_signalement` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`id_reponse`) REFERENCES `reponses_forum`(`id_reponse`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO signalements (id_reponse) VALUES
+    (10),
+    (11),
+    (15),
+    (20);
+
