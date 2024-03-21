@@ -2,7 +2,6 @@
 // Inclusion du fichier de fonctions et démarrage de la session
 
 include 'tools/functions.php';
-
 session_start();
 
 // Connexion à la base de données
@@ -20,6 +19,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['nickName'] = $pseudo;
             $_SESSION['pwd'] = $password;
             $_SESSION['id'] = $user['id'];
+            $_SESSION['roleId'] = $user['id_role'];
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }

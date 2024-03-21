@@ -143,7 +143,7 @@ INSERT INTO `actualites` (`id_actualite`, `titre`, `photo`, `contenu`, `lien_art
 CREATE TABLE Dons (
     id INT AUTO_INCREMENT PRIMARY KEY,
     type_don ENUM('Don ponctuel', 'Don mensuel') NOT NULL,
-    montant DECIMAL(10, 2) NOT NULL,
+    montant DECIMAL(10, 2),
     montant_libre DECIMAL(10, 2),
     prenom VARCHAR(50) NOT NULL,
     nom VARCHAR(50) NOT NULL,
@@ -159,10 +159,50 @@ CREATE TABLE Dons (
     forme_juridique VARCHAR(100),
     date_paiement DATE DEFAULT CURRENT_DATE,
     est_paye BOOLEAN NOT NULL DEFAULT FALSE,
+    date_arret_don_mensuel DATE DEFAULT NULL,
+    stopper_don_mensuel BOOLEAN DEFAULT FALSE,
     CONSTRAINT CHK_SirenLength CHECK (
-        (est_organisme = TRUE AND LENGTH(siren) = 9) OR est_organisme = FALSE)
-    )
-    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        (est_organisme = TRUE AND LENGTH(siren) = 9) OR est_organisme = FALSE
+        )
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO Dons (type_don, montant, montant_libre, prenom, nom, email, date_naissance, adresse, code_postal, ville, pays, est_organisme, raison_sociale, siren, forme_juridique, date_paiement, est_paye) VALUES
+    ('Don ponctuel', 50.00, NULL, 'Alice', 'Dubois', 'alice.dubois@example.com', '1985-04-12', '123 rue de la Paix', '75000', 'Paris', 'France', FALSE, NULL, NULL, NULL, '2024-03-21', TRUE),
+    ('Don mensuel', 20.00, NULL, 'Jacques', 'Moreau', 'jacques.moreau@example.com', '1978-08-25', '456 avenue Liberté', '33000', 'Bordeaux', 'France', TRUE, 'Entreprise XYZ', '123456789', 'SARL', '2024-03-21', FALSE),
+    ('Don ponctuel', 30.00, NULL, 'Marie', 'Martin', 'marie.martin@example.com', '1980-06-10', '10 rue du Soleil', '69000', 'Lyon', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', NULL, 25.00, 'Paul', 'Dupont', 'paul.dupont@example.com', '1990-11-22', '22 avenue de la Lune', '44000', 'Nantes', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don ponctuel', 75.00, NULL, 'Élise', 'Mercier', 'elise.mercier@example.com', '1975-02-15', '15 boulevard des Fleurs', '34000', 'Montpellier', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don ponctuel', 60.00, NULL, 'Lucas', 'Petit', 'lucas.petit@example.com', '1982-08-30', '30 chemin des Oliviers', '59000', 'Lille', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don mensuel', 45.00, NULL, 'Chloé', 'Rousseau', 'chloe.rousseau@example.com', '1994-05-19', '19 rue des Cerisiers', '67000', 'Strasbourg', 'France', TRUE, 'Compagnie ABC', '987654321', 'SA', '2024-03-22', TRUE),
+    ('Don ponctuel', NULL, 55.00, 'Maxime', 'Lefebvre', 'maxime.lefebvre@example.com', '1968-12-28', '28 rue du Chêne', '80000', 'Amiens', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don mensuel', 35.00, NULL, 'Laura', 'Garnier', 'laura.garnier@example.com', '1988-09-09', '9 rue de la Colline', '13090', 'Aix-en-Provence', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don ponctuel', 40.00, NULL, 'Nicolas', 'Bonnet', 'nicolas.bonnet@example.com', '1992-03-14', '14 avenue des Saules', '76000', 'Rouen', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don mensuel', NULL, 50.00, 'Julie', 'Bertrand', 'julie.bertrand@example.com', '1986-01-21', '21 boulevard des Érables', '31000', 'Toulouse', 'France', TRUE, 'Société XYZ', '112233445', 'SAS', '2024-03-22', TRUE),
+    ('Don ponctuel', 65.00, NULL, 'Antoine', 'Lopez', 'antoine.lopez@example.com', '1996-07-02', '2 rue des Ormes', '37000', 'Tours', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don mensuel', 30.00, NULL, 'Emma', 'Brun', 'emma.brun@example.com', '1991-10-18', '18 avenue des Peupliers', '21000', 'Dijon', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', NULL, 35.00, 'Sophie', 'Leroy', 'sophie.leroy@example.com', '1992-01-15', '789 boulevard Égalité', '13000', 'Marseille', 'France', FALSE, NULL, NULL, NULL, '2024-03-21', TRUE),
+    ('Don ponctuel', 100.00, NULL, 'Nathalie', 'Perrin', 'nathalie.perrin@example.com', '1983-07-12', '12 avenue des Tilleuls', '14000', 'Caen', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', 25.00, NULL, 'Stéphane', 'Leclerc', 'stephane.leclerc@example.com', '1993-02-27', '27 rue du Port', '17000', 'La Rochelle', 'France', TRUE, 'Groupe DEF', '546372819', 'SASU', '2024-03-22', FALSE),
+    ('Don ponctuel', NULL, 70.00, 'Isabelle', 'Moulin', 'isabelle.moulin@example.com', '1966-09-16', '16 chemin du Lac', '74000', 'Annecy', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', 55.00, NULL, 'Olivier', 'Fournier', 'olivier.fournier@example.com', '1974-06-08', '8 boulevard des Alpes', '25000', 'Besançon', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don ponctuel', 80.00, NULL, 'Audrey', 'Morel', 'audrey.morel@example.com', '1984-10-31', '31 rue des Acacias', '57000', 'Metz', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', NULL, 45.00, 'Rémi', 'Fontaine', 'remi.fontaine@example.com', '1995-08-20', '20 avenue de la Mer', '29000', 'Quimper', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don ponctuel', 35.00, NULL, 'Catherine', 'Roux', 'catherine.roux@example.com', '1972-03-11', '11 rue des Jonquilles', '72000', 'Le Mans', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', 40.00, NULL, 'François', 'David', 'francois.david@example.com', '1969-05-23', '23 boulevard des Sports', '26000', 'Valence', 'France', TRUE, 'Organisation GHI', '753951846', 'SCOP', '2024-03-22', FALSE),
+    ('Don ponctuel', NULL, 65.00, 'Hélène', 'Girard', 'helene.girard@example.com', '1981-12-07', '7 chemin des Dunes', '56000', 'Vannes', 'France', FALSE, NULL, NULL, NULL, '2024-03-22', TRUE),
+    ('Don mensuel', 20.00, NULL, 'Arnaud', 'Dumont', 'arnaud.dumont@example.com', '1976-11-17', '17 rue de la Forêt', '88000', 'Épinal','France', FALSE, NULL, NULL, NULL, '2024-03-22', FALSE),
+    ('Don mensuel', 15.00, NULL, 'Vincent', 'Simon', 'vincent.simon@example.com', '1989-02-28', '28 rue des Écoles', '54000', 'Nancy', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', TRUE),
+    ('Don ponctuel', NULL, 95.00, 'Caroline', 'Blanc', 'caroline.blanc@example.com', '1977-04-03', '3 avenue des Rosiers', '83000', 'Toulon', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', FALSE),
+    ('Don mensuel', 10.00, NULL, 'Éric', 'Dupuis', 'eric.dupuis@example.com', '1967-05-20', '20 rue des Pommiers', '64000', 'Pau', 'France', TRUE, 'Organisation JKL', '258147369', 'EURL', '2024-03-23', TRUE),
+    ('Don ponctuel', 85.00, NULL, 'Amandine', 'Richard', 'amandine.richard@example.com', '1999-07-14', '14 chemin des Vignes', '68000', 'Colmar', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', FALSE),
+    ('Don mensuel', NULL, 60.00, 'Bruno', 'Lemaire', 'bruno.lemaire@example.com', '1971-08-08', '8 boulevard de la Victoire', '16000', 'Angoulême', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', TRUE),
+    ('Don ponctuel', 90.00, NULL, 'Fanny', 'Colin', 'fanny.colin@example.com', '1987-10-21', '21 rue des Lilas', '41000', 'Blois', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', FALSE),
+    ('Don mensuel', 30.00, NULL, 'Mathieu', 'Barbier', 'mathieu.barbier@example.com', '1979-01-12', '12 avenue de Verdun', '49000', 'Angers', 'France', TRUE, 'Société MNO', '123789456', 'SNC', '2024-03-23', TRUE),
+    ('Don ponctuel', NULL, 100.00, 'Véronique', 'Lefevre', 'veronique.lefevre@example.com', '1993-03-31', '31 rue de Bretagne', '72000', 'Le Mans', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', FALSE),
+    ('Don mensuel', 40.00, NULL, 'Guillaume', 'Renaud', 'guillaume.renaud@example.com', '1990-09-17', '17 chemin de Provence', '84000', 'Avignon', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', TRUE),
+    ('Don ponctuel', 70.00, NULL, 'Clémence', 'Thomas', 'clemence.thomas@example.com', '1973-06-06', '6 rue de Normandie', '80000', 'Amiens', 'France', FALSE, NULL, NULL, NULL, '2024-03-23', FALSE);
 
 -- --------------------------------------------------------
 
