@@ -2,7 +2,6 @@
 // Inclusion du fichier de fonctions et démarrage de la session
 
 include 'tools/functions.php';
-
 session_start();
 
 
@@ -20,7 +19,9 @@ if (isset($_POST['submit'])) {
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['nickName'] = $user['userName'];
             $_SESSION['id'] = $user['id'];
+
             $_SESSION['id_role'] = $user['id_role'];
+
 
         } else {
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
