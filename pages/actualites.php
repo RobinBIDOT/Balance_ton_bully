@@ -15,20 +15,32 @@ $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $elementsParPage;
 
 /**
- * Obtient le nombre total d'actualités dans la base de données.
+ * Obtient le nombre total d'actualités dans la base de données, éventuellement filtré par un mot-clé.
  *
  * @param PDO $dbh Connexion à la base de données.
- * @return int Nombre total d'actualités.
+ * @param string $motCle Mot-clé pour filtrer les actualités.
+ * @return int Nombre total d'actualités correspondant au mot-clé.
  */
-function getTotalActualites($dbh) {
-    $stmt = $dbh->prepare("SELECT COUNT(*) AS total FROM actualites");
+function getTotalActualites($dbh, $motCle = '') {
+    if ($motCle) {
+        $sql = "SELECT COUNT(*) AS total FROM actualites WHERE titre LIKE :motCle OR contenu LIKE :motCle";
+        $stmt = $dbh->prepare($sql);
+        $motCleParam = '%' . $motCle . '%';
+        $stmt->bindParam(':motCle', $motCleParam, PDO::PARAM_STR);
+    } else {
+        $sql = "SELECT COUNT(*) AS total FROM actualites";
+        $stmt = $dbh->prepare($sql);
+    }
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row['total'];
 }
 
-// Obtenir le nombre total d'actualités
-$totalActualites = getTotalActualites($dbh);
+// Récupération du mot-clé de recherche s'il est défini
+$motCle = isset($_GET['recherche']) ? $_GET['recherche'] : '';
+
+// Obtenir le nombre total d'actualités en tenant compte de la recherche
+$totalActualites = getTotalActualites($dbh, $motCle);
 
 // Calculer le nombre total de pages
 $totalPages = ceil($totalActualites / $elementsParPage);
@@ -51,8 +63,41 @@ function getActualites($dbh, $offset, $elementsParPage) {
 }
 
 $actualities = getActualites($dbh, $offset, $elementsParPage);
-?>
 
+/**
+ * Recherche des actualités en fonction d'un mot-clé et retourne les résultats paginés.
+ *
+ * @param PDO $dbh Connexion à la base de données.
+ * @param string $motCle Mot-clé pour la recherche.
+ * @param int $offset Décalage initial pour la pagination.
+ * @param int $elementsParPage Nombre d'éléments par page.
+ * @return array Résultats de la recherche.
+ */
+function rechercherActualites($dbh, $motCle, $offset, $elementsParPage) {
+    if ($motCle) {
+        // Recherche avec mot-clé
+        $sql = "SELECT * FROM actualites WHERE titre LIKE :motCle OR contenu LIKE :motCle ORDER BY date_publication DESC LIMIT :offset, :elementsParPage";
+        $stmt = $dbh->prepare($sql);
+        $motCleParam = '%' . $motCle . '%';
+        $stmt->bindParam(':motCle', $motCleParam, PDO::PARAM_STR);
+    } else {
+        // Pas de mot-clé, sélection de toutes les actualités
+        $sql = "SELECT * FROM actualites ORDER BY date_publication DESC LIMIT :offset, :elementsParPage";
+        $stmt = $dbh->prepare($sql);
+    }
+
+    // Liaison des paramètres de pagination et exécution de la requête
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindParam(':elementsParPage', $elementsParPage, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Appel de la fonction pour obtenir les actualités
+$actualities = rechercherActualites($dbh, $motCle, $offset, $elementsParPage);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,23 +109,50 @@ $actualities = getActualites($dbh, $offset, $elementsParPage);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.css" rel="stylesheet">
 </head>
 <body>
 <?php include('../includes/headerNav.php')?>
 <div class="container mt-4">
     <h2 class="mb-3 text-center">Toute l'actualité</h2>
-    <?php foreach ($actualities as $key => $actu): ?>
-        <div class="row no-gutters border rounded overflow-hidden mb-4 <?php echo $key % 2 == 0 ? '' : 'flex-md-row-reverse'; ?>" style="background-color: #0854C7;">
+    <!-- Formulaire de recherche -->
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get" class="form-inline">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Rechercher..." name="recherche" aria-label="Rechercher">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="btn btn-outline-danger"><i class="fa-solid fa-magnifying-glass-arrow-right"></i></a>
+            </div>
+        </div>
+    </form>
+    <?php foreach ($actualities as $key => $actu):
+        // Création d'un objet DateTime à partir de la date de publication
+        $datePublication = new DateTime($actu['date_publication']);
+        // Formatage de la date au format JJ/MM/AAAA
+        $formattedDate = $datePublication->format('d/m/Y');
+        ?>
+        <div class="row no-gutters border rounded overflow-hidden mb-4
+         <?php echo $key % 2 == 0 ? '' : 'flex-md-row-reverse'; ?>"
+             data-aos="<?php echo $key % 2 == 0 ? 'fade-right' : 'fade-left'; ?>"
+             data-aos-delay="<?php echo $key * 100; ?>"
+             style="background-color: #0854C7;">
             <div class="col-12 col-md-auto text-center">
-                <img src="<?php echo htmlspecialchars($actu['photo']); ?>" style="height: 250px;" alt="photo actu" class="my-3">
+                <img src="<?php echo htmlspecialchars($actu['photo']); ?>"
+                     style="height: 250px;"
+                     alt="photo actu"
+                     class="my-3">
             </div>
             <div class="col p-4">
                 <div class="bg-white p-3 rounded">
-                    <h5 class="card-title"><?php echo htmlspecialchars($actu['titre']); ?></h5>
-                    <p class="card-text text-start"><?php echo htmlspecialchars($actu['contenu']); ?></p>
-                    <p class="card-text"><small class="text-muted"><?php echo htmlspecialchars($actu['date_publication']); ?></small></p>
+                    <h5 class="card-title mb-3 text-justify"><?php echo htmlspecialchars($actu['titre']); ?></h5>
+                    <p class="card-text text-justify"><?php echo htmlspecialchars($actu['contenu']); ?></p>
+                    <p class="card-text"><small class="text-muted"><?php echo $formattedDate; ?></small></p>
                     <div class="d-flex justify-content-end">
-                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" target="_blank" class="btn btn-link">...Voir l'article</a>
+                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>"
+                           target="_blank"
+                           class="btn btn-link">...Voir l'article</a>
                     </div>
                 </div>
             </div>
@@ -152,5 +224,8 @@ $actualities = getActualites($dbh, $offset, $elementsParPage);
 </div>
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 <?php include('../includes/footer.php') ?>
+<script>
+    AOS.init();
+</script>
 </body>
 </html>
