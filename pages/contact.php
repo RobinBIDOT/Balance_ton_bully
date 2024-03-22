@@ -10,7 +10,7 @@
 <body>
 <?php include('../includes/headerNav.php') ?>
 <div class="container mt-5">
-    <h1 class="mb-4">Contactez-nous</h1>
+    <h1 class="mb-4 contact">Contactez-nous</h1>
     <p>N'hésitez pas à nous contacter en utilisant le formulaire ci-dessous.</p>
     <!-- Formulaire de contact -->
     <form action="mailto:votreemail@exemple.com" method="post">
@@ -33,7 +33,7 @@
         <button type="submit" class="btn btn-primary">Envoyer</button>
         <button type="reset" class="btn btn-secondary">Annuler</button>
     </form>
-    <p class="mt-4">Vous pouvez également nous joindre par téléphone au : 01-XX-XX-XX-XX</p>
+    <p class="mt-4">Vous pouvez également nous joindre par téléphone au : 01-32-43-98-22</p>
     <div class="row mt-5">
         <div class="col-md-6">
             <div class="address">
@@ -48,6 +48,20 @@
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
+<script>
+    function initMap() {
+        var location = { lat: 48.8566, lng: 2.3522 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: "Notre emplacement"
+        });
+    }
+</script>
 <!-- Chargement de l'API Google Maps -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABCTt9uLNjRLOX9NQqcThmUT5mPtW8p7A&callback=initMap"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

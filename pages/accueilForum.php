@@ -63,7 +63,6 @@ try {
     $dbh = dbConnexion();
     session_start();
 
-
     $limit = 10; // Nombre de sujets par page
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
@@ -143,7 +142,7 @@ try {
                                 <span class="badge bg-primary"><?php echo $row['nombre_reponses']; ?> Réponses</span>
                             </div>
                             <!-- Bouton Supprimer -->
-                            <?php if(isset($_SESSION['nickName']) && $_SESSION['nickName'] === $row['userName']) : ?>
+                            <?php if(isset($_SESSION['nickName']) && ($_SESSION['nickName'] === $row['userName'] || $_SESSION['id_role'] == 1)) : ?>
                                 <form action="supprimerSujet.php" method="post">
                                     <input type="hidden" name="id_sujet" value="<?php echo $row['id']; ?>">
                                     <button type="submit" class="btn btn-danger btn-sm ms-2">Supprimer</button>

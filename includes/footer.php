@@ -14,10 +14,10 @@
                                     <div class="widget">
                                         <ul class="list-unstyled">
                                             <li class="mb-2">
-                                                <a href="#!" class="text-decoration-none">Mentions légales</a>
+                                                <a href="../pages/mentionlegales.php" class="text-decoration-none">Mentions légales</a>
                                             </li>
                                             <li class="mb-2">
-                                                <a href="#!" class="text-decoration-none">Nous contacter</a>
+                                                <a href="../pages/contact.php" class="text-decoration-none">Nous contacter</a>
                                             </li>
                                             <li class="mb-2">
                                                 <a href="#!" class="text-decoration-none">Confidentialité</a>

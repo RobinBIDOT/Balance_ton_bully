@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,7 +62,7 @@
                         Vous êtes une école
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="../pages/formations.php">Formation</a></li>
+                        <li><a class="dropdown-item" href="../pages/formations.php">Formations</a></li>
                         <li><a class="dropdown-item" href="">Intervention</a></li>
                     </ul>
                 </div>
@@ -105,7 +105,8 @@
                         </div>
                         <?php
                         if(isset($_SESSION['nickName'])){
-                            if($user['id_role'] = 1){ ?>
+
+                            if($_SESSION['id_role'] == 1){ ?>
                                 <li class="nav-item">
                                     <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
                                 </li>

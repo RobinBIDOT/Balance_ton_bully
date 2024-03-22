@@ -15,6 +15,7 @@
 include 'tools/functions.php';
 session_start();
 
+
 // Connexion à la base de données
 $pdo = dbConnexion();
 
