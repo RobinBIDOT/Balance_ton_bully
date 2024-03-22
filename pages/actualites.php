@@ -80,7 +80,7 @@ $actualities = getActualites($dbh, $offset, $elementsParPage);
                     <p class="card-text text-start"><?php echo htmlspecialchars($actu['contenu']); ?></p>
                     <p class="card-text"><small class="text-muted"><?php echo htmlspecialchars($actu['date_publication']); ?></small></p>
                     <div class="d-flex justify-content-end">
-                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" class="btn btn-link">...Voir l'article</a>
+                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>" target="_blank" class="btn btn-link">...Voir l'article</a>
                     </div>
                 </div>
             </div>
