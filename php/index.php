@@ -106,7 +106,7 @@ session_start()
         // Créer une nouvelle scène pour déclencher l'animation lorsque la section "Nos solutions" devient visible
         var scene = new ScrollMagic.Scene({
             triggerElement: '.solutions',
-            triggerHook: 0.7, // Déclenche l'animation lorsque 70% de la section est visible
+            triggerHook: 0.9, // Déclenche l'animation lorsque 70% de la section est visible
             reverse: true // Ne pas inverser l'animation lorsque l'utilisateur fait défiler vers le haut
         })
         .setTween(timeline) // Utilisez la timeline GSAP comme tween

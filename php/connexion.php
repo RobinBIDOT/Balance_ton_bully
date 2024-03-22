@@ -18,6 +18,9 @@ session_start();
 
 // Connexion à la base de données
 $pdo = dbConnexion();
+if (isset($_GET['success']) && $_GET['success'] == '1') {
+    echo '<div class="alert alert-success" role="alert">Mot de passe réinitialisé avec succès !</div>';
+}
 
 // Traitement du formulaire de connexion
 if (isset($_POST['submit'])) {
@@ -30,6 +33,11 @@ if (isset($_POST['submit'])) {
         $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE userName = ?');
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['nickName'] = $user['userName'];
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['id_role'] = $user['id_role'];
+            header('Location: index.php');
 
         // Vérification du mot de passe
         if ($user && password_verify($password, $user['password'])) {
@@ -90,7 +98,7 @@ if (isset($_POST['disconnect'])) {
                     </div>
                     <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
                     <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
-                    <p class="text-center mt-3 text-white"><a href="Inscription.php" class="text-white font-bold">J'ai perdu mon mot de passe. </a></p>
+                    <p class="text-center mt-3 text-white"><a href="retrievePwd.php" class="text-white font-bold">J'ai perdu mon mot de passe. </a></p>
                 </form>
             </div>
         <?php } else { ?>
