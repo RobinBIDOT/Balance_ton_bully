@@ -32,39 +32,44 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `roles`
+-- Création de la table `roles`
 --
 
 CREATE TABLE `roles` (
-                         `id` int(11) NOT NULL AUTO_INCREMENT,
-                         `role` varchar(255) NOT NULL,
-                         PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    `id` int(11) NOT NULL AUTO_INCREMENT,          -- Déclaration d'une colonne 'id' comme clé primaire et auto-incrémentée
+    `role` varchar(255) NOT NULL,                  -- Déclaration d'une colonne 'role' pour stocker le rôle de l'utilisateur
+    PRIMARY KEY (`id`)                             -- Définition de la colonne 'id' comme clé primaire de la table
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;     -- Spécification de l'engine de stockage et du jeu de caractères
+
 
 --
--- Déchargement des données de la table `roles`
+-- Insertion de données dans la table `roles`
 --
 
 INSERT INTO `roles` (`id`, `role`) VALUES
-                                       (1, 'Admin'),
-                                       (2, 'User'),
-                                       (3, 'Pro');
+    (1, 'Admin'),  -- Ajout du rôle 'Admin' avec l'identifiant 1
+    (2, 'User'),   -- Ajout du rôle 'User' avec l'identifiant 2
+    (3, 'Pro');    -- Ajout du rôle 'Pro' avec l'identifiant 3
+
+-- --------------------------------------------------------
+
 
 --
--- Structure de la table `utilisateurs`
+-- Création de la table `utilisateurs`
 --
 
 CREATE TABLE `utilisateurs` (
-                                `id` int(11) NOT NULL AUTO_INCREMENT,
-                                `firstName` varchar(255) NOT NULL,
-                                `name` varchar(255) NOT NULL,
-                                `userName` varchar(255) NOT NULL,
-                                `mail` varchar(255) NOT NULL,
-                                `photo_avatar` varchar(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',
-                                `password` varchar(255) NOT NULL,
-                                `id_role` int(11) NOT NULL,
-                                PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,  -- Une colonne 'id' pour l'identifiant unique de chaque utilisateur, auto-incrémentée
+    `firstName` varchar(255) NOT NULL,     -- Une colonne pour stocker le prénom de l'utilisateur
+    `name` varchar(255) NOT NULL,          -- Une colonne pour le nom de famille de l'utilisateur
+    `userName` varchar(255) NOT NULL,      -- Une colonne pour le pseudonyme/nom d'utilisateur
+    `mail` varchar(255) NOT NULL,          -- Une colonne pour l'adresse e-mail de l'utilisateur
+    `photo_avatar` varchar(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',-- Une colonne pour l'URL de la photo de profil de l'utilisateur, avec une valeur par défaut
+    `password` varchar(255) NOT NULL,      -- Une colonne pour le mot de passe (qui doit être stocké de manière sécurisée, par exemple après hashage)
+    `id_role` int(11) NOT NULL,            -- Une colonne pour l'ID du rôle de l'utilisateur, faisant référence à la table `roles`
+    PRIMARY KEY (`id`)                     -- La colonne 'id' est définie comme la clé primaire de la table
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Paramétrage de la table avec le moteur InnoDB et le jeu de caractères UTF-8mb4 pour une meilleure compatibilité internationale
 
 --
 -- Déchargement des données de la table `utilisateurs`

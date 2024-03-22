@@ -1,4 +1,19 @@
 <?php
+/**
+ * Script de confirmation de paiement pour les dons.
+ *
+ * Ce script affiche les détails d'un don en attente de paiement et intègre un bouton de paiement PayPal.
+ * Il utilise les informations de la session pour récupérer les détails du don depuis la base de données.
+ * Le script affiche également des informations pour le débogage et intègre un bouton PayPal pour le paiement.
+ *
+ * PHP version 7.4
+ *
+ * @category   Donation
+ * @package    BalanceTonBully
+ * @subpackage Payment
+ */
+
+// Activation de l'affichage des erreurs pour le débogage
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,6 +22,7 @@ include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
 
+// Affichage des données de la session et du formulaire pour le débogage
 echo "<pre>Données de la session : ";
 var_dump($_SESSION);
 echo "</pre>";

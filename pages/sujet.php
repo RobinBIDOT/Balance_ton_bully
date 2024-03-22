@@ -1,7 +1,17 @@
 <?php
+/**
+ * Script PHP pour afficher un sujet de forum avec ses réponses.
+ *
+ * Ce script récupère un sujet de forum spécifique et toutes ses réponses,
+ * les affiche, et fournit un formulaire pour ajouter de nouvelles réponses.
+ *
+ * @package balance_ton_bully
+ * @subpackage forum
+ */
+
 try {
     // Inclusion du fichier de connexion à la base de données
-    include('../php/tools/functions.php');
+    include('../php/tools/functions.php'); // Connexion à la base de données
     $dbh = dbConnexion();
     session_start();
 
@@ -226,8 +236,18 @@ try {
 }
 ?>
 <script>
+    /**
+     * Fonction JavaScript pour signaler une réponse sur un forum.
+     *
+     * Cette fonction envoie une requête AJAX pour signaler une réponse spécifique.
+     * Elle demande une confirmation à l'utilisateur avant de procéder.
+     *
+     * @param {number} idReponse - Identifiant de la réponse à signaler.
+     */
     function signalerReponse(idReponse) {
+        // Confirmation avant le signalement
         if (confirm('Voulez-vous vraiment signaler cette réponse ?')) {
+            // Requête AJAX pour le signalement
             fetch('../pages/signalerReponse.php', {
                 method: 'POST',
                 headers: {
@@ -235,16 +255,15 @@ try {
                 },
                 body: 'idReponse=' + idReponse
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('La réponse a été signalée avec succès.');
-                    } else {
-                        alert('Erreur lors du signalement.');
-                    }
-                })
-                .catch(error => console.error('Erreur:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('La réponse a été signalée avec succès.');
+                } else {
+                    alert('Erreur lors du signalement.');
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
         }
     }
-
 </script>

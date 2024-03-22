@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -13,12 +12,10 @@
     <title>Balance Ton Bully - Accueil</title>
 </head>
 <body>
-
     <?php include('../includes/headerNav.php')?>
     <?php if (isset($_SESSION['nickName'])){ ?>
        <h1>Bienvenue <?php echo ucfirst($_SESSION['nickName']) ?></h1>
     <?php } ?>
-
     <div class="container-stats">
         <div class="statistiques">
             <div class="first-stat">

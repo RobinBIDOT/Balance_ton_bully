@@ -1,4 +1,21 @@
 <?php
+/**
+ * Script de modification d'une réponse dans un forum.
+ *
+ * Ce script permet à l'utilisateur de modifier le contenu de sa réponse dans un sujet du forum.
+ * L'utilisateur doit être connecté et être l'auteur de la réponse pour pouvoir la modifier.
+ * Si les conditions sont remplies, un formulaire permettant de modifier la réponse est affiché.
+ * Après soumission du formulaire, la réponse est mise à jour dans la base de données et
+ * l'utilisateur est redirigé vers la page du sujet.
+ *
+ * @package balance_ton_bully
+ * @subpackage forum
+ *
+ * @param int $_GET['id'] - L'identifiant de la réponse à modifier.
+ * @param int $_GET['idSujet'] - L'identifiant du sujet associé à la réponse.
+ * @return void
+ */
+
 // Vérifier si l'utilisateur est connecté
 session_start();
 if (!isset($_SESSION['nickName'])) {

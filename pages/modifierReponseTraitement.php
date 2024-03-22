@@ -1,4 +1,20 @@
 <?php
+/**
+ * Script pour la modification d'une réponse dans un forum.
+ *
+ * Ce script permet à un utilisateur connecté de modifier une réponse qu'il a postée dans un forum.
+ * Il vérifie si l'utilisateur est l'auteur de la réponse et permet la modification si c'est le cas.
+ * En cas de réussite, l'utilisateur est redirigé vers le sujet avec un message de succès.
+ * Sinon, il est redirigé avec un message d'erreur approprié.
+ *
+ * @package balance_ton_bully
+ * @subpackage forum
+ *
+ * @param int $_POST['idReponse'] - L'identifiant de la réponse à modifier.
+ * @param string $_POST['contenuReponse'] - Le nouveau contenu de la réponse.
+ * @return void
+ */
+
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
@@ -72,4 +88,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: ../pages/accueilForum.php"); // Redirection vers la page d'accueil
     exit();
 }
-?>
