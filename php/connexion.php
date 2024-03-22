@@ -39,22 +39,22 @@ if (isset($_POST['submit'])) {
             $_SESSION['id_role'] = $user['id_role'];
             header('Location: index.php');
 
-        // Vérification du mot de passe
-        if ($user && password_verify($password, $user['password'])) {
-            // Enregistrement des informations de l'utilisateur dans la session
-            $_SESSION['nickName'] = $pseudo;
-            $_SESSION['pwd'] = $password;
-            $_SESSION['id'] = $user['id'];
-            $_SESSION['id_role'] = $user['id_role'];
+            // Vérification du mot de passe
+            if ($user && password_verify($password, $user['password'])) {
+                // Enregistrement des informations de l'utilisateur dans la session
+                $_SESSION['nickName'] = $pseudo;
+                $_SESSION['pwd'] = $password;
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['id_role'] = $user['id_role'];
+            } else {
+                // Affichage d'un message d'erreur en cas de pseudo ou mot de passe incorrect
+                echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
+            }
         } else {
-            // Affichage d'un message d'erreur en cas de pseudo ou mot de passe incorrect
-            echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
+            // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
+            echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
         }
-    } else {
-        // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
-        echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
-    }
-}
+    }}
 
 // Traitement de la déconnexion de l'utilisateur
 if (isset($_POST['disconnect'])) {
