@@ -19,15 +19,13 @@ session_start()
 <body>
     <?php include('../includes/headerNav.php')?>
 
+
     <?php if (isset($_SESSION['nickName'])){ ?>
        <!-- Si un surnom est défini, affiche un message de bienvenue -->
        <h1>Bienvenue <?php echo ucfirst($_SESSION['nickName']) ?></h1>
     <?php } ?>
 
-
-
     <!-- Section pour afficher les statistiques -->
-
 
     <div class="container-stats">
         <div class="statistiques">
@@ -115,7 +113,9 @@ session_start()
         // Créer une nouvelle scène pour déclencher l'animation lorsque la section "Nos solutions" devient visible
         var scene = new ScrollMagic.Scene({
             triggerElement: '.solutions',
-            triggerHook: 0.7, // Déclenche l'animation lorsque 70% de la section est visible
+
+            triggerHook: 0.9, // Déclenche l'animation lorsque 70% de la section est visible
+
             reverse: true // Ne pas inverser l'animation lorsque l'utilisateur fait défiler vers le haut
         })
         .setTween(timeline) // Utilisez la timeline GSAP comme tween

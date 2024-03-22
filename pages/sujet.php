@@ -132,8 +132,8 @@ try {
                             echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
 
-                        
-                            echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
+
+
                         }
                         echo '</div>';
                         echo '</div>';
@@ -277,4 +277,5 @@ try {
             .catch(error => console.error('Erreur:', error));
         }
     }
+
 </script>

@@ -7,15 +7,19 @@ $dbh = dbConnexion();
 session_start();
 
 // Vérification si l'utilisateur est connecté et a le rôle d'admin
-if (!isset($_SESSION['nickName']) || $_SESSION['roleId'] != 1) {
+
+if (!isset($_SESSION['nickName']) || $_SESSION['id_role'] != 1) {
     // Redirection si l'utilisateur n'est pas admin ou n'est pas connecté
-    header('Location: index.php'); // Redirige vers la page d'accueil ou de connexion
+    header('Location: ../php/index.php'); // Redirige vers la page d'accueil ou de connexion
+
     exit();
 }
 
 // Préparation des données des dons pour JavaScript
 $donsData = [];
-if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
+
+if (isset($_SESSION['nickName']) && $_SESSION['id_role'] == 1) {
+
     $stmt = $dbh->prepare("SELECT * FROM Dons WHERE est_paye = TRUE ORDER BY date_paiement DESC");
     $stmt->execute();
     $donsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -40,7 +44,9 @@ if (isset($_POST['donId'])) {
 
 // Préparation des données des actualités pour JavaScript
 $actualitesData = [];
-if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
+
+if (isset($_SESSION['nickName']) && $_SESSION['id_role'] == 1) {
+
     $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC");
     $stmt->execute();
     $actualitesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -51,7 +57,9 @@ $jsonActualitesData = json_encode($actualitesData);
 
 // Préparation des données des utilisateurs pour JavaScript
 $utilisateursData = [];
-if (isset($_SESSION['nickName']) && $_SESSION['roleId'] == 1) {
+
+if (isset($_SESSION['nickName']) && $_SESSION['id_role'] == 1) {
+
     $stmt = $dbh->prepare("SELECT utilisateurs.*, roles.role FROM utilisateurs JOIN roles ON utilisateurs.id_role = roles.id");
     $stmt->execute();
     $utilisateursData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -202,6 +210,12 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     var donsData = <?php echo $jsonDonsData; ?>;
     var actualitesData = <?php echo $jsonActualitesData; ?>;
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
+
+
+    // Données des actualités
+    var actualitesData = <?php echo $jsonActualitesData; ?>;
+    var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
+
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.

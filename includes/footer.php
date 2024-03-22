@@ -2,9 +2,8 @@
 
 <footer class="footer py-3 py-xl-8">
 
-
-    <div class="container-fluid">
-   <div class="container-fluid p-0 mt-2 rounded">
+    <div class="container-fluid p-0 mt-2 rounded">
+        <div class="container-fluid bg-light">
 
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11">

@@ -65,14 +65,27 @@ if (isset($_POST['submit'])) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            // Insertion des données dans la base de données
-            $stmt = $pdo->prepare('INSERT INTO utilisateurs (mail, password, userName) VALUES (?,?,?)');
-            $stmt->execute([$mail, $hashedPassword, $pseudo]);
-            //echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
-        } catch (PDOException $e) {
-            echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
+            $stmt = $pdo->prepare('SELECT * FROM utilisateurs');
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user['mail'] == $mail) {
+                echo "<div class='alert alert-warning' role='alert'>Un compte est deja associé a cette adresse mail";
+            }elseif ($user['userName'] == $pseudo) {
+                echo "<div class='alert alert-warning' role='alert'>Le nom d'utilisateur n'est pas disponible";
+            } else {
+
+                // Insertion des données dans la base de données
+                $stmt = $pdo->prepare('INSERT INTO utilisateurs (mail, password, userName) VALUES (?,?,?)');
+                $stmt->execute([$mail, $hashedPassword, $pseudo]);
+                echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
+            }
         }
+        catch
+            (PDOException $e) {
+                echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
+            }
     }
+
 }
 ?>
 <!DOCTYPE html>
@@ -80,7 +93,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S'inscrire - MovEase</title>
+    <title>S'inscrire - Balance Ton Bully</title>
     <!-- Liens vers les styles CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
@@ -105,11 +118,9 @@ if (isset($_POST['submit'])) {
 <body>
 <?php include('../includes/headerNav.php') ?>
 
-
 <!-- <div class="container full-height"> -->
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
-
 
             <h2 class="text-center text-white">S'inscrire</h2>
             <?php
@@ -122,12 +133,7 @@ if (isset($_POST['submit'])) {
                     <div class="alert alert-danger" role="alert">
                         Erreur: <?php echo $e->getMessage(); ?>
                     </div>
-                    <?php } else { ?>
-                    <div class="alert alert-success" role="alert">
-                        Utilisateur enregistré avec succès
-                    </div>
-                    <?php
-                }
+                    <?php }
             } ?>
             <form method="POST" action="">
                 <!--<div class="mb-3">

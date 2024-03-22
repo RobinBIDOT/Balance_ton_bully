@@ -78,7 +78,9 @@
         
             <div class="container-fluid p-0 rounded">
 
+
                 <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-bottom">
+
 
 
                     <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,8 +128,10 @@
 
 
 
+
                         </ul>
                     </div>
+
 
                 </nav>
             </div>

@@ -18,6 +18,9 @@ session_start();
 
 // Connexion à la base de données
 $pdo = dbConnexion();
+if (isset($_GET['success']) && $_GET['success'] == '1') {
+    echo '<div class="alert alert-success" role="alert">Mot de passe réinitialisé avec succès !</div>';
+}
 
 // Traitement du formulaire de connexion
 if (isset($_POST['submit'])) {
@@ -40,11 +43,24 @@ if (isset($_POST['submit'])) {
             $_SESSION['id'] = $user['id'];
 
             $_SESSION['id_role'] = $user['id_role'];
+            header('Location: index.php');
 
 
+            // Vérification du mot de passe
+            if ($user && password_verify($password, $user['password'])) {
+                // Enregistrement des informations de l'utilisateur dans la session
+                $_SESSION['nickName'] = $pseudo;
+                $_SESSION['pwd'] = $password;
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['id_role'] = $user['id_role'];
+            } else {
+                // Affichage d'un message d'erreur en cas de pseudo ou mot de passe incorrect
+                echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
+            }
         } else {
-            // Affichage d'un message d'erreur en cas de pseudo ou mot de passe incorrect
-            echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
+            // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
+            echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
+
         }
     } else {
         // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
@@ -92,10 +108,11 @@ if (isset($_POST['disconnect'])) {
                         <label for="pwd" class="form-label text-white">Votre mot de passe:</label>
                         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
                     </div>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
-                    </div>        
-                        <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
+
+                    <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
+                    <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
+                    <p class="text-center mt-3 text-white"><a href="retrievePwd.php" class="text-white font-bold">J'ai perdu mon mot de passe. </a></p>
+
                 </form>
             </div>
         <?php } else { ?>
