@@ -203,6 +203,10 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     var actualitesData = <?php echo $jsonActualitesData; ?>;
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
 
+    // Données des actualités
+    var actualitesData = <?php echo $jsonActualitesData; ?>;
+    var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
+
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
      * @param {string} type - Le type de contenu à charger ('actualites', 'dons', 'utilisateurs', 'signalements', 'pro_sante').

@@ -33,6 +33,8 @@ if (isset($_POST['submit'])) {
         $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE userName = ?');
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Vérification du mot de passe
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['nickName'] = $user['userName'];
             $_SESSION['id'] = $user['id'];

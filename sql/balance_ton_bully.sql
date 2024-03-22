@@ -12,7 +12,7 @@ CREATE DATABASE IF NOT EXISTS balance_ton_bully;
 USE balance_ton_bully;
 
 -- Suppression des tables si elles existent déjà pour éviter les conflits lors de la création
-DROP TABLE IF EXISTS roles, reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites, administrateurs;
+DROP TABLE IF EXISTS roles, reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites, signalements;
 
 -- Paramétrage de la session SQL
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -66,6 +66,7 @@ CREATE TABLE `utilisateurs` (
     `mail` varchar(255) NOT NULL,          -- Une colonne pour l'adresse e-mail de l'utilisateur
     `photo_avatar` varchar(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',-- Une colonne pour l'URL de la photo de profil de l'utilisateur, avec une valeur par défaut
     `password` varchar(255) NOT NULL,      -- Une colonne pour le mot de passe (qui doit être stocké de manière sécurisée, par exemple après hashage)
+    `token` varchar(50) DEFAULT NULL,
     `id_role` int(11) NOT NULL,            -- Une colonne pour l'ID du rôle de l'utilisateur, faisant référence à la table `roles`
     PRIMARY KEY (`id`)                     -- La colonne 'id' est définie comme la clé primaire de la table
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -423,4 +424,3 @@ INSERT INTO signalements (id_reponse) VALUES
     (11),
     (15),
     (20);
-

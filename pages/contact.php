@@ -69,6 +69,7 @@
 
 
 <script>
+    // Fonction d'initialisation de la carte Google Maps
     function initMap() {
         var location = { lat: 48.8566, lng: 2.3522 };
         var map = new google.maps.Map(document.getElementById("map"), {

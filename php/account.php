@@ -158,7 +158,6 @@ if(isset($_POST['modMail'])){
                         // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
                         if ($_SESSION['id_role'] == 1) {
                             // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
-                            // Par exemple :
                             echo '<a href="../pages/profilAdmin.php" class="btn btn-success">Admin</a>';
                         }
                     //} else {
