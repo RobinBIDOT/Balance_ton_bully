@@ -13,7 +13,7 @@ if (isset($_POST['sendMail'])) {
         $message = "Bonjour, voici le lien pour reinitialiser votre mot de passe " . $url;
         $update = $dbConnexion->prepare('UPDATE utilisateurs SET token = ? WHERE mail = ?');
         $update->execute([$token, $mail]);
-        mail($user['mail'], "Mot de passe oublié", $message );
+        mail($user['mail'], "Mot de passe oublié", $message, 'From: Balance ton Bully' );
         echo "Mail envoyé";
     } else {
         echo "Veuillez renseigner une adresse mail valide";
