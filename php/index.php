@@ -14,13 +14,11 @@ session_start()
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
     <?php include('../includes/headerNav.php')?>
     <?php if (isset($_SESSION['nickName'])){ ?>
        <!-- Si un surnom est défini, affiche un message de bienvenue -->
        <h1>Bienvenue <?php echo ucfirst($_SESSION['nickName']) ?></h1>
     <?php } ?>
-
     <!-- Section pour afficher les statistiques -->
     <div class="container-stats">
         <div class="statistiques">

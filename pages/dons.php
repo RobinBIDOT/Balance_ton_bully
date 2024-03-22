@@ -1,13 +1,116 @@
 <?php
-    // Inclusion du fichier de connexion à la base de données
-    include('../php/tools/functions.php');
-    $dbh = dbConnexion();
-    session_start();
+/**
+ * Script de traitement du formulaire de dons.
+ *
+ * Ce script PHP gère le traitement des données saisies dans le formulaire de dons.
+ * Il valide les données, les nettoie et les insère dans la base de données.
+ * En cas de succès, il redirige l'utilisateur vers la page de paiement pour finaliser
+ * le don. Si une erreur se produit lors de la validation ou de l'insertion des données,
+ * un message d'erreur est affiché à l'utilisateur.
+ *
+ * @package balance_ton_bully
+ * @subpackage dons
+ */
 
-    // Afficher les informations de session
-    //    echo "<pre>";
-    //    var_dump($_SESSION);
-    //    echo "</pre>";
+// Activation de l'affichage des erreurs pour le débogage
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Inclusion des fonctions et connexion à la base de données
+include('../php/tools/functions.php');
+$dbh = dbConnexion();
+session_start();
+
+// Initialisation de la variable de message d'erreur
+$errorMessage = '';
+
+// Traitement du formulaire de don
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération et nettoyage des données du formulaire
+    if (isset($_POST['donUneFois'])) {
+        $typeDon = 'Don ponctuel';
+    } elseif (isset($_POST['donMensuel'])) {
+        $typeDon = 'Don mensuel';
+    } else {
+        $typeDon = 'Don ponctuel';
+    }
+    $montant = isset($_POST['montant']) ? filter_var($_POST['montant'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
+    $montantLibre = isset($_POST['montantLibre']) ? filter_var($_POST['montantLibre'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : 0;
+    $prenom = htmlspecialchars(trim($_POST['prenom']));
+    $nom = htmlspecialchars(trim($_POST['nom']));
+    // Validation de l'email
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Adresse email non valide.\\n');</script>";
+    }
+    $dateNaissance = $_POST['dateNaissance'];
+    $adresse = htmlspecialchars(trim($_POST['adresse']));
+    // Validation du code postal
+    $codePostal = trim($_POST['codePostal']);
+    if (!preg_match("/^\d{5}$/", $codePostal)) {
+        echo "<script>alert('Le code postal doit contenir exactement 5 chiffres.\\n');</script>";
+    } else {
+        $codePostal = htmlspecialchars($codePostal);
+    }
+    $ville = htmlspecialchars(trim($_POST['ville']));
+    $pays = htmlspecialchars(trim($_POST['pays']));
+    $estOrganisme = isset($_POST['payerOrganisme']) ? 1 : 0;
+    $raisonSociale = htmlspecialchars(trim($_POST['raisonSociale']));
+    // Validation du SIREN pour les organismes
+    $siren =  trim($_POST['siren']);
+    if (!preg_match("/^\d{9}$/", $siren)) {
+        echo "<script>alert('Le numéro SIREN doit contenir exactement 9 chiffres.\\n');</script>";
+    }
+    $formeJuridique = htmlspecialchars(trim($_POST['formeJuridique']));
+
+    // S'il y a des erreurs, les afficher et arrêter l'exécution du script
+    if (!empty($errorMessage)) {
+        echo "<script>alert('$errorMessage');</script>";
+    } else {
+        // Insertion des données dans la base de données
+        try {
+            $query = "INSERT INTO Dons (type_don, montant, montant_libre, prenom, nom, email, date_naissance, adresse, code_postal, ville, pays, est_organisme, raison_sociale, siren, forme_juridique) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $dbh->prepare($query);
+
+            // Liaison des paramètres
+            $stmt->bindParam(1,$typeDon);
+            $stmt->bindParam(2,$montant);
+            $stmt->bindParam(3,$montantLibre);
+            $stmt->bindParam(4,$prenom);
+            $stmt->bindParam(5,$nom);
+            $stmt->bindParam(6,$email);
+            $stmt->bindParam(7,$dateNaissance);
+            $stmt->bindParam(8,$adresse);
+            $stmt->bindParam(9,$codePostal);
+            $stmt->bindParam(10,$ville);
+            $stmt->bindParam(11,$pays);
+            $stmt->bindParam(12,$estOrganisme);
+            $stmt->bindParam(13,$raisonSociale);
+            $stmt->bindParam(14,$siren);
+            $stmt->bindParam(15,$formeJuridique);
+
+            if ($stmt->execute()) {
+                // Stockage de l'ID du don dans la session
+                $_SESSION['donId'] = $dbh->lastInsertId();
+                header('Location: ../pages/traitementPaiement.php');
+                exit;
+            } else {
+                echo "<script>alert('Erreur lors de l\'enregistrement du don.');</script>";
+            }
+        } catch (PDOException $e) {
+            // Gestion des erreurs de base de données
+            echo "<script>alert('Erreur de base de données: " . $e->getMessage() . "');</script>";
+        }
+    }
+}
+// Débogage
+echo "<pre>Session Data : ";
+var_dump($_SESSION);
+echo "</pre>";
+echo "<pre>Données du formulaire : ";
+var_dump($_POST);
+echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,27 +120,21 @@
     <title>Page de dons</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <style>
-        .blue-background {
-            background-color: #0854C7;
-            padding: 20px;
-            color: white;
-            border-radius: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/styleDons.css">
 </head>
 <body>
-<?php include('../includes/headerNav.php') ?>
+<?php include('../includes/headerNav.php'); ?>
 <div class="container-fluid mt-5 custom-container">
-    <div class="row">
-        <!-- Colonne de gauche -->
-        <div class="col-md-4">
-            <div class="blue-background">
-                <form>
+    <form id="formDon" method="post">
+        <div class="row">
+            <!-- Colonne de gauche (Type de don, Montant) -->
+            <div class="col-md-4">
+                <!-- Section Type de Don -->
+                <div class="blue-background">
                     <h3>Mon don</h3>
                     <div class="mb-3">
-                        <button type="button" id="donUneFois" class="btn btn-primary">Je donne une fois</button>
-                        <button type="button" id="donMensuel" class="btn btn-primary">Je donne tous les mois</button>
+                        <button type="button" class="btn btn-primary" id="donUneFois">Je donne une fois</button>
+                        <button type="button" class="btn btn-primary" id="donMensuel">Je donne tous les mois</button>
                     </div>
                     <div class="mb-3">
                         <label for="montant">Montant :</label><br>
@@ -45,51 +142,59 @@
                         <input type="radio" name="montant" value="20"> 20 €
                         <input type="radio" name="montant" value="50"> 50 €
                         <input type="radio" name="montant" value="150"> 150 €<br>
-                        <input type="text" class="form-control mt-2" id="montantLibre" placeholder="Montant libre">
+                        <label for="montantLibre" class="form-label mt-3">Montant libre</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="montantLibre" name="montantLibre" placeholder="Montant libre">
+                            <button type="button" id="confirmMontantLibre" class="btn btn-primary">Confirmer</button>
+                        </div>
                     </div>
-                </form>
-            </div>
-            <div class="blue-background mt-5">
-                <form>
+                </div>
+                <div class="blue-background mt-5">
                     <h3>Réduction fiscale</h3>
-                    <p>Le don à Balance ton Bully ouvre le droit à une réduction fiscale car il remplit les conditions générales prévues aux articles 200 et 238 bis du code général des impôts.</p>
+                    <p id="infoReduction"></p>
                     <button type="button" id="btnParticulier" class="btn btn-primary">Particulier</button>
                     <button type="button" id="btnOrganisme" class="btn btn-primary">Organisme</button>
-                    <p id="infoReduction"></p>
-                </form>
+                    <p class="mt-3" id="infoReductionCategorie"></p>
+                </div>
             </div>
-        </div>
-
-        <!-- Colonne centrale -->
-        <div class="col-md-4">
-            <div class="blue-background" id="mesCoordonnees">
-                <form>
+            <!-- Colonne centrale (Coordonnées) -->
+            <div class="col-md-4">
+                <div class="blue-background" id="mesCoordonnees">
                     <h3>Mes coordonnées</h3>
+                    <!-- Formulaire coordonnées -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="payerOrganisme">
+                        <label class="form-check-label" for="payerOrganisme">Payer en tant qu'organisme</label>
+                    </div>
+                    <!-- Ajout du formulaire pour les organismes -->
                     <div id="champsOrganisme" style="display: none;">
                         <div class="mb-3">
                             <label for="raisonSociale" class="form-label">Raison sociale</label>
-                            <input type="text" class="form-control mb-2" placeholder="Raison sociale">
+                            <input type="text" class="form-control mb-2" id="raisonSociale" name="raisonSociale" placeholder="Raison sociale">
                         </div>
                         <div class="mb-3">
                             <label for="siren" class="form-label">SIREN</label>
-                            <input type="text" class="form-control mb-2" placeholder="SIREN">
+                            <input type="text" class="form-control mb-2" id="siren" name="siren" placeholder="SIREN">
                         </div>
                         <div class="mb-3">
                             <label for="formeJuridique" class="form-label">Forme juridique</label>
-                            <input type="text" class="form-control mb-2" placeholder="Forme juridique">
+                            <input type="text" class="form-control mb-2" id="formeJuridique" name="formeJuridique" placeholder="Forme juridique">
+                        </div>
+                    </div>
+                    <!-- Fin du formulaire pour les organismes -->
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prénom" required>
+                        </div>
+                        <div class="col">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom" required>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="prenom" class="form-label">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="exemple@exemple.fr" required>
                     </div>
                     <div class="mb-3">
                         <label for="dateNaissance" class="form-label">Date de naissance</label>
@@ -97,145 +202,50 @@
                     </div>
                     <div class="mb-3">
                         <label for="adresse" class="form-label">Adresse</label>
-                        <input type="text" class="form-control" id="adresse" name="adresse" required>
+                        <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Adresse" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="codePostal" class="form-label">Code postal</label>
-                        <input type="text" class="form-control" id="codePostal" name="codePostal" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ville" class="form-label">Ville</label>
-                        <input type="text" class="form-control" id="ville" name="ville" required>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="codePostal" class="form-label">Code postal</label>
+                            <input type="text" class="form-control" id="codePostal" name="codePostal" placeholder="75000" required>
+                        </div>
+                        <div class="col">
+                            <label for="ville" class="form-label">Ville</label>
+                            <input type="text" class="form-control" id="ville" name="ville" placeholder="Paris" required>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="pays" class="form-label">Pays</label>
-                        <input type="text" class="form-control" id="pays" name="pays" required>
+                        <input type="text" class="form-control" id="pays" name="pays" placeholder="France" required>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-
-        <!-- Colonne de droite -->
-        <div class="col-md-4">
-            <div class="blue-background">
-                <form>
+            <!-- Colonne de droite (Récapitulatif) -->
+            <div class="col-md-4">
+                <div class="blue-background">
                     <h3>Mon récapitulatif</h3>
+                    <!-- Section Récapitulatif -->
                     <div class="mb-3 form-check">
                         <p id="typeDon"></p>
                         <p id="montantTotal"></p>
                         <input type="checkbox" class="form-check-input" id="acceptConditions">
                         <label class="form-check-label" for="acceptConditions">J’accepte les Conditions Générales d’Utilisation du service et j’ai lu la charte de confidentialité *</label>
                     </div>
-                </form>
-            </div>
-            <div class="text-center mt-5">
-                <button type="submit" class="btn btn-primary" disabled id="validerPayer">Valider et payer</button>
-            </div>
-            <div class="blue-background mt-5">
-                <form>
+                </div>
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-primary" id="validerPayer" disabled>Valider et payer</button>
+                </div>
+                <div class="blue-background mt-5">
                     <p>Plateforme de paiement 100 % sécurisée</p>
                     <p>Toutes les informations bancaires pour traiter ce paiement sont totalement sécurisées. Grâce au cryptage SSL de vos données bancaires, vous êtes assurés de la fiabilité de vos transactions sur notre site.</p>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
-<?php include('../includes/footer.php') ?>
+<?php include('../includes/footer.php'); ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Récupération des éléments du DOM
-        let btnParticulier = $('#btnParticulier');
-        let btnOrganisme = $('#btnOrganisme');
-        let btnDonUneFois = $('#donUneFois');
-        let btnDonMensuel = $('#donMensuel');
-        let infoReduction = $('#infoReduction');
-        let montants = $('input[name="montant"]');
-        let montantLibre = $('#montantLibre');
-        let divCoordonnees = $('#mesCoordonnees');
-        let recapDon = $('#recapDon');
-        let typeDon = $('#typeDon');
-        let montantTotal = $('#montantTotal');
-        let validerPayer = $('#validerPayer');
-
-        // Fonction pour ajouter des champs pour les organismes
-        function ajouterChampsOrganisme() {
-            if ($('#champsOrganisme').children().length === 0) {
-                divCoordonnees.append(`
-                <div id="champsOrganisme">
-                    <div class="mb-3">
-                        <label for="raisonSociale" class="form-label">Raison sociale</label>
-                        <input type="text" class="form-control mb-2" placeholder="Raison sociale">
-                    </div>
-                    <div class="mb-3">
-                        <label for="siren" class="form-label">SIREN</label>
-                        <input type="text" class="form-control mb-2" placeholder="SIREN">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formeJuridique" class="form-label">Forme juridique</label>
-                        <input type="text" class="form-control mb-2" placeholder="Forme juridique">
-                    </div>
-                </div>
-            `);
-            }
-        }
-
-        // Fonction pour changer les montants des dons
-        function changerMontants(montantsDon) {
-            montants.each(function() {
-                let montantInput = $(this);
-                let valeur = montantsDon[montantInput.val()];
-                if (valeur) {
-                    montantInput.val(valeur).next().text(' ' + valeur + ' €');
-                }
-            });
-        }
-
-        // Mise à jour de l'information fiscale et du montant après réduction
-        function miseAJourInfoFiscale(montant) {
-            let montantReduit = btnParticulier.is(':checked') ? montant * 0.66 : montant * 0.60;
-            infoReduction.text(`Votre don ne vous coûtera que ${montantReduit.toFixed(2)} € après réduction fiscale`);
-        }
-
-        // Événements
-        btnParticulier.click(function() {
-            $('#champsOrganisme').remove();
-            infoReduction.text("Particulier : vous pouvez bénéficier d’une réduction d’impôt égale à 66 % du montant de votre don , dans la limite de 20 % de votre revenu imposable.");
-        });
-
-        btnOrganisme.click(function() {
-            ajouterChampsOrganisme();
-            infoReduction.text("Entreprise : l’ensemble des versements à notre association permet de bénéficier d’une réduction d’impôt sur les sociétés de 60 % du montant de ces versements, plafonnée à 20 000 € ou 5 ‰ (5 pour mille) du chiffre d'affaires annuel hors taxe de l’entreprise. En cas de dépassement de plafond, l'excédent est reportable sur les 5 exercices suivants.");
-        });
-
-        btnDonMensuel.click(function() {
-            changerMontants({'5': '9', '20': '12', '50': '30', '150': '70'});
-            typeDon.text("Don mensuel");
-        });
-
-        btnDonUneFois.click(function() {
-            changerMontants({'9': '5', '12': '20', '30': '50', '70': '150'});
-            typeDon.text("Don ponctuel");
-        });
-
-        montants.change(function() {
-            let montantChoisi = parseFloat($(this).val());
-            miseAJourInfoFiscale(montantChoisi);
-            montantTotal.text(`Montant total: ${montantChoisi} €`);
-        });
-
-        montantLibre.change(function() {
-            let montantLibreChoisi = parseFloat(montantLibre.val());
-            miseAJourInfoFiscale(montantLibreChoisi);
-            montantTotal.text(`Montant total: ${montantLibreChoisi} €`);
-        });
-
-        $('#acceptConditions').change(function() {
-            validerPayer.prop('disabled', !$(this).is(':checked'));
-        });
-    });
-
+<script src="../js/scriptDons.js"></script>
 </script>
+</body>
 </html>

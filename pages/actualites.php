@@ -1,4 +1,9 @@
 <?php
+/**
+ * Ce script affiche une liste d'actualités avec pagination.
+ * Il récupère les actualités depuis une base de données et les affiche par pages.
+ */
+
 // Inclusion du fichier de connexion à la base de données
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
@@ -9,7 +14,12 @@ $elementsParPage = 5;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $elementsParPage;
 
-// Fonction pour obtenir le nombre total d'actualités
+/**
+ * Obtient le nombre total d'actualités dans la base de données.
+ *
+ * @param PDO $dbh Connexion à la base de données.
+ * @return int Nombre total d'actualités.
+ */
 function getTotalActualites($dbh) {
     $stmt = $dbh->prepare("SELECT COUNT(*) AS total FROM actualites");
     $stmt->execute();
@@ -23,7 +33,14 @@ $totalActualites = getTotalActualites($dbh);
 // Calculer le nombre total de pages
 $totalPages = ceil($totalActualites / $elementsParPage);
 
-// Fonction pour récupérer les actualités pour une page donnée
+/**
+ * Récupère les actualités pour une page donnée.
+ *
+ * @param PDO $dbh Connexion à la base de données.
+ * @param int $offset Décalage initial pour la requête SQL.
+ * @param int $elementsParPage Nombre d'éléments par page.
+ * @return array Liste des actualités pour la page actuelle.
+ */
 function getActualites($dbh, $offset, $elementsParPage) {
     $stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC LIMIT :offset, :elementsParPage");
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);

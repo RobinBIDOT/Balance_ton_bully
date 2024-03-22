@@ -1,4 +1,18 @@
 <?php
+/**
+ * Script PHP pour supprimer une réponse dans un forum.
+ *
+ * Ce script permet de supprimer une réponse spécifique dans un forum en utilisant son identifiant.
+ * Il est utilisé pour gérer le contenu du forum et maintenir un environnement sûr et respectueux.
+ *
+ * @package balance_ton_bully
+ * @subpackage forum
+ *
+ * @param int $idReponse - L'identifiant de la réponse à supprimer.
+ * @param int $idSujet - L'identifiant du sujet auquel la réponse appartient.
+ * @return void
+ */
+
 // Inclusion du fichier de connexion à la base de données
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
@@ -35,4 +49,3 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     header('Location: ../php/index.php');
     exit();
 }
-?>

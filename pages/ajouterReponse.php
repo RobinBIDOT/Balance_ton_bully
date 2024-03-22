@@ -1,4 +1,9 @@
 <?php
+/**
+ * Script pour ajouter une réponse à un sujet sur un forum.
+ * L'utilisateur doit être connecté pour pouvoir poster une réponse.
+ */
+
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
@@ -8,8 +13,10 @@ if (!isset($_SESSION['nickName'])) {
     header("Location: ../php/connexion.php");
     exit();
 }
-var_dump($_POST['contenuReponse']);
-var_dump($_POST['id']);
+
+//var_dump($_POST['contenuReponse']);
+//var_dump($_POST['id']);
+
 // Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['contenuReponse']) && isset($_POST['id'])) {
@@ -42,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
  * @param int $idSujet ID du sujet auquel la réponse est associée.
  * @param string $contenu Contenu de la réponse.
  * @param string $pseudo Pseudo de l'utilisateur qui poste la réponse.
+ * @throws PDOException Si une erreur survient lors de l'exécution de la requête.
  */
 function ajouterReponse($dbh, $idSujet, $contenu, $pseudo) {
     // Récupérer l'ID de l'utilisateur à partir de son pseudo
