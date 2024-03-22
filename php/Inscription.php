@@ -109,15 +109,19 @@ if (isset($_POST['submit'])) {
             display: flex;
             justify-content: center;
             align-items: center;
+
         } 
+
 
     </style>
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
+
 <!-- <div class="container full-height"> -->
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
+
             <h2 class="text-center text-white">S'inscrire</h2>
             <?php
             if(isset($_POST['submit'])){

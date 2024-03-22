@@ -92,7 +92,9 @@ if(isset($_POST['modMail'])){
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Mon compte</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styleDons.css">
@@ -168,7 +170,9 @@ if(isset($_POST['modMail'])){
             </div>
         </div>
     </form>
+
 </div>
 <?php include('../includes/footer.php') ?>
+
 </body>
 </html>

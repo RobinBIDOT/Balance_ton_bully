@@ -15,6 +15,11 @@ try {
     $dbh = dbConnexion();
     session_start();
 
+    // Afficher les informations de session
+    echo "<pre>";
+    var_dump($_SESSION);
+    echo "</pre>";
+
     // Définition du nombre d'éléments par page
     $elementsParPage = 8;
 
@@ -30,7 +35,7 @@ try {
         $sql = "SELECT sujets_forum.*, utilisateurs.userName AS nom_auteur
                 FROM sujets_forum
                 LEFT JOIN utilisateurs ON sujets_forum.id_utilisateur = utilisateurs.id
-                WHERE sujets_forum.id = :id";
+                WHERE  sujets_forum.id = :id";
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $idSujet, PDO::PARAM_INT);
         $stmt->execute();
@@ -56,8 +61,8 @@ try {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Titre de votre sujet</title>
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-                <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+                <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
+                <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
                 <link rel="stylesheet" href="../../css/style.css">
             </head>
             <?php include('../includes/headerNav.php')?>
@@ -110,20 +115,24 @@ try {
                         }
                         echo '</div>';
                         echo '</div>';
-                        //echo '<p class="text-white mb-2">' . $rowReponse['fonction_auteur'] . '</p>';
+                        // echo '<p class="text-white mb-2">' . $rowReponse['fonction_auteur'] . '</p>';
                         echo '<div class="bg-white shadow-md rounded-md p-4">';
                         echo '<p class="mb-2">' . $rowReponse['contenu'] . '</p>';
                         echo '<div class="flex justify-end">';
 
                         // Afficher le bouton de signalement si l'utilisateur n'est pas l'auteur de la réponse
+
                         if (!$estAuteur) {
                             echo '<button onclick="signalerReponse(' . $rowReponse['id_reponse'] . ')" class="btn btn-danger btn-sm">Signaler</button>';
                         } else {
+
                             // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
                             echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-info">Modifier</a>';
                             echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
+
+
 
                         }
                         echo '</div>';
@@ -196,7 +205,7 @@ try {
                         echo '</nav>';
                     }
                 } else {
-                    echo "<p class='text-white-500'>Aucune réponse trouvée pour ce sujet.</p>";
+                    echo "<p class='text-gray-500'>Aucune réponse trouvée pour ce sujet.</p>";
                 }
                 echo '</div>'; // Fermeture de la div de fond
                 ?>
@@ -210,7 +219,7 @@ try {
                                 <label for="contenuReponse">Contenu de la réponse :</label>
                                 <textarea class="form-control" id="contenuReponse" name="contenuReponse" rows="4" required></textarea>
                             </div>
-                            <input type="hidden" name="id" value="<?= $idSujet ?>">
+                            <input type="hidden" name="idSujet" value="<?= $idSujet ?>">
                             <button type="submit" class="btn btn-primary mt-3">Envoyer</button>
                         </form>
                     </div>
@@ -268,4 +277,5 @@ try {
             .catch(error => console.error('Erreur:', error));
         }
     }
+
 </script>

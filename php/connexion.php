@@ -36,10 +36,15 @@ if (isset($_POST['submit'])) {
 
         // Vérification du mot de passe
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['nickName'] = $user['userName'];
+
+            // Enregistrement des informations de l'utilisateur dans la session
+            $_SESSION['nickName'] = $pseudo;
+            $_SESSION['pwd'] = $password;
             $_SESSION['id'] = $user['id'];
+
             $_SESSION['id_role'] = $user['id_role'];
             header('Location: index.php');
+
 
             // Vérification du mot de passe
             if ($user && password_verify($password, $user['password'])) {
@@ -55,6 +60,7 @@ if (isset($_POST['submit'])) {
         } else {
             // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
             echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
+
         }
     } else {
         // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
@@ -77,7 +83,7 @@ if (isset($_POST['disconnect'])) {
     <title>Se connecter - Balance Ton Bully</title>
     <!-- Liens vers les styles CSS -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="CSS/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <style>
@@ -102,16 +108,20 @@ if (isset($_POST['disconnect'])) {
                         <label for="pwd" class="form-label text-white">Votre mot de passe:</label>
                         <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mot de passe...">
                     </div>
+
                     <button type="submit" class="btn btn-primary text-white" name="submit">Se connecter</button>
                     <p class="text-center mt-3 text-white">Je n'ai pas encore de compte. <a href="Inscription.php" class="text-white font-bold">S'inscrire</a></p>
                     <p class="text-center mt-3 text-white"><a href="retrievePwd.php" class="text-white font-bold">J'ai perdu mon mot de passe. </a></p>
+
                 </form>
             </div>
         <?php } else { ?>
             <p class="text-center">Vous êtes déjà connecté</p>
-            <form method="post" action="">
-                <button type="submit" class="btn btn-danger" name="disconnect">Déconnexion</button>
-            </form>
+            <div class="d-flex justify-content-center align-items-center">
+                <form method="post" action="">
+                    <button type="submit" class="btn btn-danger" name="disconnect">Déconnexion</button>
+                </form>
+            </div>
         <?php } ?>
     </div>
 </div>

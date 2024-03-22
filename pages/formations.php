@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demande de formation</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/style-formations.css">
 
 </head>
 <body>
   <?php include('../includes/headerNav.php')?>
+
   <div class="container mt-4">
       <div class="row">
         <div class="d-flex justify-content-between align-items-center">
+
                 <div class="d-flex align-items-center">
                     <img src="../ressources/discrimination.png" alt="Image gauche" class="img-fluid" style="max-width: 100px;">
                 </div>
@@ -21,9 +24,11 @@
                 <div class="d-flex align-items-center">
                     <img src="../ressources/stop-bullying-2.png" alt="Image droite" class="img-fluid" style="max-width: 100px;">
                 </div>
+
+            </div>
         </div>
-      </div>
-      
+     
+
       <p class="formation-contenu">La lutte contre le harcèlement scolaire est un enjeu crucial dans le système éducatif. Ce phénomène, qui affecte de nombreux élèves, peut avoir des répercussions profondes et durables sur la santé mentale, le bien-être et la réussite scolaire des jeunes. Se former à la lutte contre le harcèlement scolaire n'est donc pas seulement une responsabilité, mais une nécessité impérative pour tous les acteurs impliqués dans le milieu éducatif, qu'ils soient enseignants, administrateurs scolaires, conseillers, parents ou même élèves.<br><br>
         D'abord, la formation permet de mieux comprendre la nature et les manifestations du harcèlement scolaire. Elle aide à identifier les différents types de harcèlement – physique, verbal, psychologique ou en ligne – et à reconnaître les signes parfois subtils chez les victimes. Cette compréhension approfondie est la première étape pour intervenir efficacement et prévenir les situations de harcèlement.<br><br>
         Ensuite, se former offre des outils et des stratégies pour agir. Cela inclut des techniques de communication, des approches de résolution de conflits et des méthodes pour créer un environnement scolaire sécurisant et inclusif. Les éducateurs formés sont mieux équipés pour gérer les incidents de harcèlement de manière sensible et efficace, en soutenant la victime et en adressant le comportement du harceleur de manière constructive.<br><br>
@@ -59,8 +64,8 @@
           <button type="reset" class="btn btn-secondary">Annuler</button>
       </form>
       <p class="mt-3">Nous vous recontacterons dans les meilleurs délais pour vous fournir un devis.</p>
-  </div>
+    </div>
   <?php include('../includes/footer.php') ?>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script> 
 </body>
 </html>

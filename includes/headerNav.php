@@ -77,7 +77,12 @@
             </div>
         
             <div class="container-fluid p-0 rounded">
+
+
                 <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-bottom">
+
+
+
                     <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -113,9 +118,9 @@
                             </div>
                             <?php
                             if(isset($_SESSION['nickName'])){
-                                if($_SESSION['id_role'] == 1){ ?>
+                                if($user['id_role'] = 1){ ?>
                                     <li class="nav-item">
-                                        <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page administrateur</a>
+                                        <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
                                     </li>
                                     <?php
                                 }
@@ -123,15 +128,19 @@
 
 
 
+
                         </ul>
                     </div>
+
 
                 </nav>
             </div>
         </div>
     </header>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 </body>
 </html>
+
