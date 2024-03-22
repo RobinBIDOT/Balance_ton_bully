@@ -16,7 +16,7 @@ if ($mail) {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Changement de mot de passe</title>
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
@@ -39,7 +39,6 @@ if (isset($_POST['submit'])) {
             $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
             $stmt = $dbConnexion->prepare('UPDATE utilisateurs SET password = ? WHERE mail = ?');
             $stmt->execute([$hashedPwd , $mail]);
-            echo 'Changement de mot de passe validé';
             $stmt = $dbConnexion->prepare('UPDATE utilisateurs SET token = NULL WHERE mail = ?');
             $stmt->execute([$mail]);
             header('Location: connexion.php?success=1');
