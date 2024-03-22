@@ -98,11 +98,10 @@
 <!-- Chargement de l'API Google Maps -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABCTt9uLNjRLOX9NQqcThmUT5mPtW8p7A&callback=initMap"></script>
 
-<script>
+
     // Fonction d'initialisation de la carte Google Maps
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>  -->
  <script>
-
     function initMap() {
         var location = { lat: 48.8566, lng: 2.3522 };
         var map = new google.maps.Map(document.getElementById("map"), {
