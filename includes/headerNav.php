@@ -115,7 +115,7 @@
                             if(isset($_SESSION['nickName'])){
                                 if($_SESSION['id_role'] == 1){ ?>
                                     <li class="nav-item">
-                                        <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
+                                        <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page administrateur</a>
                                     </li>
                                     <?php
                                 }
