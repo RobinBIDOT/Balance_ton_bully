@@ -595,7 +595,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
             })
                 .then(response => response.json())
                 .then(data => {
-                    if(data.success) {
+                    if(data.success) {  //  --------------------------------------------------------------------- à vérifier
                         alert('Réponse supprimée avec succès.');
                         loadContent('signalements');
                     } else {
