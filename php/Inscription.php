@@ -1,7 +1,20 @@
 <?php
+/**
+ * Script d'inscription pour les utilisateurs.
+ *
+ * Ce script permet aux nouveaux utilisateurs de s'inscrire en fournissant leurs informations.
+ * Il inclut la validation des données du formulaire et l'insertion des données dans la base de données.
+ *
+ * PHP version 7.4
+ *
+ * @category Authentication
+ * @package  MovEase
+ */
+
 // Inclusion du fichier de fonctions et démarrage de la session
 include './tools/functions.php';
 
+// Démarrage ou reprise de la session
 session_start();
 
 // Connexion à la base de données
@@ -62,10 +75,8 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,7 +100,6 @@ if (isset($_POST['submit'])) {
 
     </style>
 </head>
-
 <body>
 <?php include('../includes/headerNav.php') ?>
 <!-- <div class="container full-height"> -->
@@ -113,7 +123,6 @@ if (isset($_POST['submit'])) {
                     <?php
                 }
             } ?>
-
             <form method="POST" action="">
                 <!--<div class="mb-3">
                     <label for="name" class="form-label text-white">Votre prénom:</label>
@@ -160,5 +169,4 @@ if (isset($_POST['submit'])) {
 <?php include('../includes/footer.php') ?>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
 </body>
-
 </html>

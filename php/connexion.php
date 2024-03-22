@@ -1,6 +1,17 @@
 <?php
-// Inclusion du fichier de fonctions et démarrage de la session
+/**
+ * Script de connexion pour les utilisateurs.
+ *
+ * Ce script permet aux utilisateurs de se connecter en utilisant leur pseudo et mot de passe.
+ * Il gère également la déconnexion des utilisateurs connectés.
+ *
+ * PHP version 7.4
+ *
+ * @category Authentication
+ * @package  BalanceTonBully
+ */
 
+// Inclusion du fichier de fonctions et démarrage de la session
 include 'tools/functions.php';
 session_start();
 
@@ -8,40 +19,48 @@ session_start();
 // Connexion à la base de données
 $pdo = dbConnexion();
 
-// Vérification de la soumission du formulaire de connexion
+// Traitement du formulaire de connexion
 if (isset($_POST['submit'])) {
+    // Vérification des champs du formulaire
     if (!empty($_POST['pseudo']) && !empty($_POST['pwd'])) {
-        $pseudo = htmlspecialchars($_POST['pseudo']);
-        $password = $_POST['pwd'];
+        $pseudo = htmlspecialchars($_POST['pseudo']); // Nettoyage du pseudo
+        $password = $_POST['pwd']; // Récupération du mot de passe
+
+        // Requête pour vérifier l'existence de l'utilisateur
         $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE userName = ?');
         $stmt->execute([$pseudo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Vérification du mot de passe
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['nickName'] = $user['userName'];
+
+            // Enregistrement des informations de l'utilisateur dans la session
+            $_SESSION['nickName'] = $pseudo;
+            $_SESSION['pwd'] = $password;
             $_SESSION['id'] = $user['id'];
 
             $_SESSION['id_role'] = $user['id_role'];
 
 
         } else {
+            // Affichage d'un message d'erreur en cas de pseudo ou mot de passe incorrect
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";
         }
     } else {
+        // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
         echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
     }
 }
 
-// Déconnexion de l'utilisateur ou de l'administrateur
+// Traitement de la déconnexion de l'utilisateur
 if (isset($_POST['disconnect'])) {
-    session_destroy();
-    header('Location: connexion.php');
+    session_destroy(); // Destruction de la session
+    header('Location: connexion.php'); // Redirection vers la page de connexion
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,7 +76,6 @@ if (isset($_POST['disconnect'])) {
         }
     </style>
 </head>
-
 <body>
 <?php include('../includes/headerNav.php') ?>
 <div class="d-flex justify-content-center align-items-center vh-100">
@@ -92,5 +110,4 @@ if (isset($_POST['disconnect'])) {
 </div>
 <?php include('../includes/footer.php') ?>
 </body>
-
 </html>

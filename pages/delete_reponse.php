@@ -2,14 +2,17 @@
 /**
  * Script pour la suppression d'une réponse dans un forum.
  *
- * Ce script permet de supprimer une réponse spécifique dans le forum en utilisant son identifiant.
- * Il est destiné à être utilisé par les administrateurs pour gérer le contenu du forum.
+ * Ce script est utilisé pour supprimer une réponse spécifique dans un forum, identifiée par son ID.
+ * Il est principalement destiné à être utilisé par les administrateurs ou les modérateurs du forum
+ * pour maintenir la qualité et la pertinence des discussions. Le script récupère l'ID de la réponse
+ * à partir d'une requête JSON, exécute une requête SQL pour la suppression, et retourne un résultat
+ * sous forme de JSON indiquant le succès ou l'échec de l'opération.
  *
  * @package balance_ton_bully
  * @subpackage forum
  * @author Robin
  *
- * @param int $data['id'] - L'identifiant de la réponse à supprimer.
+ * @param int $data['id'] - Identifiant de la réponse à supprimer.
  * @return json - Renvoie un objet JSON indiquant le succès ou l'échec de la suppression.
  */
 

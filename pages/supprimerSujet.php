@@ -1,12 +1,25 @@
 <?php
+/**
+ * Script de suppression d'un sujet de forum et de ses réponses.
+ *
+ * Ce script permet de supprimer un sujet spécifié ainsi que toutes ses réponses
+ * associées de la base de données. Il est principalement destiné à être utilisé
+ * par les administrateurs du forum.
+ *
+ * @package balance_ton_bully
+ * @subpackage forum
+ */
+
 session_start();
 
+// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['nickName'])) {
     // Rediriger l'utilisateur vers la page de connexion s'il n'est pas connecté
     header("Location: ../php/connexion.php");
     exit;
 }
 
+// Vérifier si le formulaire a été soumis et si l'ID du sujet est valide
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_sujet']) && is_numeric($_POST['id_sujet'])) {
     $idSujet = $_POST['id_sujet'];
 

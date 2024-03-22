@@ -1,23 +1,37 @@
 <?php
-include('tools/functions.php');
-$dbConnect = dbConnexion();
-session_start();
+/**
+ * Script de gestion du compte utilisateur.
+ *
+ * Ce script permet aux utilisateurs de modifier leurs informations personnelles
+ * telles que le nom, le prénom, le nom d'utilisateur et l'adresse e-mail.
+ * Il permet également la déconnexion et la suppression du compte.
+ *
+ * PHP version 7.4
+ *
+ * @category UserManagement
+ * @package  BalanceTonBully
+ */
 
+include('tools/functions.php'); // Inclusion du fichier de fonctions
+$dbConnect = dbConnexion(); // Connexion à la base de données
+session_start(); // Démarrage de la session
 
+// Récupération des informations de l'utilisateur connecté
 $stmt = $dbConnect -> prepare('SELECT * FROM utilisateurs WHERE userName = ?');
 $stmt->execute(array($_SESSION['nickName']));
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Déclaration des variables pour stocker les nouvelles informations
 @$newName = $_POST['newName'];
 @$newFName = $_POST['newFName'];
 @$newUName = $_POST['newUName'];
 @$newMail = $_POST['newMail'];
 @$userId = $user['id'];
 
-// Déconnexion de l'utilisateur
+// Traitement de la déconnexion de l'utilisateur
 if (isset($_POST['disconnect'])) {
-    session_destroy();
-    header('Location: connexion.php');
+    session_destroy(); // Destruction de la session
+    header('Location: connexion.php'); // Redirection vers la page de connexion
 }
 if (isset($_POST['delete'])) {
 echo '<div class="modal" id="alertModal">
@@ -46,14 +60,16 @@ echo '<div class="modal" id="alertModal">
         });</script>';
 }
 
+// Traitement de la suppression du compte
 if(isset($_POST['suppr'])){
     $stmt = $dbConnect->prepare('DELETE FROM utilisateurs WHERE id = ?');
     $stmt -> execute([$userId]);
-    session_destroy();
-    header('Location: connexion.php');
+    session_destroy(); // Destruction de la session après la suppression du compte
+    header('Location: connexion.php'); // Redirection vers la page de connexion
     exit();
 }
 
+// Traitement de la modification des informations de l'utilisateur
 if(isset($_POST['modName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
     $stmt->execute([$newName, $userId]);
@@ -71,8 +87,6 @@ if(isset($_POST['modMail'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET mail = ? WHERE id = ?');
     $stmt->execute([$newMail, $userId]);
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">

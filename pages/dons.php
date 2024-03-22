@@ -1,4 +1,17 @@
 <?php
+/**
+ * Script de traitement du formulaire de dons.
+ *
+ * Ce script PHP gère le traitement des données saisies dans le formulaire de dons.
+ * Il valide les données, les nettoie et les insère dans la base de données.
+ * En cas de succès, il redirige l'utilisateur vers la page de paiement pour finaliser
+ * le don. Si une erreur se produit lors de la validation ou de l'insertion des données,
+ * un message d'erreur est affiché à l'utilisateur.
+ *
+ * @package balance_ton_bully
+ * @subpackage dons
+ */
+
 // Activation de l'affichage des erreurs pour le débogage
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
