@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['nickName'] = $pseudo;
             $_SESSION['pwd'] = $password;
             $_SESSION['id'] = $user['id'];
-            $_SESSION['roleId'] = $user['id_role'];
+            $_SESSION['id_role'] = $user['id_role'];
         } else {
             // Affichage d'un message d'erreur en cas de pseudo ou mot de passe incorrect
             echo "<div class='alert alert-danger' role='alert'>Pseudo ou mot de passe incorrect</div>";

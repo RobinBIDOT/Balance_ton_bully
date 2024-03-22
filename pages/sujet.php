@@ -125,8 +125,6 @@ try {
                             echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
 
-                        } else {
-                            echo '<a href="#" class="inline-block btn btn-danger rounded-md btn-sm">Signaler</a>';
                         }
                         echo '</div>';
                         echo '</div>';
