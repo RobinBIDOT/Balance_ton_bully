@@ -149,22 +149,22 @@ if(isset($_POST['modMail'])){
                 <!-- Bouton "Admin" (si l'utilisateur est un admin) -->
                 <?php
                     // Vérification du rôle de l'utilisateur dans la base de données
-                    $stmt = $dbConnect->prepare('SELECT id_role FROM utilisateurs WHERE userName = ?');
+                   /* $stmt = $dbConnect->prepare('SELECT id_role FROM utilisateurs WHERE userName = ?');
                     $stmt->execute(array($_SESSION['nickName']));
-                    $userRole = $stmt->fetchColumn();
+                    $userRole = $stmt->fetchColumn();*/
 
                     // Vérifiez d'abord si le rôle de l'utilisateur a été récupéré avec succès
-                    if ($userRole !== false) {
+                    //if ($userRole !== false) {
                         // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
-                        if ($userRole == 1) {
+                        if ($_SESSION['id_role'] == 1) {
                             // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
                             // Par exemple :
                             echo '<a href="../pages/profilAdmin.php" class="btn btn-success">Admin</a>';
                         }
-                    } else {
+                    //} else {
                         // Gérer le cas où le rôle de l'utilisateur n'a pas pu être récupéré de la base de données
-                        echo "Erreur : Impossible de récupérer le rôle de l'utilisateur depuis la base de données.";
-                    }
+                      //  echo "Erreur : Impossible de récupérer le rôle de l'utilisateur depuis la base de données.";
+                    //}
                 ?>
             </div>
         </div>

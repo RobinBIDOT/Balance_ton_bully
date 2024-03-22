@@ -113,7 +113,7 @@
                             </div>
                             <?php
                             if(isset($_SESSION['nickName'])){
-                                if($user['id_role'] = 1){ ?>
+                                if($_SESSION['id_role'] == 1){ ?>
                                     <li class="nav-item">
                                         <a class="nav-link text-black text-center mx-5" href="">Page administrateur</a>
                                     </li>

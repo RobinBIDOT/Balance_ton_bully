@@ -54,7 +54,11 @@ if (isset($_POST['submit'])) {
             // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
             echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
         }
-    }}
+    } else {
+        // Affichage d'un message d'erreur si tous les champs ne sont pas remplis
+        echo "<div class='alert alert-danger' role='alert'>Veuillez compléter tous les champs</div>";
+    }
+}}
 
 // Traitement de la déconnexion de l'utilisateur
 if (isset($_POST['disconnect'])) {
