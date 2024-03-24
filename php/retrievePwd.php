@@ -14,9 +14,9 @@ if (isset($_POST['sendMail'])) {
         $update = $dbConnexion->prepare('UPDATE utilisateurs SET token = ? WHERE mail = ?');
         $update->execute([$token, $mail]);
         mail($user['mail'], "Mot de passe oublié", $message, 'From: Balance ton Bully' );
-        echo "Mail envoyé";
+        echo '<div class="alert alert-success" role="alert">Mail envoyé !</div>';
     } else {
-        echo "Veuillez renseigner une adresse mail valide";
+        echo '<div class="alert alert-warning" role="alert">Veuillez renseigner une adresse valide</div>';
     }
 }
 
