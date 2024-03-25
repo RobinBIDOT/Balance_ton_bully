@@ -136,8 +136,8 @@ $jsonHorairesData = json_encode($horairesData);
 <body>
 <div class="container-fluid mt-5">
     <h1 class="text-center mb-4">Administration</h1>
-    <div class="row justify-content-center mb-5">
-        <div class="col-md-8 d-flex flex-wrap justify-content-around">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-8 d-flex flex-wrap justify-content-around mb-5">
             <button onclick="loadContent('actualites')" class="btn btn-primary admin-btn">Gérer les actualités</button>
             <button onclick="loadContent('dons')" class="btn btn-success admin-btn">Gérer les dons</button>
             <button onclick="loadContent('utilisateurs')" class="btn btn-warning admin-btn">Gérer les utilisateurs</button>
