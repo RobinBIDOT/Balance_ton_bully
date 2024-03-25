@@ -13,7 +13,7 @@
     <link href="../css/styleNav.css" rel="stylesheet">
 </head>
 <body>
-<div class='container-fluid p-0 mt-2 rounded'>
+<div class='container-fluid p-0 rounded'>
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-12 col-md-auto p-2 text-center'>

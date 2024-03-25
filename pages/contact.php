@@ -7,19 +7,25 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
-
-
     <link rel="stylesheet" href="../css/style.css">
-
-
-
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
     <style>
+        *{
+            font-family: "Roboto", sans-serif;
+        }
         .blue-bg {
                 background-color: #0854C7;
             }
+        .custom-map {
+            height: 300px;
+            width: 100%;
+        }
     </style>
     
 </head>
@@ -27,9 +33,9 @@ session_start();
 <?php include('../includes/headerNav.php') ?>
 
 
-<!-- <div class="container mt-5"> -->
+ <!-- <div class="container mt-5"> -->
 
-    <div class="d-flex my-5 justify-content-center align-items-center vh-100">
+    <div class="d-flex my-5 justify-content-center align-items-center vh-90">
         <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
             <h1 class=" contact text-white">Contactez-nous</h1>
             <p class=" contact text-white">N'hésitez pas à nous contacter en utilisant le formulaire ci-dessous.</p>
@@ -62,7 +68,7 @@ session_start();
             <p class="mt-4 text-white">Vous pouvez également nous joindre par téléphone au : 01-32-43-98-22</p>
 
             <div class="row mt-5">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="address text-white">
                         <h4>Notre adresse :</h4>
                         <p>30 rue Notre Dame des Victoires</p>
@@ -70,16 +76,16 @@ session_start();
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-8 my-1">
 
-                    <div id="map" style="height: 100%; width: 100%"></div>
+                    <div id="map" class="custom-map"></div>
 
                 </div>
             </div>
         </div>
     </div>
 
-<!-- </div> -->
+<!-- </div>  -->
 
 
 <script>
@@ -102,7 +108,7 @@ session_start();
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABCTt9uLNjRLOX9NQqcThmUT5mPtW8p7A&callback=initMap"></script>
 
 
-    // Fonction d'initialisation de la carte Google Maps
+
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>  -->
  <script>
     function initMap() {

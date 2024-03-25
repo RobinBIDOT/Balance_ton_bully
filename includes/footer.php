@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="../css/style.css">
 
-<footer class="footer py-3 py-xl-8">
+<footer class="footer pt-3 py-xl-8">
 
     <div class="container-fluid p-0 mt-2 rounded">
         <div class="container-fluid bg-light">
