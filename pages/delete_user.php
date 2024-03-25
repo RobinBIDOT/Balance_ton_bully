@@ -16,6 +16,14 @@ $dbh = dbConnexion();
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
+    // Suppression des sujets et réponses associés à l'utilisateur
+    $stmt = $dbh->prepare("DELETE FROM reponses_forum WHERE id_utilisateur = ?");
+    $stmt->execute([$id]);
+
+    $stmt = $dbh->prepare("DELETE FROM sujets_forum WHERE id_utilisateur = ?");
+    $stmt->execute([$id]);
+
+    // Suppression de l'utilisateur
     $stmt = $dbh->prepare("DELETE FROM utilisateurs WHERE id = ?");
     $stmt->execute([$id]);
 

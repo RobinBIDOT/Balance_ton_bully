@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/styleNav.css" rel="stylesheet">
 </head>
-
 <body>
 <div class='container-fluid p-0 mt-2 rounded'>
     <header class='bg-light text-black rounded-top'>
@@ -35,7 +35,6 @@
                     <a href="../php/connexion.php" class="d-block mb-2" style="max-width: 50px;">
                         <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
-
                     <div class="container my-3">
                         <!-- Si l'utilisateur est connecté, afficher le message de bienvenue et les options de profil et de déconnexion -->
                         <?php if (isset($_SESSION['nickName'])) { ?>
@@ -44,26 +43,20 @@
                                     <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                                 </div>
                                 <a href="../php/account.php" class="btn btn-primary my-2">Votre profil</a>
-
-                                
-                                <?php 
-                                
+                                <?php
                                     // Bouton pour accéder à la page de profil administrateur 
                                     if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'administrateur') { ?>
                                     <a href="../pages/profilAdmin.php" class="btn btn-warning my-2">Profil admin</a>
                                 <?php }
-
                                     // Bouton pour accéder à la page de profil professionnel de santé
                                     if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'sante') { ?>
                                         <a href="../pages/profilSante.php" class="btn btn-success my-2">Profil santé</a>
                                     <?php } ?>
-
                                     <a href="../pages/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
                             </div>
                         <?php } ?>
                     </div>
                 </div>
-
                 <!-- Menu déroulant (toujours visible) -->
                 <div class="d-none d-md-block dropdown custom-bg-dropdown rounded-bottom ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,14 +68,8 @@
                     </ul>
                 </div>
             </div>
-        
             <div class="container-fluid p-0 rounded">
-
-
                 <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-bottom">
-
-
-
                     <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -125,22 +112,13 @@
                                     <?php
                                 }
                             } ?>
-
-
-
-
                         </ul>
                     </div>
-
-
                 </nav>
             </div>
         </div>
     </header>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 </body>
 </html>
-

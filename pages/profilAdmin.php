@@ -521,7 +521,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 .then(response => response.json())
                 .then(data => {
                     if(data.success) {
-                        alert('Utilisateur supprimé avec succès.');
+                        alert('Utilisateur et ses données associées supprimés avec succès.');
                         loadContent('utilisateurs');
                     } else {
                         alert('Erreur lors de la suppression.');
