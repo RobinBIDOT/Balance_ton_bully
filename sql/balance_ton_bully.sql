@@ -13,8 +13,10 @@ USE balance_ton_bully;
 
 -- Suppression des tables si elles existent déjà pour éviter les conflits lors de la création
 
-DROP TABLE IF EXISTS roles, reponses_forum, rendez_vous, sujets_forum, dons, professionnels_sante, utilisateurs, actualites, signalements;
-
+DROP TABLE IF EXISTS reponses_forum, rendez_vous, signalements;
+DROP TABLE IF EXISTS dons, professionnels_sante, actualites;
+DROP TABLE IF EXISTS sujets_forum, utilisateurs;
+DROP TABLE IF EXISTS roles;
 
 -- Paramétrage de la session SQL
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";

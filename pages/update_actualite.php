@@ -12,15 +12,26 @@
  * @subpackage admin
  */
 
+// Connection à la base de données et mise à jour l'actualité
+include('../php/tools/functions.php');
+$dbh = dbConnexion();
+
 // Vérifier que toutes les données requises sont présentes
 if (isset($_POST['id'], $_POST['titre'], $_POST['contenu'], $_POST['lien_article'])) {
     $id = $_POST['id'];
     $titre = $_POST['titre'];
     $contenu = $_POST['contenu'];
     $lien_article = $_POST['lien_article'];
+    $photoChanged = isset($_POST['photoChanged']) && $_POST['photoChanged'] == 'yes';
+
+    // Récupérer le chemin actuel de la photo
+    $stmt = $dbh->prepare("SELECT photo FROM actualites WHERE id_actualite = ?");
+    $stmt->execute([$id]);
+    $actualite = $stmt->fetch(PDO::FETCH_ASSOC);
+    $photoPath = $actualite['photo'];
 
     // Gérer l'upload de la photo si elle est présente
-    if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
+    if ($photoChanged && isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
         // Vérifier le type et la taille de la photo
         $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
         if (in_array($_FILES['photo']['type'], $allowedTypes) && $_FILES['photo']['size'] <= 5000000) {
@@ -37,12 +48,8 @@ if (isset($_POST['id'], $_POST['titre'], $_POST['contenu'], $_POST['lien_article
             exit;
         }
     } else {
-        $photoPath = null;
+        $photoPath = $actualite['photo']; // Conserver la photo existante
     }
-
-    // Connection à la base de données et mise à jour l'actualité
-    include('../php/tools/functions.php');
-    $dbh = dbConnexion();
 
     // Préparation de la requête SQL pour la mise à jour
     $sql = "UPDATE actualites SET titre = ?, contenu = ?, lien_article = ?, photo = ? WHERE id_actualite = ?";

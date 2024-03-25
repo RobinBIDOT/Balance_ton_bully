@@ -74,7 +74,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page en Construction</title>
+    <title>Page administrateur</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .admin-btn {
@@ -127,13 +127,14 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                         <input type="text" class="form-control" id="editActuLien" name="lien_article">
                     </div>
                     <div class="form-group">
+                        <input type="checkbox" name="photoChanged" value="yes"> Cochez si vous changez la photo
                         <label>Photo</label>
                         <input type="file" class="form-control" id="editActuPhoto" name="photo">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="annulerEditActu">Annuler</button>
                 </div>
             </form>
         </div>
@@ -173,7 +174,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="annulerEditUser">Annuler</button>
                 </div>
             </form>
         </div>
@@ -196,7 +197,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="annulerEditAnswer">Annuler</button>
                 </div>
             </form>
         </div>
@@ -303,7 +304,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 .then(data => {
                     if(data.success) {
                         alert('Actualité supprimée avec succès.');
-                        loadContent('actualites');
+                        window.location.reload();
                     } else {
                         alert('Erreur lors de la suppression.');
                     }
@@ -339,6 +340,10 @@ $jsonUtilisateursData = json_encode($utilisateursData);
         }
     }
 
+    document.getElementById('annulerEditActu').addEventListener('click', function() {
+        $('#modalEditActu').modal('hide');
+    });
+
     // Gérer la soumission du formulaire de modification
     document.getElementById('formEditActu').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -353,7 +358,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 if (data.success) {
                     alert('Actualité mise à jour avec succès.');
                     $('#modalEditActu').modal('hide');
-                    loadContent('actualites');
+                    window.location.reload();
                 } else {
                     alert('Erreur lors de la mise à jour : ' + data.error);
                 }
@@ -496,6 +501,10 @@ $jsonUtilisateursData = json_encode($utilisateursData);
         }
     }
 
+    document.getElementById('annulerEditUser').addEventListener('click', function() {
+        $('#modalEditUser').modal('hide');
+    });
+
     /**
      * Supprime un utilisateur de la base de données après confirmation.
      * Envoie une requête POST au serveur pour effectuer la suppression.
@@ -581,6 +590,9 @@ $jsonUtilisateursData = json_encode($utilisateursData);
             .catch(error => console.error('Erreur:', error));
     }
 
+    document.getElementById('annulerEditAnswer').addEventListener('click', function() {
+        $('#modalEditReponse').modal('hide');
+    });
 
     /**
      * Supprime une réponse de la base de données après confirmation.
