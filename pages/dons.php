@@ -13,9 +13,9 @@
  */
 
 // Activation de l'affichage des erreurs pour le débogage
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 // Inclusion des fonctions et connexion à la base de données
 include('../php/tools/functions.php');
@@ -105,12 +105,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 // Débogage
-echo "<pre>Session Data : ";
-var_dump($_SESSION);
-echo "</pre>";
-echo "<pre>Données du formulaire : ";
-var_dump($_POST);
-echo "</pre>";
+//echo "<pre>Session Data : ";
+//var_dump($_SESSION);
+//echo "</pre>";
+//echo "<pre>Données du formulaire : ";
+//var_dump($_POST);
+//echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="fr">

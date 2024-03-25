@@ -73,7 +73,7 @@ if(isset($_POST['suppr'])){
 if(isset($_POST['modName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
     $stmt->execute([$newName, $userId]);
-    $user['name'] = $_POST['newName'];
+
 }
 if(isset($_POST['modFName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET firstName = ? WHERE id = ?');
@@ -156,7 +156,7 @@ if(isset($_POST['modMail'])){
                     $userRole = $stmt->fetchColumn();*/
 
                     // Vérifiez d'abord si le rôle de l'utilisateur a été récupéré avec succès
-                    //if ($userRole !== false) {
+                    //if ($userRole !== false){
                         // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
                         if ($_SESSION['id_role'] == 1) {
                             // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"

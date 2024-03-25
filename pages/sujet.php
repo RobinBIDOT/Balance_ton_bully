@@ -16,9 +16,9 @@ try {
     session_start();
 
     // Afficher les informations de session
-    echo "<pre>";
-    var_dump($_SESSION);
-    echo "</pre>";
+    //echo "<pre>";
+    //var_dump($_SESSION);
+    //echo "</pre>";
 
     // Définition du nombre d'éléments par page
     $elementsParPage = 8;
