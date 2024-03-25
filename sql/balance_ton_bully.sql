@@ -438,6 +438,8 @@ CREATE TABLE `signalements` (
     FOREIGN KEY (`id_reponse`) REFERENCES `reponses_forum`(`id_reponse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE signalements DROP FOREIGN KEY signalements_ibfk_1;
+ALTER TABLE signalements ADD CONSTRAINT signalements_ibfk_1 FOREIGN KEY (id_reponse) REFERENCES reponses_forum (id_reponse) ON DELETE CASCADE;
 
 INSERT INTO signalements (id_reponse) VALUES
     (10),

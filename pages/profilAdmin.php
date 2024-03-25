@@ -68,6 +68,14 @@ if (isset($_SESSION['nickName']) && $_SESSION['id_role'] == 1) {
 // Convertit les données PHP en JSON pour JavaScript
 $jsonUtilisateursData = json_encode($utilisateursData);
 
+// Récupération des données des réponses
+$reponsesData = [];
+$stmt = $dbh->prepare("SELECT * FROM reponses_forum");
+$stmt->execute();
+$reponsesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Convertit les données PHP en JSON pour JavaScript
+$jsonReponsesData = json_encode($reponsesData);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -211,7 +219,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     var donsData = <?php echo $jsonDonsData; ?>;
     var actualitesData = <?php echo $jsonActualitesData; ?>;
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
-
+    var reponsesData = <?php echo $jsonReponsesData; ?>;
 
     // Données des actualités
     var actualitesData = <?php echo $jsonActualitesData; ?>;
@@ -601,20 +609,29 @@ $jsonUtilisateursData = json_encode($utilisateursData);
      */
     function deleteReponse(idReponse) {
         if(confirm('Voulez-vous vraiment supprimer cette réponse ?')) {
+            console.log("Envoi de la requête avec l'ID :", JSON.stringify({ id: idReponse }));
             fetch('delete_reponse.php', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ id: idReponse })
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Réponse du serveur non OK');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    if(data.success) {  //  --------------------------------------------------------------------- à vérifier
+                    if(data.success) {
                         alert('Réponse supprimée avec succès.');
                         loadContent('signalements');
                     } else {
-                        alert('Erreur lors de la suppression.');
+                        alert('Erreur lors de la suppression : ' + data.error);
                     }
                 })
-                .catch(error => console.error('Erreur:', error));
+                // .catch(error => console.error('Erreur:', error));
         }
     }
 
