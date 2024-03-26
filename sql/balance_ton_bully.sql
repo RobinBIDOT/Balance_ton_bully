@@ -13,10 +13,14 @@ USE balance_ton_bully;
 
 -- Suppression des tables si elles existent déjà pour éviter les conflits lors de la création
 
+DROP TABLE IF EXISTS horaires_professionnels;
+DROP TABLE IF EXISTS professionnel_expertise;
 DROP TABLE IF EXISTS reponses_forum, rendez_vous, signalements;
 DROP TABLE IF EXISTS dons, professionnels_sante, actualites;
 DROP TABLE IF EXISTS sujets_forum, utilisateurs;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS expertise;
+
 
 -- Paramétrage de la session SQL
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -64,14 +68,14 @@ INSERT INTO `roles` (`id`, `role`) VALUES
 
 CREATE TABLE `utilisateurs` (
     `id` int(11) NOT NULL AUTO_INCREMENT,  -- Une colonne 'id' pour l'identifiant unique de chaque utilisateur, auto-incrémentée
-    `firstName` varchar(255) NOT NULL,     -- Une colonne pour stocker le prénom de l'utilisateur
-    `name` varchar(255) NOT NULL,          -- Une colonne pour le nom de famille de l'utilisateur
+    `firstName` varchar(255),     -- Une colonne pour stocker le prénom de l'utilisateur
+    `name` varchar(255),          -- Une colonne pour le nom de famille de l'utilisateur
     `userName` varchar(255) NOT NULL,      -- Une colonne pour le pseudonyme/nom d'utilisateur
     `mail` varchar(255) NOT NULL,          -- Une colonne pour l'adresse e-mail de l'utilisateur
     `photo_avatar` varchar(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',-- Une colonne pour l'URL de la photo de profil de l'utilisateur, avec une valeur par défaut
     `password` varchar(255) NOT NULL,      -- Une colonne pour le mot de passe (qui doit être stocké de manière sécurisée, par exemple après hashage)
     `token` varchar(50) DEFAULT NULL,
-    `id_role` int(11) NOT NULL,            -- Une colonne pour l'ID du rôle de l'utilisateur, faisant référence à la table `roles`
+    `id_role` int(11) DEFAULT 2,            -- Une colonne pour l'ID du rôle de l'utilisateur, faisant référence à la table `roles`
     PRIMARY KEY (`id`)                     -- La colonne 'id' est définie comme la clé primaire de la table
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -242,11 +246,11 @@ CREATE TABLE `sujets_forum` (
     `date_creation` datetime NOT NULL,
     `date_mise_a_jour` datetime DEFAULT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
+    CONSTRAINT `fk_sujets_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE sujets_forum
-DROP FOREIGN KEY sujets_forum_ibfk_1;
+DROP FOREIGN KEY fk_sujets_utilisateur;
 
 -- Ajout de la nouvelle contrainte avec suppression en cascade
 ALTER TABLE sujets_forum
@@ -311,17 +315,21 @@ CREATE TABLE `reponses_forum` (
     `contenu` text NOT NULL,
     `date_creation` datetime NOT NULL,
     PRIMARY KEY (`id_reponse`),
-    FOREIGN KEY (`id_sujet`) REFERENCES `sujets_forum` (`id`),
-    FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
+    CONSTRAINT `fk_reponses_sujets` FOREIGN KEY (`id_sujet`) REFERENCES `sujets_forum` (`id`),
+    CONSTRAINT `fk_reponses_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-ALTER TABLE reponses_forum
-DROP FOREIGN KEY reponses_forum_ibfk_2;
+-- Suppression des clés étrangères existantes
+ALTER TABLE `reponses_forum`
+DROP FOREIGN KEY `fk_reponses_sujets`;
+
+ALTER TABLE `reponses_forum`
+DROP FOREIGN KEY `fk_reponses_utilisateur`;
 
 -- Ajout de la nouvelle contrainte avec suppression en cascade
-ALTER TABLE reponses_forum
-ADD CONSTRAINT fk_utilisateurs_reponses
-FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE;
+ALTER TABLE `reponses_forum`
+ADD CONSTRAINT `fk_utilisateurs_reponses`
+FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`) ON DELETE CASCADE;
 
 
 -- Insertion de réponses pour les sujets du forum
@@ -462,3 +470,231 @@ INSERT INTO signalements (id_reponse) VALUES
     (15),
     (20);
 
+
+-- Table professionnels_sante
+CREATE TABLE professionnels_sante (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    prenom VARCHAR(255) NOT NULL,
+    profession VARCHAR(255) NOT NULL,
+    adresse VARCHAR(255) NOT NULL,
+    ville VARCHAR(255) NOT NULL,
+    code_postal VARCHAR(10) NOT NULL,
+    presentation TEXT NOT NULL,
+    photo VARCHAR(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png'
+);
+
+INSERT INTO professionnels_sante (nom, prenom, profession, adresse, ville, code_postal, presentation)
+VALUES
+    ('Dupont', 'Marie', 'Psychologue', '10 Rue des Écoles', 'Paris', '75001', 'Psychologue spécialisée dans la lutte contre le harcèlement scolaire.'),
+    ('Martin', 'Jean', 'Conseiller d\'orientation', '15 Rue des Lycées', 'Marseille', '13001', 'Conseiller d\'orientation passionné par le bien-être des élèves et la prévention du harcèlement.'),
+    ('Leclerc', 'Sophie', 'Pédopsychiatre', '20 Avenue des Collèges', 'Lyon', '69001', 'Pédopsychiatre expérimentée, engagée dans la protection des enfants contre le harcèlement à l\'école.'),
+    ('Dubois', 'Thomas', 'Éducateur spécialisé', '5 Boulevard des Étudiants', 'Bordeaux', '33001', 'Éducateur spécialisé dédié à accompagner les victimes de harcèlement scolaire vers la résilience.'),
+    ('Moreau', 'Catherine', 'Infirmière scolaire', '8 Rue des Écoliers', 'Toulouse', '31001', 'Infirmière scolaire engagée dans la sensibilisation et le soutien des élèves face au harcèlement.'),
+    ('Lefebvre', 'Pierre', 'Médecin généraliste', '25 Rue des Collèges', 'Lille', '59001', 'Médecin généraliste impliqué dans la prévention du harcèlement scolaire et le soutien aux familles.'),
+    ('Girard', 'Julie', 'Psychothérapeute', '30 Avenue des Lycées', 'Nice', '06001', 'Psychothérapeute spécialisée dans l\'accompagnement des jeunes confrontés au harcèlement et à la violence.'),
+    ('Roux', 'Nicolas', 'Assistant social', '12 Rue des Étudiants', 'Strasbourg', '67001', 'Assistant social engagé dans la lutte contre le harcèlement scolaire et la promotion du bien-être des élèves.'),
+    ('Gonzalez', 'Maria', 'Orthophoniste', '40 Rue des Écoles', 'Paris', '75002', 'Orthophoniste spécialisée dans l\'accompagnement des enfants victimes de harcèlement scolaire.'),
+    ('Leroy', 'David', 'Psychiatre', '35 Rue des Lycées', 'Marseille', '13002', 'Psychiatre expert en troubles de l\'adolescence et en gestion du harcèlement scolaire.'),
+    ('Bernard', 'Juliette', 'Psychomotricienne', '25 Avenue des Collèges', 'Lyon', '69002', 'Psychomotricienne dédiée à aider les enfants en difficulté scolaire, y compris les victimes de harcèlement.'),
+    ('Morel', 'Luc', 'Socio-éducatif', '10 Boulevard des Étudiants', 'Bordeaux', '33002', 'Éducateur spécialisé dans la prévention du harcèlement scolaire et l\'accompagnement des familles.'),
+    ('Fournier', 'Sarah', 'Orthoptiste', '5 Rue des Écoliers', 'Toulouse', '31002', 'Orthoptiste engagée dans la prise en charge des séquelles du harcèlement sur la vision des enfants.'),
+    ('Petit', 'Anne', 'Diététicienne', '20 Rue des Collèges', 'Lille', '59002', 'Diététicienne spécialisée dans la santé des adolescents et la gestion du stress lié au harcèlement scolaire.'),
+    ('Dubois', 'Marcel', 'Coach scolaire', '15 Avenue des Lycées', 'Nice', '06002', 'Coach scolaire accompagnant les élèves victimes de harcèlement pour retrouver confiance et motivation.'),
+    ('Renaud', 'Paul', 'Ergothérapeute', '8 Rue des Étudiants', 'Strasbourg', '67002', 'Ergothérapeute spécialisé dans l\'intégration des enfants harcelés dans le milieu scolaire.');
+
+-- Table expertise
+CREATE TABLE expertise (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL
+);
+
+-- Insertion des expertises
+INSERT INTO expertise (nom) VALUES
+    ('Guidance parentale'), -- 1
+    ('Psychologie de l\'enfant'), -- 2
+    ('Psychologie de l\'adulte'), -- 3
+    ('Thérapie familiale'), -- 4
+    ('Développement de l\'enfant'), -- 5
+    ('Gestion du stress'), -- 6
+    ('Estime de soi'),  -- 7
+    ('Gestion des traumatismes'), -- 8
+    ('Prise en charge des troubles émotionnels'), -- 9
+    ('Accompagnement familial'), -- 10
+    ('Intervention en milieu scolaire'), -- 11
+    ('Psychothérapie'), -- 12
+    ('Médiation sociale'); -- 13
+
+-- Table professionnel_expertise
+CREATE TABLE professionnel_expertise (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     professionnel_id INT NOT NULL,
+     expertise_id INT NOT NULL,
+     FOREIGN KEY (professionnel_id) REFERENCES professionnels_sante(id),
+     FOREIGN KEY (expertise_id) REFERENCES expertise(id)
+);
+
+-- Insertion dans professionnel_expertise
+INSERT INTO professionnel_expertise (professionnel_id, expertise_id) VALUES
+    (1, 1), -- Guidance parentale
+    (1, 2), -- Psychologie de l'enfant
+    (1, 3), -- Psychologie de l'adulte
+
+    (2, 1), -- Guidance parentale
+    (2, 6), -- Gestion du stress
+
+    (3, 1), -- Guidance parentale
+    (3, 2), -- Psychologie de l'enfant
+    (3, 3), -- Psychologie de l'adulte
+
+    (4, 1), -- Guidance parentale
+    (4, 2), -- Psychologie de l'enfant
+
+    (5, 2), -- Psychologie de l'enfant
+    (5, 1), -- Guidance parentale
+
+    (6, 3), -- Psychologie de l'adulte
+    (6, 1), -- Guidance parentale
+
+    (7, 12), -- Psychothérapie
+    (7, 6), -- Gestion du stress
+
+    (8, 11), -- Intervention en milieu scolaire
+    (8, 13), -- Médiation sociale
+    (8, 10), -- Accompagnement familial
+
+    (9, 2), -- Psychologie de l'enfant
+    (9, 10), -- Accompagnement familial
+
+    (10, 3), -- Psychologie de l'adulte
+    (10, 8), -- Gestion des traumatismes
+    (10, 12), -- Psychothérapie
+
+    (11, 2), -- Psychologie de l'enfant
+    (11, 5), -- Développement de l'enfant
+    (11, 10), -- Accompagnement familial
+
+    (12, 1), -- Guidance parentale
+    (12, 5), -- Développement de l'enfant
+    (12, 11), -- Intervention en milieu scolaire
+
+    (13, 5), -- Développement de l'enfant
+    (13, 8), -- Gestion des traumatismes
+
+    (14, 5), -- Développement de l'enfant
+    (14, 6), -- Gestion du stress
+
+    (15, 7), -- Estime de soi
+    (15, 11), -- Intervention en milieu scolaire
+
+    (16, 5), -- Développement de l'enfant
+    (16, 8); -- Gestion des traumatismes
+
+-- Table horaires_professionnels
+CREATE TABLE horaires_professionnels (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    professionnel_id INT NOT NULL,
+    jour_semaine ENUM('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche') NOT NULL,
+    heure_debut_matin TIME,
+    heure_fin_matin TIME,
+    heure_debut_apres_midi TIME,
+    heure_fin_apres_midi TIME,
+    duree_rdv ENUM('30 minutes', '1 heure') NOT NULL,
+    FOREIGN KEY (professionnel_id) REFERENCES professionnels_sante(id)
+);
+
+-- Insertion dans horaires_professionnels pour Jean Martin
+INSERT INTO horaires_professionnels (professionnel_id, jour_semaine, heure_debut_matin, heure_fin_matin, heure_debut_apres_midi, heure_fin_apres_midi, duree_rdv) VALUES
+    (1, 'Lundi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (1, 'Mardi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (1, 'Mercredi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (1, 'Jeudi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (1, 'Vendredi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+
+    (2, 'Lundi', '08:00:00', '12:00:00', '13:30:00', '18:00:00', '1 heure'),
+    (2, 'Mardi', '08:00:00', '12:00:00', '13:30:00', '18:00:00', '1 heure'),
+    (2, 'Mercredi', '08:00:00', '12:00:00', '13:30:00', '18:00:00', '1 heure'),
+    (2, 'Jeudi', '08:00:00', '12:00:00', '13:30:00', '18:00:00', '1 heure'),
+    (2, 'Vendredi', '08:00:00', '12:00:00', '13:30:00', '18:00:00', '1 heure'),
+
+    (3, 'Lundi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (3, 'Mardi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (3, 'Mercredi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (3, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (3, 'Vendredi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+
+    (4, 'Lundi', '09:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (4, 'Mardi', '14:00:00', '18:00:00', NULL, NULL, '30 minutes'),
+    (4, 'Mercredi', '09:00:00', '12:00:00', NULL, NULL, '1 heure'),
+    (4, 'Jeudi', NULL, NULL, '14:00:00', '18:00:00', '1 heure'),
+    (4, 'Vendredi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+
+    (5, 'Lundi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (5, 'Mardi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (5, 'Mercredi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (5, 'Jeudi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (5, 'Vendredi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+
+    (6, 'Lundi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (6, 'Mardi', NULL, NULL, '14:00:00', '18:00:00', '30 minutes'),
+    (6, 'Mercredi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (6, 'Jeudi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (6, 'Vendredi', NULL, NULL, '14:00:00', '18:00:00', '30 minutes'),
+
+    (7, 'Lundi', NULL, NULL, '14:00:00', '18:00:00', '1 heure'),
+    (7, 'Mardi', '08:00:00', '12:00:00', NULL, NULL, '1 heure'),
+    (7, 'Mercredi', NULL, NULL, '14:00:00', '18:00:00', '1 heure'),
+    (7, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '1 heure'),
+    (7, 'Vendredi', '08:00:00', '12:00:00', NULL, NULL, '1 heure'),
+
+    (8, 'Lundi', '09:00:00', '12:00:00', '13:00:00', '17:00:00', '30 minutes'),
+    (8, 'Mercredi', '10:00:00', '13:00:00', NULL, NULL, '1 heure'),
+    (8, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (8, 'Vendredi', '08:30:00', '12:30:00', NULL, NULL, '1 heure'),
+
+    (9, 'Lundi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (9, 'Mardi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (9, 'Mercredi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (9, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (9, 'Vendredi', '08:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+
+    (10, 'Lundi', '10:00:00', '13:00:00', '14:00:00', '18:00:00', '1 heure'),
+    (10, 'Mardi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '1 heure'),
+    (10, 'Mercredi', '10:00:00', '13:00:00', '14:00:00', '18:00:00', '1 heure'),
+    (10, 'Jeudi', '09:00:00', '12:00:00', '14:00:00', '18:00:00', '1 heure'),
+    (10, 'Vendredi', '10:00:00', '13:00:00', '14:00:00', '18:00:00', '1 heure'),
+
+    (11, 'Lundi', '08:30:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (11, 'Mardi', '08:30:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (11, 'Mercredi', '08:30:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (11, 'Jeudi', '08:30:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (11, 'Vendredi', '08:30:00', '12:00:00', NULL, NULL, '30 minutes'),
+
+    (12, 'Lundi', '09:00:00', '12:00:00', '14:00:00', '17:00:00', '30 minutes'),
+    (12, 'Mardi', '09:00:00', '12:00:00', '14:00:00', '17:00:00', '30 minutes'),
+    (12, 'Mercredi', '09:00:00', '12:00:00', NULL, NULL, '30 minutes'),
+    (12, 'Jeudi', '09:00:00', '12:00:00', '14:00:00', '17:00:00', '30 minutes'),
+    (12, 'Vendredi', '09:00:00', '12:00:00', '14:00:00', '17:00:00', '30 minutes'),
+
+    (13, 'Lundi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (13, 'Mardi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (13, 'Mercredi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (13, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (13, 'Vendredi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+
+    (14, 'Lundi', '09:00:00', '13:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (14, 'Mardi', '09:00:00', '13:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (14, 'Mercredi', '09:00:00', '13:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (14, 'Jeudi', '09:00:00', '13:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (14, 'Vendredi', '09:00:00', '13:00:00', '14:00:00', '18:00:00', '30 minutes'),
+
+    (15, 'Lundi', NULL, NULL, '14:00:00', '18:00:00', '1 heure'),
+    (15, 'Mardi', '08:00:00', '12:00:00', NULL, NULL, '1 heure'),
+    (15, 'Mercredi', NULL, NULL, '14:00:00', '18:00:00', '1 heure'),
+    (15, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '1 heure'),
+    (15, 'Vendredi', '08:00:00', '12:00:00', NULL, NULL, '1 heure'),
+
+    (16, 'Lundi', '08:30:00', '12:30:00', NULL, NULL, '30 minutes'),
+    (16, 'Mercredi', '10:00:00', '13:00:00', NULL, NULL, '1 heure'),
+    (16, 'Jeudi', '08:00:00', '12:00:00', '14:00:00', '18:00:00', '30 minutes'),
+    (16, 'Vendredi', '08:30:00', '12:30:00', NULL, NULL, '1 heure');
