@@ -183,7 +183,7 @@ $professionnels = getProfessionnels($dbh, $offset, $elementsParPage, $nomRecherc
                             <p class="card-text"><?php echo $professionnel['adresse']; ?></p>
                             <p class="card-text"><?php echo $professionnel['ville']; ?></p>
                             <p class="card-text"><?php echo $professionnel['code_postal']; ?></p>
-                            <a href="#" class="btn btn-primary mb-1">Prendre rendez-vous</a>
+                            <a href="../pages/rdv.php?professionnel_id=<?php echo $professionnel['id']; ?>" class="btn btn-primary mb-1">Prendre rendez-vous</a>
                         </div>
                     </div>
                     <div class="col-md-8">

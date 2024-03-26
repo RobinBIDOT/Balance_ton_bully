@@ -5,3 +5,4 @@ info_god.json
 qodana.yaml
 .idea
 /pages/test/node_modules
+node_modules
