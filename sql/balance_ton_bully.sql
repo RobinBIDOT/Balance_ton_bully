@@ -70,13 +70,11 @@ CREATE TABLE `utilisateurs` (
     `mail` varchar(255) NOT NULL,          -- Une colonne pour l'adresse e-mail de l'utilisateur
     `photo_avatar` varchar(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',-- Une colonne pour l'URL de la photo de profil de l'utilisateur, avec une valeur par défaut
     `password` varchar(255) NOT NULL,      -- Une colonne pour le mot de passe (qui doit être stocké de manière sécurisée, par exemple après hashage)
-
     `token` varchar(50) DEFAULT NULL,
-
     `id_role` int(11) NOT NULL,            -- Une colonne pour l'ID du rôle de l'utilisateur, faisant référence à la table `roles`
     PRIMARY KEY (`id`)                     -- La colonne 'id' est définie comme la clé primaire de la table
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
--- Paramétrage de la table avec le moteur InnoDB et le jeu de caractères UTF-8mb4 pour une meilleure compatibilité internationale
+
 
 --
 -- Déchargement des données de la table `utilisateurs`
@@ -247,6 +245,14 @@ CREATE TABLE `sujets_forum` (
     FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE sujets_forum
+DROP FOREIGN KEY sujets_forum_ibfk_1;
+
+-- Ajout de la nouvelle contrainte avec suppression en cascade
+ALTER TABLE sujets_forum
+ADD CONSTRAINT fk_utilisateurs_sujets
+FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE;
+
 
 -- Insertion de 20 sujets de forum en une seule requête
 INSERT INTO sujets_forum (id_utilisateur, titre, contenu, date_creation) VALUES
@@ -297,6 +303,7 @@ INSERT INTO sujets_forum (id_utilisateur, titre, contenu, date_creation) VALUES
 -- Structure de la table `reponses_forum`
 --
 
+-- Création de la table reponses_forum
 CREATE TABLE `reponses_forum` (
     `id_reponse` int(11) NOT NULL AUTO_INCREMENT,
     `id_sujet` int(11) NOT NULL,
@@ -307,6 +314,14 @@ CREATE TABLE `reponses_forum` (
     FOREIGN KEY (`id_sujet`) REFERENCES `sujets_forum` (`id`),
     FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE reponses_forum
+DROP FOREIGN KEY reponses_forum_ibfk_2;
+
+-- Ajout de la nouvelle contrainte avec suppression en cascade
+ALTER TABLE reponses_forum
+ADD CONSTRAINT fk_utilisateurs_reponses
+FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE;
 
 
 -- Insertion de réponses pour les sujets du forum

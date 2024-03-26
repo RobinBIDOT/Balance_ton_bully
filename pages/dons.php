@@ -105,12 +105,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 // Débogage
-echo "<pre>Session Data : ";
-var_dump($_SESSION);
-echo "</pre>";
-echo "<pre>Données du formulaire : ";
-var_dump($_POST);
-echo "</pre>";
+//echo "<pre>Session Data : ";
+//var_dump($_SESSION);
+//echo "</pre>";
+//echo "<pre>Données du formulaire : ";
+//var_dump($_POST);
+//echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="fr">

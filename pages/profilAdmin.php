@@ -123,21 +123,21 @@ $jsonReponsesData = json_encode($reponsesData);
                     <!-- Champs du formulaire -->
                     <input type="hidden" id="editActuId" name="id">
                     <div class="form-group">
-                        <label>Titre</label>
-                        <input type="text" class="form-control" id="editActuTitre" name="titre">
+                        <label for="editActuTitre">Titre</label>
+                        <input type="text" class="form-control" id="editActuTitre" name="titre" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Contenu</label>
-                        <textarea class="form-control" id="editActuContenu" name="contenu"></textarea>
+                        <label for="editActuContenu">Contenu</label>
+                        <textarea class="form-control" id="editActuContenu" name="contenu" autocomplete="off"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Lien de l'article</label>
-                        <input type="text" class="form-control" id="editActuLien" name="lien_article">
+                        <label for="editActuLien">Lien de l'article</label>
+                        <input type="text" class="form-control" id="editActuLien" name="lien_article" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="photoChanged" value="yes"> Cochez si vous changez la photo
-                        <label>Photo</label>
-                        <input type="file" class="form-control" id="editActuPhoto" name="photo">
+                        <label for="editActuPhoto">Photo</label>
+                        <input type="file" class="form-control" id="editActuPhoto" name="photo" autocomplete="off">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -160,24 +160,24 @@ $jsonReponsesData = json_encode($reponsesData);
                     <!-- Champs du formulaire -->
                     <input type="hidden" id="editUserId" name="id">
                     <div class="form-group">
-                        <label>Prénom</label>
-                        <input type="text" class="form-control" id="editUserFirstName" name="firstName">
+                        <label for="editUserFirstName">Prénom</label>
+                        <input type="text" class="form-control" id="editUserFirstName" name="firstName" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Nom</label>
-                        <input type="text" class="form-control" id="editUserName" name="name">
+                        <label for="editUserName">Nom</label>
+                        <input type="text" class="form-control" id="editUserName" name="name" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Pseudo</label>
-                        <input type="text" class="form-control" id="editUserUserName" name="userName">
+                        <label for="editUserUserName">Pseudo</label>
+                        <input type="text" class="form-control" id="editUserUserName" name="userName" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" id="editUserMail" name="mail">
+                        <label for="editUserMail">Email</label>
+                        <input type="email" class="form-control" id="editUserMail" name="mail" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Photo Avatar</label>
-                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar">
+                        <label for="editUserPhoto">Photo Avatar</label>
+                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar" autocomplete="off">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -199,8 +199,8 @@ $jsonReponsesData = json_encode($reponsesData);
                 <div class="modal-body">
                     <input type="hidden" id="editReponseId" name="id">
                     <div class="form-group">
-                        <label>Contenu de la réponse</label>
-                        <textarea class="form-control" id="editReponseContenu" name="contenu" required></textarea>
+                        <label for="editReponseContenu">Contenu de la réponse</label>
+                        <textarea class="form-control" id="editReponseContenu" name="contenu" required autocomplete="off"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -220,11 +220,6 @@ $jsonReponsesData = json_encode($reponsesData);
     var actualitesData = <?php echo $jsonActualitesData; ?>;
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
     var reponsesData = <?php echo $jsonReponsesData; ?>;
-
-    // Données des actualités
-    var actualitesData = <?php echo $jsonActualitesData; ?>;
-    var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
-
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -495,6 +490,7 @@ $jsonReponsesData = json_encode($reponsesData);
     function editUser(id) {
         // Trouver les données de l'utilisateur à partir de son ID
         const user = utilisateursData.find(user => user.id === id);
+        console.log(user);
         if (user) {
             // Préremplir le formulaire avec les données de l'utilisateur
             document.getElementById('editUserId').value = user.id;
@@ -502,12 +498,28 @@ $jsonReponsesData = json_encode($reponsesData);
             document.getElementById('editUserName').value = user.name;
             document.getElementById('editUserUserName').value = user.userName;
             document.getElementById('editUserMail').value = user.mail;
+
+            // Effectuer une requête AJAX pour récupérer d'autres données de l'utilisateur si nécessaire
+            $.ajax({
+                url: "../pages/delete_user.php",
+                type: "POST",
+                data: { id: user.id },
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors de la requête AJAX:", error);
+                }
+            });
+
             // Afficher le modal
             $('#modalEditUser').modal('show');
         } else {
             alert("Utilisateur introuvable.");
         }
     }
+
 
     document.getElementById('annulerEditUser').addEventListener('click', function() {
         $('#modalEditUser').modal('hide');
