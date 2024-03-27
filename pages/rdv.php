@@ -24,8 +24,8 @@ if (isset($_GET['professionnel_id'])) {
 // Initialiser la variable $date_en_cours avec la date d'aujourd'hui
 $date_aujourdhui = date('Y-m-d');
 
-// Calculer la date dans 1 mois
-$date_dans_1_mois = date('Y-m-d', strtotime('+1 month'));
+// Calculer la date dans 1 semaine
+$date_dans_1_semaine = date('Y-m-d', strtotime('+1 week'));
 
 // Jours de la semaine en français
 $jours_semaine = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
@@ -41,8 +41,8 @@ $horaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Initialiser la variable $date_en_cours avec la date d'aujourd'hui
 $date_en_cours = $date_aujourdhui;
 
-// Pour chaque jour entre aujourd'hui et dans 2 mois
-while ($date_en_cours <= $date_dans_1_mois) {
+// Pour chaque jour entre aujourd'hui et dans 1 semaine
+while ($date_en_cours <= $date_dans_1_semaine) {
     // Récupérer le jour de la semaine pour la date en cours
     $jour_semaine = date('N', strtotime($date_en_cours));
     $jour_semaine_fr = $jours_semaine[$jour_semaine - 1];
