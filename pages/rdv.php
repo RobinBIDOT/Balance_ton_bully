@@ -42,7 +42,10 @@ $horaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $date_en_cours = $date_aujourdhui;
 
 // Pour chaque jour entre aujourd'hui et dans 1 semaine
-while ($date_en_cours <= $date_dans_1_semaine) {
+for ($i = 0; $i <= 6; $i++) { // Boucle sur les jours de la semaine (0: dimanche, 1: lundi, ..., 6: samedi)
+    // Date en cours
+    $date_en_cours = date('Y-m-d', strtotime($date_aujourdhui . " +$i day"));
+
     // Récupérer le jour de la semaine pour la date en cours
     $jour_semaine = date('N', strtotime($date_en_cours));
     $jour_semaine_fr = $jours_semaine[$jour_semaine - 1];
@@ -50,45 +53,73 @@ while ($date_en_cours <= $date_dans_1_semaine) {
     // Vérifier si des horaires sont définis pour ce jour de la semaine
     foreach ($horaires as $horaire) {
         if ($horaire['jour_semaine'] == $jour_semaine_fr) {
-            // Calculer les créneaux horaires pour ce jour en tenant compte de la durée des rendez-vous
-            $heure_debut = strtotime($horaire['heure_debut_matin']);
-            $heure_fin = strtotime($horaire['heure_fin_matin']);
-            $duree_rdv = intval($horaire['duree_rdv']) * 60;
+            // Récupérer les heures de début et de fin pour le matin
+            $heure_debut_matin = $horaire['heure_debut_matin'];
+            $heure_fin_matin = $horaire['heure_fin_matin'];
 
-            // Ajouter les créneaux horaires pour ce jour
-            while ($heure_debut < $heure_fin) {
-                // Vérifier si un rendez-vous existe pour ce créneau horaire
-                $date_heure_debut = date('Y-m-d H:i:s', $heure_debut);
-                $date_heure_fin = date('Y-m-d H:i:s', $heure_debut + $duree_rdv);
-                $sql = "SELECT COUNT(*) AS count FROM rendez_vous WHERE professionnel_id = :professionnel_id AND date_heure >= :date_heure_debut AND date_heure < :date_heure_fin";
-                $stmt = $dbh->prepare($sql);
-                $stmt->bindParam(':professionnel_id', $professionnel_id, PDO::PARAM_INT);
-                $stmt->bindParam(':date_heure_debut', $date_heure_debut);
-                $stmt->bindParam(':date_heure_fin', $date_heure_fin);
-                $stmt->execute();
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Récupérer les heures de début et de fin pour l'après-midi
+            $heure_debut_apres_midi = $horaire['heure_debut_apres_midi'];
+            $heure_fin_apres_midi = $horaire['heure_fin_apres_midi'];
 
-                // Si aucun rendez-vous trouvé, ajouter ce créneau horaire aux événements disponibles
-                if ($result['count'] == 0) {
-                    $evenements[] = array(
-                        'title' => 'Disponible',
-                        'start' => date('Y-m-d\TH:i:s', $heure_debut),
-                        'end' => date('Y-m-d\TH:i:s', $heure_debut + $duree_rdv),
-                        'url' => 'confirmation_rdv.php?professionnel_id=' . $professionnel_id . '&date_heure=' . date('Y-m-d\TH:i:s', $heure_debut),
-                        'backgroundColor' => '#28a745',
-                        'borderColor' => '#28a745'
-                    );
-                }
+            // Définir la durée d'un rendez-vous
+            $duree_rdv = $horaire['duree_rdv'];
 
-                // Avancer l'heure de début au prochain créneau horaire
-                $heure_debut += $duree_rdv;
-            }
+            // Vérifier les créneaux horaires pour le matin
+            verifierCreneaux($heure_debut_matin, $heure_fin_matin, $duree_rdv, $professionnel_id, $dbh, $evenements, $date_en_cours);
+
+            // Vérifier les créneaux horaires pour l'après-midi
+            verifierCreneaux($heure_debut_apres_midi, $heure_fin_apres_midi, $duree_rdv, $professionnel_id, $dbh, $evenements, $date_en_cours);
         }
     }
-
-    // Passer au jour suivant
-    $date_en_cours = date('Y-m-d', strtotime($date_en_cours . ' +1 day'));
 }
+
+
+function verifierCreneaux($heure_debut, $heure_fin, $duree_rdv, $professionnel_id, $dbh, &$evenements, $date_en_cours) {
+    // Vérifier si les heures de début et de fin sont définies
+    if (!empty($heure_debut) && !empty($heure_fin)) {
+        // Convertir les heures en timestamps
+        $heure_debut_ts = strtotime($date_en_cours . " $heure_debut");
+        $heure_fin_ts = strtotime($date_en_cours . " $heure_fin");
+
+        // Tableau pour stocker les créneaux horaires déjà traités
+        $creneaux_traites = array();
+
+        // Ajouter les créneaux horaires
+        while ($heure_debut_ts < $heure_fin_ts) {
+            // Vérifier si un rendez-vous existe pour ce créneau horaire
+            $date_heure_debut = date('Y-m-d H:i:s', $heure_debut_ts);
+            $date_heure_fin = date('Y-m-d H:i:s', $heure_debut_ts + $duree_rdv * 60);
+            $sql = "SELECT COUNT(*) AS count FROM rendez_vous WHERE professionnel_id = :professionnel_id AND date_heure >= :date_heure_debut AND date_heure < :date_heure_fin";
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindParam(':professionnel_id', $professionnel_id, PDO::PARAM_INT);
+            $stmt->bindParam(':date_heure_debut', $date_heure_debut);
+            $stmt->bindParam(':date_heure_fin', $date_heure_fin);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Si aucun rendez-vous trouvé et le créneau n'a pas été ajouté, ajouter ce créneau horaire aux événements disponibles
+            if ($result['count'] == 0 && !isset($creneaux_traites[$date_heure_debut])) {
+                $evenements[] = array(
+                    'title' => 'Disponible',
+                    'start' => date('Y-m-d\TH:i:s', $heure_debut_ts),
+                    'end' => date('Y-m-d\TH:i:s', $heure_debut_ts + $duree_rdv * 60),
+                    'url' => 'confirmation_rdv.php?professionnel_id=' . $professionnel_id . '&date_heure=' . date('Y-m-d\TH:i:s', $heure_debut_ts),
+                    'backgroundColor' => '#28a745',
+                    'borderColor' => '#28a745'
+                );
+
+                // Ajouter ce créneau horaire au tableau des créneaux traités
+                $creneaux_traites[$date_heure_debut] = true;
+            }
+
+            // Avancer l'heure de début au prochain créneau horaire
+            $heure_debut_ts += $duree_rdv * 60;
+        }
+    }
+}
+
+
+
 
 // Convertir le tableau des événements en format JSON pour l'utiliser dans le JavaScript
 $evenements_json = json_encode($evenements);
