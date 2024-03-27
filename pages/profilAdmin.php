@@ -91,7 +91,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
 <div class="container-fluid mt-5">
     <h1 class="text-center mb-4">Administration</h1>
     <div class="row justify-content-center my-5">
-        <div class="col-md-8 d-flex flex-wrap justify-content-around mb-5">
+        <div class="col-6 col-md-8 d-flex flex-wrap justify-content-around mb-5">
             <button onclick="loadContent('actualites')" class="btn btn-primary admin-btn">Gérer les actualités</button>
             <button onclick="loadContent('dons')" class="btn btn-success admin-btn">Gérer les dons</button>
             <button onclick="loadContent('utilisateurs')" class="btn btn-warning admin-btn">Gérer les utilisateurs</button>
@@ -203,7 +203,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Rend les données PHP disponibles en tant qu'objet JavaScript
