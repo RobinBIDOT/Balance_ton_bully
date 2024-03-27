@@ -1,3 +1,7 @@
+
+<?php
+session_start()
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,6 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
 
     <style>
+        body {font-family: 'Roboto', sans-serif;background-color: #f8f9fa;}
+        h1, h2 {font-family: 'Montserrat', sans-serif;margin-bottom: 1rem;}
+        p, li {font-size: 1rem;line-height: 1.5;}
         .custom-primary { color: #0854C7; }
         .custom-secondary { color: #58C1F5; }
         .flipping-card { perspective: 1000px; }
@@ -16,18 +23,18 @@
         .flipping-card:hover .flipping-card-inner { transform: rotateY(180deg); }
         .flipping-card-front, .flipping-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; }
         .flipping-card-front { background-color: #bbb; color: black; }
-        .flipping-card-back { background-color: #2980b9; color: white; transform: rotateY(180deg); }
+        .flipping-card-back { color:#0854C7; transform: rotateY(180deg); }
         .team-member-image { max-height: 200px; /* Ajustez la hauteur maximale selon vos besoins */ }
-        .team-member-description { margin-top: 10px; } /* Ajoute une marge supérieure à la description */
+        .team-member-description { margin-top: 10px; font-size: 1rem;} /* Ajoute une marge supérieure à la description */
     </style>
 </head>
 <body>
     <?php include('../includes/headerNav.php'); ?>
 
-    <div class="container my-5">
+    <div class="container my-5 vh-100">
         <h1 class="custom-primary mb-5 text-center custom-primary">Qui Sommes-Nous ?</h1>
 
-        <section class="mb-5 ml-2">
+        <section class="ml-2">
             <h2 class="custom-secondary">Notre Mission</h2>
             <p>Balance ton Bully est bien plus qu'un simple service en ligne. Nous sommes une association reconnue d'utilité publique depuis 2024, engagée corps et âme dans la protection des enfants, des adolescents, et des parents. Notre mission principale est la prévention et la sensibilisation. Chaque année, nous touchons 200 000 personnes à travers nos actions menées dans les écoles, les collèges, les lycées, et au sein des familles et des milieux professionnels. Nous sommes agréés par le Ministère de l’Éducation nationale et de la Jeunesse, ce qui témoigne de notre engagement et de notre crédibilité dans ce domaine.</p>
 
@@ -44,64 +51,64 @@
                 <li><strong>Accompagnement Personnalisé :</strong> Nos écoutants, composés de spécialistes de la santé sociale, fournissent un soutien personnalisé et des conseils adaptés à chaque situation.</li>
                 <li><strong>Forum d’échange :</strong> Nous mettons en place un lieu d'échange de témoignages qui permet aux jeunes victimes d'harcèlement de réaliser qu'ils ont le droit de s'exprimer et de demander de l'aide.</li>
             </ul>
-
-        <section class="mb-5 ml-2">
+        </section>
+        <section class=" ml-2">
             <h2 class="custom-secondary">Une Équipe de Direction Expérimentée</h2>
-    <div class="row mt-4">
-        <div class="col-md-3 mb-4">
-            <div class="flipping-card">
-                <div class="flipping-card-inner">
-                    <div class="flipping-card-front">
-                        <img src="../ressources/Kevin.jpg" class="img-fluid team-member-image" alt="Membre de l'équipe">
+            <div class="row mt-4">
+                <div class="col-md-3 mb-4">
+                    <div class="flipping-card">
+                        <div class="flipping-card-inner">
+                            <div class="flipping-card-front">
+                                <img src="../ressources/Kevin.jpg" class="img-fluid team-member-image rounded-2" alt="Membre de l'équipe">
+                            </div>
+                            <div class="flipping-card-back">
+                                <h3 class="team-member-name">Kevin</h3>
+                                <p class="team-member-description">Chef de Projet</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flipping-card-back">
-                        <h3 class="team-member-name">Kevin</h3>
-                        <p class="team-member-description">Chef de Projet</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="flipping-card">
+                        <div class="flipping-card-inner">
+                            <div class="flipping-card-front">
+                                <img src="../ressources/Walid.jpg" class="img-fluid team-member-image rounded-2" alt="Membre de l'équipe">
+                            </div>
+                            <div class="flipping-card-back">
+                                <h3 class="team-member-name">Walid</h3>
+                                <p class="team-member-description">Front-End</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="flipping-card">
+                        <div class="flipping-card-inner">
+                            <div class="flipping-card-front">
+                                <img src="../ressources/Robin.jpg" class="img-fluid team-member-image rounded-2" alt="Membre de l'équipe">
+                            </div>
+                            <div class="flipping-card-back">
+                                <h3 class="team-member-name">Robin</h3>
+                                <p class="team-member-description">Back-End</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="flipping-card">
+                        <div class="flipping-card-inner">
+                            <div class="flipping-card-front">
+                                <img src="../ressources/Godwill.jpg" class="img-fluid team-member-image rounded-2" alt="Membre de l'équipe">
+                            </div>
+                            <div class="flipping-card-back">
+                                <h3 class="team-member-name">Godwill</h3>
+                                <p class="team-member-description">Front-End</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="flipping-card">
-                <div class="flipping-card-inner">
-                    <div class="flipping-card-front">
-                        <img src="../ressources/Walid.jpg" class="img-fluid team-member-image" alt="Membre de l'équipe">
-                    </div>
-                    <div class="flipping-card-back">
-                        <h3 class="team-member-name">Walid</h3>
-                        <p class="team-member-description">Front-End</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="flipping-card">
-                <div class="flipping-card-inner">
-                    <div class="flipping-card-front">
-                        <img src="../ressources/Robin.jpg" class="img-fluid team-member-image" alt="Membre de l'équipe">
-                    </div>
-                    <div class="flipping-card-back">
-                        <h3 class="team-member-name">Robin</h3>
-                        <p class="team-member-description">Back-End</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="flipping-card">
-                <div class="flipping-card-inner">
-                    <div class="flipping-card-front">
-                        <img src="../ressources/Godwill.jpg" class="img-fluid team-member-image" alt="Membre de l'équipe">
-                    </div>
-                    <div class="flipping-card-back">
-                        <h3 class="team-member-name">Godwill</h3>
-                        <p class="team-member-description">Front-End</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
     </div>
 
