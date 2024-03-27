@@ -20,17 +20,17 @@ $sql = "SELECT
             ps.code_postal,
             ps.presentation,
             ps.photo,
-            GROUP_CONCAT(e.nom) AS expertises
+            GROUP_CONCAT(DISTINCT e.nom) AS expertises
         FROM professionnels_sante ps
         LEFT JOIN professionnel_expertise pe ON ps.id = pe.professionnel_id
         LEFT JOIN expertise e ON pe.expertise_id = e.id
-        GROUP BY ps.id ";
+        GROUP BY ps.id";
 $stmt = $dbh->query($sql);
 $professionnels = array();
 
 // Récupérer les données sous forme de tableau associatif
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $id = $row['professionnel_id']; // Utiliser la bonne clé pour l'ID du professionnel
+    $id = $row['professionnel_id'];
     if (!isset($professionnels[$id])) {
         $professionnels[$id] = array(
             'id' => $id,
@@ -42,12 +42,15 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             'code_postal' => $row['code_postal'],
             'photo' => $row['photo'],
             'presentation' => $row['presentation'],
-            'expertises' => array() // Initialiser un tableau vide pour les expertises
+            'expertises' => array()
         );
     }
     // Ajouter chaque expertise au tableau d'expertises du professionnel
     if (!empty($row['expertises'])) {
-        $professionnels[$id]['expertises'][] = $row['expertises']; // Utiliser la bonne clé pour les expertises
+        $expertises = explode(',', $row['expertises']);
+        foreach ($expertises as $expertise) {
+            $professionnels[$id]['expertises'][] = $expertise;
+        }
     }
 }
 

@@ -76,6 +76,44 @@ $reponsesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Convertit les données PHP en JSON pour JavaScript
 $jsonReponsesData = json_encode($reponsesData);
+
+// Pour l'affichage de la liste des professionnels de santé
+$query = "
+    SELECT ps.id, ps.nom, ps.prenom, ps.profession, ps.adresse, ps.ville, ps.code_postal, ps.presentation,
+           GROUP_CONCAT(DISTINCT e.nom ORDER BY e.nom SEPARATOR '\n') AS expertises,
+           GROUP_CONCAT(CONCAT(IFNULL(hp.jour_semaine, 'Fermé'), ': ', 
+                                IFNULL(CONCAT(hp.heure_debut_matin, '-', hp.heure_fin_matin), 'Fermé'), ' / ', 
+                                IFNULL(CONCAT(hp.heure_debut_apres_midi, '-', hp.heure_fin_apres_midi), 'Fermé')) 
+                        ORDER BY hp.jour_semaine SEPARATOR '\n') AS horaires
+    FROM professionnels_sante ps
+    LEFT JOIN professionnel_expertise pe ON ps.id = pe.professionnel_id
+    LEFT JOIN expertise e ON pe.expertise_id = e.id
+    LEFT JOIN horaires_professionnels hp ON ps.id = hp.professionnel_id
+    GROUP BY ps.id, ps.nom, ps.prenom, ps.profession, ps.adresse, ps.ville, ps.code_postal, ps.presentation
+    ORDER BY ps.nom, ps.prenom";
+
+$stmt = $dbh->prepare($query);
+$stmt->execute();
+$prosData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$jsonProsData = json_encode($prosData);
+
+// Pour l'affichage des horaires des professionnels de santé
+$queryHoraires = "
+    SELECT professionnel_id,
+           jour_semaine,
+           CASE
+               WHEN heure_debut_matin IS NULL AND heure_fin_matin IS NULL AND heure_debut_apres_midi IS NULL AND heure_fin_apres_midi IS NULL THEN 'Fermé'
+               WHEN heure_debut_matin IS NULL AND heure_fin_matin IS NULL THEN CONCAT('Fermé (après-midi : ', heure_debut_apres_midi, ' - ', heure_fin_apres_midi, ')')
+               WHEN heure_debut_apres_midi IS NULL AND heure_fin_apres_midi IS NULL THEN CONCAT('Fermé (matin : ', heure_debut_matin, ' - ', heure_fin_matin, ')')
+               ELSE CONCAT('Matin : ', heure_debut_matin, ' - ', heure_fin_matin, ', Après-midi : ', heure_debut_apres_midi, ' - ', heure_fin_apres_midi)
+           END AS horaires
+    FROM horaires_professionnels
+    ORDER BY professionnel_id, FIELD(jour_semaine, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')";
+
+$stmtHoraires = $dbh->prepare($queryHoraires);
+$stmtHoraires->execute();
+$horairesData = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
+$jsonHorairesData = json_encode($horairesData);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -220,6 +258,7 @@ $jsonReponsesData = json_encode($reponsesData);
     var actualitesData = <?php echo $jsonActualitesData; ?>;
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
     var reponsesData = <?php echo $jsonReponsesData; ?>;
+    var prosData = <?php echo $jsonProsData; ?>;
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -244,7 +283,7 @@ $jsonReponsesData = json_encode($reponsesData);
                     .catch(error => console.error('Erreur:', error));
                 break;
             case 'pro_sante':
-                contentArea.innerHTML = '<h2 class="text-center mb-4">Gestion des professionnels de santé</h2><p class="text-center mb-4">Ici, vous pouvez gérer les professionnels de santé.</p>';
+                displayProSante(contentArea);
                 break;
             default:
                 contentArea.innerHTML = '<p class="text-center mb-4">Choisissez une option pour commencer.</p>';
@@ -276,7 +315,7 @@ $jsonReponsesData = json_encode($reponsesData);
             tableHtml += "<td><a href='" + actu.lien_article + "'>Lien</a></td>";
             tableHtml += "<td>" + actu.date_publication + "</td>";
             tableHtml += "<td>";
-            tableHtml += "<button class='btn btn-outline-primary' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-outline-primary mb-1' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
             tableHtml += "<button class='btn btn-outline-danger' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
@@ -582,7 +621,7 @@ $jsonReponsesData = json_encode($reponsesData);
             <td>${signalement.contenuReponse}</td>
             <td>${signalement.dateSignalement}</td>
             <td>
-                <button class='btn btn-outline-primary' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
+                <button class='btn btn-outline-primary mb-1' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
                 <button class='btn btn-outline-danger' onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
             </td>
         </tr>`;
@@ -673,6 +712,61 @@ $jsonReponsesData = json_encode($reponsesData);
     });
 
 
+    /**
+     * Affiche les informations sur les professionnels de santé dans la zone de contenu spécifiée.
+     *
+     * Cette fonction génère et affiche un tableau HTML contenant la liste des professionnels de santé.
+     * Chaque ligne du tableau inclut des informations telles que le nom, la profession, l'adresse,
+     * la ville, le code postal, la présentation, l'expertise, les horaires, ainsi que des boutons
+     * pour modifier et supprimer le professionnel de santé.
+     *
+     * @param {HTMLElement} contentArea - L'élément dans lequel afficher les données des professionnels de santé.
+     */
+    function displayProSante(contentArea) {
+        var tableHtml = '<h2 class="text-center mb-4">Gestion des professionnels de santé</h2>';
+        tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        tableHtml += '<th class="align-middle">Nom et Prénom</th><th class="align-middle">Profession</th><th class="align-middle">Adresse - Ville - Code Postal</th><th class="align-middle">Présentation</th><th class="align-middle">Expertise</th><th class="align-middle">Horaires</th><th class="align-middle">Actions</th>';
+        tableHtml += '</tr></thead><tbody>';
+
+        prosData.forEach(function(pro) {
+            tableHtml += '<tr>';
+            tableHtml += `<td class="align-middle">${pro.nom} ${pro.prenom}</td>`;
+            tableHtml += `<td class="align-middle">${pro.profession}</td>`;
+            tableHtml += `<td class="align-middle">${pro.adresse}, ${pro.ville}, ${pro.code_postal}</td>`;
+            tableHtml += `<td class="align-middle">${pro.presentation}</td>`;
+
+            // Conversion des chaînes en tableaux et affichage des expertises
+            var expertisesArray = pro.expertises ? pro.expertises.split('\n') : [];
+            var expertisesHtml = expertisesArray.join('<br>');
+            tableHtml += `<td class="align-middle">${expertisesHtml}</td>`;
+
+            // Récupération et affichage des horaires sans doublons
+            var horairesArray = pro.horaires ? pro.horaires.split('\n') : [];
+            var horairesSet = new Set(horairesArray);
+            var horairesHtml = Array.from(horairesSet).join('<br>');
+            tableHtml += `<td class="align-middle">${horairesHtml}</td>`;
+
+            tableHtml += "<td class='align-middle'><button class='btn btn-outline-primary'>Modifier</button> <button class='btn btn-outline-danger'>Supprimer</button></td>";
+            tableHtml += '</tr>';
+        });
+
+        tableHtml += '</tbody></table></div>';
+        contentArea.innerHTML = tableHtml;
+    }
+
+    /**
+     * Formate et retourne une chaîne de caractères représentant les horaires d'un professionnel de santé.
+     *
+     * Cette fonction prend en entrée un objet représentant un professionnel de santé et
+     * retourne une chaîne formatée indiquant ses horaires. Les horaires incluent les heures de début
+     * et de fin le matin et l'après-midi pour chaque jour de la semaine.
+     *
+     * @param {Object} pro - L'objet représentant un professionnel de santé.
+     * @returns {string} Une chaîne de caractères représentant les horaires du professionnel.
+     */
+    function formatHoraires(pro) {
+        return pro.jour_semaine + ' ' + pro.heure_debut_matin + ' - ' + pro.heure_fin_matin + ' / ' + pro.heure_debut_apres_midi + ' - ' + pro.heure_fin_apres_midi;
+    }
 
 </script>
 </body>

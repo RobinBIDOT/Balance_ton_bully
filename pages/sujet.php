@@ -109,7 +109,7 @@ try {
 
                         echo '<div class="auteur-info text-white">';
                         if ($rowReponse['id_sujet'] === $row['id']) {
-                            echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'] . ' - Auteur ';
+                            echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'] . ' - Auteur '; // -------------------------------------- à vérifier car cela apparait sur toutes les réponses
                         } else {
                             echo $rowReponse['nom_auteur_reponse'] . ' - ' . $rowReponse['date_creation'];
                         }
