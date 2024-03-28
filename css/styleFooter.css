@@ -1,0 +1,38 @@
+.footer {
+    position: relative;
+    z-index: 2;
+    background: #A42AF0;
+    color: white;
+}
+
+footer div{
+    background-color: #A42AF0;
+    color: white;
+}
+footer div a{
+    color: white;
+    transition: font-size 1.2ms;
+}
+footer div a:hover{
+    font-size: 1.1rem;
+    transition: 1s;
+}
+/* Conteneur de la vague */
+.canvas-wrap {
+    max-width: 100%;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+}
+
+/* Canvas pour la vague */
+canvas {
+    display: block;
+    width: 100%;
+    height: 50px; /* hauteur de la vague */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
