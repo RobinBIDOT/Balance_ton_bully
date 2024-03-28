@@ -45,11 +45,11 @@
                                 <a href="../php/account.php" class="btn btn-primary my-2">Votre profil</a>
                                 <?php
                                     // Bouton pour accéder à la page de profil administrateur 
-                                    if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'administrateur') { ?>
+                                    if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == '1') { ?>
                                     <a href="../pages/profilAdmin.php" class="btn btn-warning my-2">Profil admin</a>
                                 <?php }
                                     // Bouton pour accéder à la page de profil professionnel de santé
-                                    if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'sante') { ?>
+                                    if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == '3') { ?>
                                         <a href="../pages/profilSante.php" class="btn btn-success my-2">Profil santé</a>
                                     <?php } ?>
                                     <a href="../pages/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
@@ -105,7 +105,7 @@
                             </div>
                             <?php
                             if(isset($_SESSION['nickName'])){
-                                if($user['id_role'] = 1){ ?>
+                                if($_SESSION['id_role'] == 1){ ?>
                                     <li class="nav-item">
                                         <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page administrateur</a>
                                     </li>
