@@ -3,6 +3,6 @@
   "database": "balance_ton_bully",
   "user": "root",
   "pwd": "",
-  "port": "",
+  "port": "3306",
   "charset": "utf8mb4"
 }
