@@ -43,15 +43,6 @@
                                     <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                                 </div>
                                 <a href="../php/account.php" class="btn btn-primary my-2">Votre profil</a>
-                                <?php
-                                    // Bouton pour accéder à la page de profil administrateur 
-                                    if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == '1') { ?>
-                                    <a href="../pages/profilAdmin.php" class="btn btn-warning my-2">Profil admin</a>
-                                <?php }
-                                    // Bouton pour accéder à la page de profil professionnel de santé
-                                    if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == '3') { ?>
-                                        <a href="../pages/profilSante.php" class="btn btn-success my-2">Profil santé</a>
-                                    <?php } ?>
                                     <a href="../pages/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
                             </div>
                         <?php } ?>
@@ -110,7 +101,11 @@
                                         <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page administrateur</a>
                                     </li>
                                     <?php
-                                }
+                                }elseif ($_SESSION['id_role'] == 3){ ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page professionnelle</a>
+                                    </li>
+                                <?php }
                             } ?>
                         </ul>
                     </div>

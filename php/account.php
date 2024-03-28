@@ -73,19 +73,23 @@ if(isset($_POST['suppr'])){
 if(isset($_POST['modName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
     $stmt->execute([$newName, $userId]);
+    $user['name'] = $newName;
 
 }
 if(isset($_POST['modFName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET firstName = ? WHERE id = ?');
     $stmt->execute([$newFName, $userId]);
+    $user['firstName'] = $newName;
 }
 if(isset($_POST['modUName'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET userName = ? WHERE id = ?');
     $stmt->execute([$newUName, $userId]);
+    $user['userName'] = $newName;
 }
 if(isset($_POST['modMail'])){
     $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET mail = ? WHERE id = ?');
     $stmt->execute([$newMail, $userId]);
+    $user['mail'] = $newName;
 }
 ?>
 <!DOCTYPE html>
