@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/styleNav.css" rel="stylesheet">
 </head>
@@ -22,12 +23,14 @@
                 </a>
             </div>
             <div class='col d-flex justify-content-center'>
-                <form class="form-inline d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <a href="#!" class="d-flex align-items-center">
-                        <i class="bi bi-search" style="font-size: 1.5rem;"></i>
-                    </a>
-                </form>
+                <div class="content">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Entrez votre recherche" aria-label="search" class="search-bar__input">
+                        <button aria-label="submit search" class="search-bar__submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section '>
                 <!-- Icône de connexion et navigation (toujours visible) -->
@@ -70,9 +73,7 @@
             </div>
             <div class="container-fluid p-0 rounded">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-bottom">
-                    <button class="navbar-toggler m-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+
                     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                         <ul class="navbar-nav">
                             <li class="nav-item">
@@ -104,14 +105,11 @@
                                 </div>
                             </div>
                             <?php
-                            if(isset($_SESSION['nickName'])){
-                                if($user['id_role'] = 1){ ?>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page administrateur</a>
-                                    </li>
-                                    <?php
-                                }
-                            } ?>
+                            if (isset($_SESSION['nickName']) && $_SESSION['id_role'] === 1) { ?>
+                                <li class="nav-item">
+                                    <a class="nav-link text-black text-center mx-5" href="../pages/profilAdmin.php">Page administrateur</a>
+                                </li>
+                            <?php } ?>
                         </ul>
                     </div>
                 </nav>
