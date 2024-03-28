@@ -68,13 +68,59 @@ if (isset($_SESSION['nickName']) && $_SESSION['id_role'] == 1) {
 // Convertit les données PHP en JSON pour JavaScript
 $jsonUtilisateursData = json_encode($utilisateursData);
 
+// Récupération des données des réponses
+$reponsesData = [];
+$stmt = $dbh->prepare("SELECT * FROM reponses_forum");
+$stmt->execute();
+$reponsesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Convertit les données PHP en JSON pour JavaScript
+$jsonReponsesData = json_encode($reponsesData);
+
+// Pour l'affichage de la liste des professionnels de santé
+$query = "
+    SELECT ps.id, ps.nom, ps.prenom, ps.profession, ps.adresse, ps.ville, ps.code_postal, ps.presentation,
+           GROUP_CONCAT(DISTINCT e.nom ORDER BY e.nom SEPARATOR '\n') AS expertises,
+           GROUP_CONCAT(CONCAT(IFNULL(hp.jour_semaine, 'Fermé'), ': ', 
+                                IFNULL(CONCAT(hp.heure_debut_matin, '-', hp.heure_fin_matin), 'Fermé'), ' / ', 
+                                IFNULL(CONCAT(hp.heure_debut_apres_midi, '-', hp.heure_fin_apres_midi), 'Fermé')) 
+                        ORDER BY hp.jour_semaine SEPARATOR '\n') AS horaires
+    FROM professionnels_sante ps
+    LEFT JOIN professionnel_expertise pe ON ps.id = pe.professionnel_id
+    LEFT JOIN expertise e ON pe.expertise_id = e.id
+    LEFT JOIN horaires_professionnels hp ON ps.id = hp.professionnel_id
+    GROUP BY ps.id, ps.nom, ps.prenom, ps.profession, ps.adresse, ps.ville, ps.code_postal, ps.presentation
+    ORDER BY ps.nom, ps.prenom";
+
+$stmt = $dbh->prepare($query);
+$stmt->execute();
+$prosData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$jsonProsData = json_encode($prosData);
+
+// Pour l'affichage des horaires des professionnels de santé
+$queryHoraires = "
+    SELECT professionnel_id,
+           jour_semaine,
+           CASE
+               WHEN heure_debut_matin IS NULL AND heure_fin_matin IS NULL AND heure_debut_apres_midi IS NULL AND heure_fin_apres_midi IS NULL THEN 'Fermé'
+               WHEN heure_debut_matin IS NULL AND heure_fin_matin IS NULL THEN CONCAT('Fermé (après-midi : ', heure_debut_apres_midi, ' - ', heure_fin_apres_midi, ')')
+               WHEN heure_debut_apres_midi IS NULL AND heure_fin_apres_midi IS NULL THEN CONCAT('Fermé (matin : ', heure_debut_matin, ' - ', heure_fin_matin, ')')
+               ELSE CONCAT('Matin : ', heure_debut_matin, ' - ', heure_fin_matin, ', Après-midi : ', heure_debut_apres_midi, ' - ', heure_fin_apres_midi)
+           END AS horaires
+    FROM horaires_professionnels
+    ORDER BY professionnel_id, FIELD(jour_semaine, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')";
+
+$stmtHoraires = $dbh->prepare($queryHoraires);
+$stmtHoraires->execute();
+$horairesData = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
+$jsonHorairesData = json_encode($horairesData);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page en Construction</title>
+    <title>Page administrateur</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .admin-btn {
@@ -115,25 +161,26 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                     <!-- Champs du formulaire -->
                     <input type="hidden" id="editActuId" name="id">
                     <div class="form-group">
-                        <label>Titre</label>
-                        <input type="text" class="form-control" id="editActuTitre" name="titre">
+                        <label for="editActuTitre">Titre</label>
+                        <input type="text" class="form-control" id="editActuTitre" name="titre" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Contenu</label>
-                        <textarea class="form-control" id="editActuContenu" name="contenu"></textarea>
+                        <label for="editActuContenu">Contenu</label>
+                        <textarea class="form-control" id="editActuContenu" name="contenu" autocomplete="off"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Lien de l'article</label>
-                        <input type="text" class="form-control" id="editActuLien" name="lien_article">
+                        <label for="editActuLien">Lien de l'article</label>
+                        <input type="text" class="form-control" id="editActuLien" name="lien_article" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Photo</label>
-                        <input type="file" class="form-control" id="editActuPhoto" name="photo">
+                        <input type="checkbox" name="photoChanged" value="yes"> Cochez si vous changez la photo
+                        <label for="editActuPhoto">Photo</label>
+                        <input type="file" class="form-control" id="editActuPhoto" name="photo" autocomplete="off">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="annulerEditActu">Annuler</button>
                 </div>
             </form>
         </div>
@@ -151,29 +198,29 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                     <!-- Champs du formulaire -->
                     <input type="hidden" id="editUserId" name="id">
                     <div class="form-group">
-                        <label>Prénom</label>
-                        <input type="text" class="form-control" id="editUserFirstName" name="firstName">
+                        <label for="editUserFirstName">Prénom</label>
+                        <input type="text" class="form-control" id="editUserFirstName" name="firstName" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Nom</label>
-                        <input type="text" class="form-control" id="editUserName" name="name">
+                        <label for="editUserName">Nom</label>
+                        <input type="text" class="form-control" id="editUserName" name="name" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Pseudo</label>
-                        <input type="text" class="form-control" id="editUserUserName" name="userName">
+                        <label for="editUserUserName">Pseudo</label>
+                        <input type="text" class="form-control" id="editUserUserName" name="userName" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" id="editUserMail" name="mail">
+                        <label for="editUserMail">Email</label>
+                        <input type="email" class="form-control" id="editUserMail" name="mail" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label>Photo Avatar</label>
-                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar">
+                        <label for="editUserPhoto">Photo Avatar</label>
+                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar" autocomplete="off">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="annulerEditUser">Annuler</button>
                 </div>
             </form>
         </div>
@@ -190,13 +237,13 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 <div class="modal-body">
                     <input type="hidden" id="editReponseId" name="id">
                     <div class="form-group">
-                        <label>Contenu de la réponse</label>
-                        <textarea class="form-control" id="editReponseContenu" name="contenu" required></textarea>
+                        <label for="editReponseContenu">Contenu de la réponse</label>
+                        <textarea class="form-control" id="editReponseContenu" name="contenu" required autocomplete="off"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="annulerEditAnswer">Annuler</button>
                 </div>
             </form>
         </div>
@@ -210,12 +257,8 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     var donsData = <?php echo $jsonDonsData; ?>;
     var actualitesData = <?php echo $jsonActualitesData; ?>;
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
-
-
-    // Données des actualités
-    var actualitesData = <?php echo $jsonActualitesData; ?>;
-    var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
-
+    var reponsesData = <?php echo $jsonReponsesData; ?>;
+    var prosData = <?php echo $jsonProsData; ?>;
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -240,7 +283,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                     .catch(error => console.error('Erreur:', error));
                 break;
             case 'pro_sante':
-                contentArea.innerHTML = '<h2 class="text-center mb-4">Gestion des professionnels de santé</h2><p class="text-center mb-4">Ici, vous pouvez gérer les professionnels de santé.</p>';
+                displayProSante(contentArea);
                 break;
             default:
                 contentArea.innerHTML = '<p class="text-center mb-4">Choisissez une option pour commencer.</p>';
@@ -272,7 +315,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
             tableHtml += "<td><a href='" + actu.lien_article + "'>Lien</a></td>";
             tableHtml += "<td>" + actu.date_publication + "</td>";
             tableHtml += "<td>";
-            tableHtml += "<button class='btn btn-outline-primary' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-outline-primary mb-1' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
             tableHtml += "<button class='btn btn-outline-danger' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
@@ -303,7 +346,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 .then(data => {
                     if(data.success) {
                         alert('Actualité supprimée avec succès.');
-                        loadContent('actualites');
+                        window.location.reload();
                     } else {
                         alert('Erreur lors de la suppression.');
                     }
@@ -339,6 +382,10 @@ $jsonUtilisateursData = json_encode($utilisateursData);
         }
     }
 
+    document.getElementById('annulerEditActu').addEventListener('click', function() {
+        $('#modalEditActu').modal('hide');
+    });
+
     // Gérer la soumission du formulaire de modification
     document.getElementById('formEditActu').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -353,7 +400,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 if (data.success) {
                     alert('Actualité mise à jour avec succès.');
                     $('#modalEditActu').modal('hide');
-                    loadContent('actualites');
+                    window.location.reload();
                 } else {
                     alert('Erreur lors de la mise à jour : ' + data.error);
                 }
@@ -482,6 +529,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     function editUser(id) {
         // Trouver les données de l'utilisateur à partir de son ID
         const user = utilisateursData.find(user => user.id === id);
+        console.log(user);
         if (user) {
             // Préremplir le formulaire avec les données de l'utilisateur
             document.getElementById('editUserId').value = user.id;
@@ -489,12 +537,32 @@ $jsonUtilisateursData = json_encode($utilisateursData);
             document.getElementById('editUserName').value = user.name;
             document.getElementById('editUserUserName').value = user.userName;
             document.getElementById('editUserMail').value = user.mail;
+
+            // Effectuer une requête AJAX pour récupérer d'autres données de l'utilisateur si nécessaire
+            $.ajax({
+                url: "../pages/delete_user.php",
+                type: "POST",
+                data: { id: user.id },
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors de la requête AJAX:", error);
+                }
+            });
+
             // Afficher le modal
             $('#modalEditUser').modal('show');
         } else {
             alert("Utilisateur introuvable.");
         }
     }
+
+
+    document.getElementById('annulerEditUser').addEventListener('click', function() {
+        $('#modalEditUser').modal('hide');
+    });
 
     /**
      * Supprime un utilisateur de la base de données après confirmation.
@@ -512,7 +580,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
                 .then(response => response.json())
                 .then(data => {
                     if(data.success) {
-                        alert('Utilisateur supprimé avec succès.');
+                        alert('Utilisateur et ses données associées supprimés avec succès.');
                         loadContent('utilisateurs');
                     } else {
                         alert('Erreur lors de la suppression.');
@@ -553,7 +621,7 @@ $jsonUtilisateursData = json_encode($utilisateursData);
             <td>${signalement.contenuReponse}</td>
             <td>${signalement.dateSignalement}</td>
             <td>
-                <button class='btn btn-outline-primary' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
+                <button class='btn btn-outline-primary mb-1' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
                 <button class='btn btn-outline-danger' onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
             </td>
         </tr>`;
@@ -581,6 +649,9 @@ $jsonUtilisateursData = json_encode($utilisateursData);
             .catch(error => console.error('Erreur:', error));
     }
 
+    document.getElementById('annulerEditAnswer').addEventListener('click', function() {
+        $('#modalEditReponse').modal('hide');
+    });
 
     /**
      * Supprime une réponse de la base de données après confirmation.
@@ -589,20 +660,29 @@ $jsonUtilisateursData = json_encode($utilisateursData);
      */
     function deleteReponse(idReponse) {
         if(confirm('Voulez-vous vraiment supprimer cette réponse ?')) {
+            console.log("Envoi de la requête avec l'ID :", JSON.stringify({ id: idReponse }));
             fetch('delete_reponse.php', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ id: idReponse })
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Réponse du serveur non OK');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    if(data.success) {  //  --------------------------------------------------------------------- à vérifier
+                    if(data.success) {
                         alert('Réponse supprimée avec succès.');
                         loadContent('signalements');
                     } else {
-                        alert('Erreur lors de la suppression.');
+                        alert('Erreur lors de la suppression : ' + data.error);
                     }
                 })
-                .catch(error => console.error('Erreur:', error));
+                // .catch(error => console.error('Erreur:', error));
         }
     }
 
@@ -632,6 +712,61 @@ $jsonUtilisateursData = json_encode($utilisateursData);
     });
 
 
+    /**
+     * Affiche les informations sur les professionnels de santé dans la zone de contenu spécifiée.
+     *
+     * Cette fonction génère et affiche un tableau HTML contenant la liste des professionnels de santé.
+     * Chaque ligne du tableau inclut des informations telles que le nom, la profession, l'adresse,
+     * la ville, le code postal, la présentation, l'expertise, les horaires, ainsi que des boutons
+     * pour modifier et supprimer le professionnel de santé.
+     *
+     * @param {HTMLElement} contentArea - L'élément dans lequel afficher les données des professionnels de santé.
+     */
+    function displayProSante(contentArea) {
+        var tableHtml = '<h2 class="text-center mb-4">Gestion des professionnels de santé</h2>';
+        tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        tableHtml += '<th class="align-middle">Nom et Prénom</th><th class="align-middle">Profession</th><th class="align-middle">Adresse - Ville - Code Postal</th><th class="align-middle">Présentation</th><th class="align-middle">Expertise</th><th class="align-middle">Horaires</th><th class="align-middle">Actions</th>';
+        tableHtml += '</tr></thead><tbody>';
+
+        prosData.forEach(function(pro) {
+            tableHtml += '<tr>';
+            tableHtml += `<td class="align-middle">${pro.nom} ${pro.prenom}</td>`;
+            tableHtml += `<td class="align-middle">${pro.profession}</td>`;
+            tableHtml += `<td class="align-middle">${pro.adresse}, ${pro.ville}, ${pro.code_postal}</td>`;
+            tableHtml += `<td class="align-middle">${pro.presentation}</td>`;
+
+            // Conversion des chaînes en tableaux et affichage des expertises
+            var expertisesArray = pro.expertises ? pro.expertises.split('\n') : [];
+            var expertisesHtml = expertisesArray.join('<br>');
+            tableHtml += `<td class="align-middle">${expertisesHtml}</td>`;
+
+            // Récupération et affichage des horaires sans doublons
+            var horairesArray = pro.horaires ? pro.horaires.split('\n') : [];
+            var horairesSet = new Set(horairesArray);
+            var horairesHtml = Array.from(horairesSet).join('<br>');
+            tableHtml += `<td class="align-middle">${horairesHtml}</td>`;
+
+            tableHtml += "<td class='align-middle'><button class='btn btn-outline-primary'>Modifier</button> <button class='btn btn-outline-danger'>Supprimer</button></td>";
+            tableHtml += '</tr>';
+        });
+
+        tableHtml += '</tbody></table></div>';
+        contentArea.innerHTML = tableHtml;
+    }
+
+    /**
+     * Formate et retourne une chaîne de caractères représentant les horaires d'un professionnel de santé.
+     *
+     * Cette fonction prend en entrée un objet représentant un professionnel de santé et
+     * retourne une chaîne formatée indiquant ses horaires. Les horaires incluent les heures de début
+     * et de fin le matin et l'après-midi pour chaque jour de la semaine.
+     *
+     * @param {Object} pro - L'objet représentant un professionnel de santé.
+     * @returns {string} Une chaîne de caractères représentant les horaires du professionnel.
+     */
+    function formatHoraires(pro) {
+        return pro.jour_semaine + ' ' + pro.heure_debut_matin + ' - ' + pro.heure_fin_matin + ' / ' + pro.heure_debut_apres_midi + ' - ' + pro.heure_fin_apres_midi;
+    }
 
 </script>
 </body>
