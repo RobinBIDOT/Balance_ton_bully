@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="phone" class="form-label text-white">Téléphone</label>
                         <input type="tel" id="phone" name="phone" class="form-control" placeholder="Votre numéro de téléphone" required>
                     </div>
+
                 </div>
                 <div class="mb-3">
                     <label for="message" class="form-label text-white">Message</label>
