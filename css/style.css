@@ -134,6 +134,75 @@ header a:hover{
     border-radius: 5px !important;
 }
 
+.content {
+    border-radius: 5px;
+    width: 70vw;
+    padding: 3em;
+    position: relative;
+    max-width: 600px;
+}
+
+.search-bar {
+    --size: 60px;
+    border: 2px solid #A42AF0;
+    display: flex;
+    border-radius: 50px;
+    height: var(--size);
+    padding: 3px;
+    width: var(--size);
+    position: relative;
+    transition: width 300ms cubic-bezier(.18,.89,.32,1.10);
+    overflow: hidden;
+}
+
+.search-bar__input {
+    color: #333;
+    background: transparent;
+    flex-grow: 1;
+    font-size: 1.5rem;
+    padding: 0 2em;
+    border: 0;
+    position: relative;
+    line-height: calc(var(--size) - 0px);
+    cursor: text;
+}
+
+.search-bar__submit {
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: 0;
+    background: #A42AF0;
+    color: white;
+    border-radius: 50%;
+    width: calc(var(--size) - 6px);
+    height: calc(var(--size) - 6px);
+    margin: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background 150ms ease-in-out;
+}
+
+.search-bar:focus-within {
+    width: 100%;
+}
+
+.search-bar__submit {
+    background: #A42AF0;
+    color: white;
+}
+
+.search-bar__submit:focus,
+.search-bar__submit:hover {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.35);
+}
+
+
+
+
+
 @media screen and (max-width: 950px) {
     .container-stats {
         grid-template-columns: 1fr; 
