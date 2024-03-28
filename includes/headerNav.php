@@ -98,7 +98,7 @@
                                 <a class="nav-link text-black text-center mx-5" href="">Rendez-vous</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-black text-center mx-5" href="">Qui sommes-nous ?</a>
+                                <a class="nav-link text-black text-center mx-5" href="../pages/qui-somme-nous.php">Qui sommes-nous ?</a>
                             </li>
                             <div class="d-md-none">
                                 <div class="mt-2">
