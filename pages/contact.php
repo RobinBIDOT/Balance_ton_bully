@@ -1,6 +1,10 @@
-<?php
-session_start();
+<?php 
+    include('../php/tools/functions.php');
+    $dbh = dbConnexion();
+    session_start();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
