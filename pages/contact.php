@@ -72,7 +72,7 @@
             <p class="mt-4 text-white">Vous pouvez également nous joindre par téléphone au : 01-32-43-98-22</p>
 
             <div class="row mt-5">
-                <div class="col-md-4">
+                <div class="col-12">
                     <div class="address text-white">
                         <h4>Notre adresse :</h4>
                         <p>30 rue Notre Dame des Victoires</p>
@@ -80,9 +80,9 @@
                     </div>
                 </div>
 
-                <div class="col-md-8 my-1">
+                <div class="col-12 my-1">
 
-                    <div id="map" class="custom-map"></div>
+                    <div id="map" class="custom-map rounded-1"></div>
 
                 </div>
             </div>
