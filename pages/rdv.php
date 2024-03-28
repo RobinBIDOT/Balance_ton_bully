@@ -41,8 +41,8 @@ $horaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Initialiser la variable $date_en_cours avec la date d'aujourd'hui
 $date_en_cours = $date_aujourdhui;
 
-// Pour chaque jour entre aujourd'hui et dans 1 semaine
-for ($i = 0; $i <= 6; $i++) { // Boucle sur les jours de la semaine (0: dimanche, 1: lundi, ..., 6: samedi)
+// Pour chaque jour entre aujourd'hui et dans 90 jours
+for ($i = 0; $i <= 90; $i++) { // Boucle sur les jours
     // Date en cours
     $date_en_cours = date('Y-m-d', strtotime($date_aujourdhui . " +$i day"));
 
@@ -118,15 +118,12 @@ function verifierCreneaux($heure_debut, $heure_fin, $duree_rdv, $professionnel_i
     }
 }
 
-
-
-
 // Convertir le tableau des événements en format JSON pour l'utiliser dans le JavaScript
 $evenements_json = json_encode($evenements);
 
-echo "Événements JSON : ";
-var_dump($evenements_json);
-echo "<br><br>";
+//echo "Événements JSON : ";
+//var_dump($evenements_json);
+//echo "<br><br>";
 
 ?>
 <!DOCTYPE html>
