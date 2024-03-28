@@ -49,4 +49,6 @@ if ($mail) {
 <?php include('../includes/footer.php') ?>
 </body>
 </html>
-<?php }
+<?php } else{
+    echo "Vous n'êtes pas autorisé à accéder a cette page.";
+}
