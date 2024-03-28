@@ -71,7 +71,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="../pages/formations.php">Formation</a></li>
-                        <li><a class="dropdown-item" href="">Intervention</a></li>
+                        <li><a class="dropdown-item" href="../pages/intervention.php">Intervention</a></li>
                     </ul>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <li><a class="dropdown-item text-center" href="../pages/formations.php">Formation</a></li>
-                                        <li><a class="dropdown-item text-center" href="">Intervention</a></li>
+                                        <li><a class="dropdown-item text-center" href="../pages/intervention.php">Intervention</a></li>
                                     </ul>
                                 </div>
                             </div>
