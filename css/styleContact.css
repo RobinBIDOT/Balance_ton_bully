@@ -1,0 +1,10 @@
+*{
+    font-family: "Roboto", sans-serif;
+}
+.blue-bg {
+    background-color: #0854C7;
+}
+.custom-map {
+    height: 300px;
+    width: 100%;
+}

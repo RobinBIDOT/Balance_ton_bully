@@ -15,12 +15,14 @@ USE balance_ton_bully;
 
 DROP TABLE IF EXISTS horaires_professionnels;
 DROP TABLE IF EXISTS professionnel_expertise;
-DROP TABLE IF EXISTS reponses_forum, rendez_vous, signalements;
+DROP TABLE IF EXISTS signalements, reponses_forum, rendez_vous;
 DROP TABLE IF EXISTS dons, professionnels_sante, actualites;
 DROP TABLE IF EXISTS sujets_forum, utilisateurs;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS expertise;
-
+DROP TABLE IF EXISTS messages_contact;
+DROP TABLE IF EXISTS demandes_formation;
+DROP TABLE IF EXISTS demandes_intervention;
 
 -- Paramétrage de la session SQL
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -778,3 +780,79 @@ CREATE TABLE rendez_vous (
     UNIQUE(professionnel_id, date_heure),
     FOREIGN KEY (professionnel_id) REFERENCES professionnels_sante(id)
 );
+
+-- Table des messages issus du formulaire de contact
+CREATE TABLE messages_contact (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    prenom VARCHAR(255) NOT NULL,
+    mail VARCHAR(255) NOT NULL,
+    telephone VARCHAR(10) NOT NULL,
+    message TEXT NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+INSERT INTO messages_contact (nom, prenom, mail, telephone, message)
+VALUES
+    ('Dupont', 'Jean', 'jean.dupont@email.com', 0662345678, 'Ceci est un message de test.'),
+    ('Martin', 'Alice', 'alice.martin@email.com', 0713456789, 'Bonjour, je souhaite avoir plus d’informations.'),
+    ('Durand', 'Marc', 'marc.durand@email.com', 0123456789, 'Quelle est la procédure pour signaler un cas ?'),
+    ('Petit', 'Sophie', 'sophie.petit@email.com', 0614567890, 'Je voudrais discuter d’un problème.'),
+    ('Moreau', 'Éric', 'eric.moreau@email.com', 0715678901, 'Comment puis-je contribuer au projet ?'),
+    ('Lefebvre', 'Lucie', 'lucie.lefebvre@email.com', 0124567890, 'Demande de contact pour un partenariat.'),
+    ('Roux', 'David', 'david.roux@email.com', 0615678902, 'Informations sur les événements à venir ?'),
+    ('Simon', 'Isabelle', 'isabelle.simon@email.com', 0716789013, 'Besoin d’aide pour utiliser le site.'),
+    ('Bernard', 'Thomas', 'thomas.bernard@email.com', 0125678904, 'Comment participer aux activités ?'),
+    ('Blanc', 'Julie', 'julie.blanc@email.com', 0617890125, 'Suggestion pour améliorer le site.');
+
+
+-- Table des messages issus du formulaire de demande de formation
+CREATE TABLE demandes_formation (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    prenom VARCHAR(255) NOT NULL,
+    mail VARCHAR(255) NOT NULL,
+    telephone VARCHAR(10) NOT NULL,
+    message TEXT NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+INSERT INTO demandes_formation (nom, prenom, mail, telephone, message)
+VALUES
+    ('Leroy', 'Emmanuelle', 'emmanuelle.leroy@email.com', 0612345678, 'Intéressée par une formation sur la prévention.'),
+    ('Henry', 'Philippe', 'philippe.henry@email.com', 0713456789, 'Demande d’informations sur les formations pour enseignants.'),
+    ('Girard', 'Nathalie', 'nathalie.girard@email.com', 0124567890, 'Pouvez-vous me contacter pour discuter des formations disponibles ?'),
+    ('Perrin', 'Julien', 'julien.perrin@email.com', 0615678901, 'Équipe pédagogique intéressée par une formation spécialisée.'),
+    ('Morin', 'Christine', 'christine.morin@email.com', 0716789012, 'Recherche de formation pour le personnel administratif.'),
+    ('Guillot', 'Françoise', 'francoise.guillot@email.com', 0617890123, 'Souhaite en savoir plus sur vos modules de formation.'),
+    ('Lambert', 'Stéphane', 'stephane.lambert@email.com', 0718901234, 'Équipe d’accueil intéressée par une formation sur l’accompagnement.'),
+    ('Richard', 'Clémence', 'clemence.richard@email.com', 0619012345, 'Demande d’information pour une formation sur la gestion de conflits.'),
+    ('Lefevre', 'Antoine', 'antoine.lefevre@email.com', 0720123456, 'Recherche formation pour améliorer les compétences en communication.'),
+    ('Mercier', 'Audrey', 'audrey.mercier@email.com', 0621234567, 'Équipe souhaitant suivre une formation sur la sensibilisation.');
+
+
+-- Table des messages issus du formulaire de demande d'intervention
+CREATE TABLE demandes_intervention (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_etablissement VARCHAR(255) NOT NULL,
+    numero_siret VARCHAR(14) NOT NULL,
+    nom_referent_projet VARCHAR(255) NOT NULL,
+    prenom_referent_projet VARCHAR(255) NOT NULL,
+    mail VARCHAR(255) NOT NULL,
+    telephone VARCHAR(10) NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    date_souhaite_intervention DATETIME NOT NULL
+);
+
+INSERT INTO demandes_intervention (nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date_souhaite_intervention)
+VALUES
+    ('Collège Les Acacias', '12345678901234', 'Durand', 'Anne', 'anne.durand@acacias.edu', 0612345678, '2024-04-15 09:00:00'),
+    ('Lycée Victor Hugo', '23456789012345', 'Moreau', 'Bruno', 'bruno.moreau@victorhugo.lyc', 0713456789, '2024-05-20 14:00:00'),
+    ('École Primaire des Lilas', '34567890123456', 'Petit', 'Caroline', 'caroline.petit@lilas.ecole', 0124567890, '2024-06-05 10:00:00'),
+    ('Institut Sainte-Marie', '45678901234567', 'Leclerc', 'David', 'david.leclerc@saintemarie.inst', 0615678901, '2024-07-10 13:00:00'),
+    ('Université de Bretagne', '56789012345678', 'Simon', 'Élise', 'elise.simon@bretagne.uni', 0716789012, '2024-08-25 09:00:00'),
+    ('Lycée Professionnel des Métiers', '67890123456789', 'Bernard', 'Frédéric', 'frederic.bernard@metiers.lycpro', 0617890123,'2024-09-15 14:00:00'),
+    ('École Internationale de Paris', '78901234567890', 'Girard', 'Hélène', 'helene.girard@paris.international', 0718901234, '2024-10-11 10:00:00'),
+    ('Collège Montaigne', '89012345678901', 'Roux', 'Isabelle', 'isabelle.roux@montaigne.college', 0619012345, '2024-11-18 13:00:00'),
+    ('Lycée Jean Monnet', '90123456789012', 'Martin', 'Julien', 'julien.martin@jeanmonnet.lyc', 0720123456, '2024-12-05 09:00:00'),
+    ('Institut National des Arts', '01234567890123', 'Blanc', 'Laure', 'laure.blanc@arts.institut', 0621234567, '2025-01-22 14:00:00');
