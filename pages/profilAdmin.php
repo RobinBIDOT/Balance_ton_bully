@@ -114,6 +114,24 @@ $stmtHoraires = $dbh->prepare($queryHoraires);
 $stmtHoraires->execute();
 $horairesData = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
 $jsonHorairesData = json_encode($horairesData);
+
+// Récupérer les messages de contact depuis la base de données
+$stmtMessagesContact = $dbh->prepare("SELECT nom, prenom, mail, telephone, message, date FROM messages_contact ORDER BY date DESC");
+$stmtMessagesContact->execute();
+$messagesContactData = $stmtMessagesContact->fetchAll(PDO::FETCH_ASSOC);
+$jsonMessagesContactData = json_encode($messagesContactData);
+
+// Récupérer les demandes de formation depuis la base de données
+$stmtDemandesFormation = $dbh->prepare("SELECT nom, prenom, mail, telephone, message, date FROM demandes_formation ORDER BY date DESC");
+$stmtDemandesFormation->execute();
+$demandesFormationData = $stmtDemandesFormation->fetchAll(PDO::FETCH_ASSOC);
+$jsonDemandesFormationData = json_encode($demandesFormationData);
+
+// Récupérer les demandes d'intervention depuis la base de données
+$stmtDemandesIntervention = $dbh->prepare("SELECT nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention FROM demandes_intervention ORDER BY date DESC");
+$stmtDemandesIntervention->execute();
+$demandesInterventionData = $stmtDemandesIntervention->fetchAll(PDO::FETCH_ASSOC);
+$jsonDemandesInterventionData = json_encode($demandesInterventionData);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -122,15 +140,8 @@ $jsonHorairesData = json_encode($horairesData);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page administrateur</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        .admin-btn {
-            margin: 10px;
-            transition: transform 0.3s ease;
-        }
-        .admin-btn:hover {
-            transform: scale(1.05);
-        }
-    </style>
+    <link rel="stylesheet" href="../css/styleProfilAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <?php include('../includes/headerNav.php') ?>
 <body>
@@ -138,11 +149,14 @@ $jsonHorairesData = json_encode($horairesData);
     <h1 class="text-center mb-4">Administration</h1>
     <div class="row justify-content-center my-5">
         <div class="col-6 col-md-8 d-flex flex-wrap justify-content-around mb-5">
-            <button onclick="loadContent('actualites')" class="btn btn-primary admin-btn">Gérer les actualités</button>
-            <button onclick="loadContent('dons')" class="btn btn-success admin-btn">Gérer les dons</button>
-            <button onclick="loadContent('utilisateurs')" class="btn btn-warning admin-btn">Gérer les utilisateurs</button>
-            <button onclick="loadContent('signalements')" class="btn btn-danger admin-btn">Voir les signalements</button>
-            <button onclick="loadContent('pro_sante')" class="btn btn-info admin-btn">Gérer les professionnels de santé</button>
+            <button onclick="loadContent('actualites')" class="btn btn-primary admin-btn"><i class="fa-solid fa-newspaper"></i> Gérer les actualités</button>
+            <button onclick="loadContent('dons')" class="btn btn-primary admin-btn"><i class="fa-solid fa-credit-card"></i> Gérer les dons</button>
+            <button onclick="loadContent('utilisateurs')" class="btn btn-primary admin-btn"><i class="fa-regular fa-user"></i> Gérer les utilisateurs</button>
+            <button onclick="loadContent('signalements')" class="btn btn-primary admin-btn"><i class="fa-solid fa-circle-exclamation"></i> Voir les signalements</button>
+            <button onclick="loadContent('pro_sante')" class="btn btn-primary admin-btn"><i class="fa-solid fa-notes-medical"></i> Gérer les professionnels de santé</button>
+            <button onclick="loadContent('messages_contact')" class="btn btn-primary admin-btn"><i class="fa-solid fa-address-book"></i> Messages de contact</button>
+            <button onclick="loadContent('demandes_formation')" class="btn btn-primary admin-btn"><i class="fa-brands fa-leanpub"></i>Demandes de formation</button>
+            <button onclick="loadContent('demandes_intervention')" class="btn btn-primary admin-btn"><i class="fa-solid fa-school"></i> Demandes d'intervention</button>
         </div>
     </div>
     <div class="content-area">
@@ -259,6 +273,9 @@ $jsonHorairesData = json_encode($horairesData);
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
     var reponsesData = <?php echo $jsonReponsesData; ?>;
     var prosData = <?php echo $jsonProsData; ?>;
+    var messagesContactData = <?php echo $jsonMessagesContactData; ?>;
+    var demandesFormationData = <?php echo $jsonDemandesFormationData; ?>;
+    var demandesInterventionData = <?php echo $jsonDemandesInterventionData; ?>;
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -285,10 +302,18 @@ $jsonHorairesData = json_encode($horairesData);
             case 'pro_sante':
                 displayProSante(contentArea);
                 break;
+            case 'messages_contact':
+                displayMessagesContact(contentArea, messagesContactData);
+                break;
+            case 'demandes_formation':
+                displayDemandesFormation(contentArea, demandesFormationData);
+                break;
+            case 'demandes_intervention':
+                displayDemandesIntervention(contentArea, demandesInterventionData);
+                break;
             default:
                 contentArea.innerHTML = '<p class="text-center mb-4">Choisissez une option pour commencer.</p>';
         }
-
     }
 
     /**
@@ -414,7 +439,7 @@ $jsonHorairesData = json_encode($horairesData);
      * @param {HTMLElement} contentArea - L'élément dans lequel afficher les données.
      */
     function displayDons(contentArea) {
-        var tableHtml = '<h2 class="text-center mb-4">Ici, vous pouvez visualiser les dons.</h2>';
+        var tableHtml = '<h2 class="text-center mb-4">Visualiser les dons. Arrêter les paiements récurrents.</h2>';
         tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
         tableHtml += '<th>Type de don</th><th>Montant</th><th>Prénom</th><th>Nom</th><th>Email</th>';
         tableHtml += '<th>Date de naissance</th><th>Adresse</th><th>Code Postal</th><th>Ville</th><th>Pays</th>';
@@ -766,6 +791,85 @@ $jsonHorairesData = json_encode($horairesData);
      */
     function formatHoraires(pro) {
         return pro.jour_semaine + ' ' + pro.heure_debut_matin + ' - ' + pro.heure_fin_matin + ' / ' + pro.heure_debut_apres_midi + ' - ' + pro.heure_fin_apres_midi;
+    }
+
+    /**
+     * Fonction pour afficher les messages de contact.
+     * @param {HTMLElement} contentArea - La zone où afficher les messages de contact.
+     * @param {array} messages - Les messages à afficher.
+     */
+    function displayMessagesContact(contentArea, messages) {
+        let html = '<h2 class="text-center mb-4">Messages de contact</h2>';
+        html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th>';
+        html += '</tr></thead><tbody>';
+
+        messages.forEach(message => {
+            html += '<tr>';
+            html += '<td>' + message.nom + ' ' + message.prenom + '</td>';
+            html += '<td><a href="mailto:' + message.mail + '">' + message.mail + '</a></td>';
+            html += '<td>' + message.telephone + '</td>';
+            html += '<td>' + message.message + '</td>';
+            html += '<td>' + message.date + '</td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        contentArea.innerHTML = html;
+    }
+
+
+    /**
+     * Fonction pour afficher les demandes de formation.
+     * @param {HTMLElement} contentArea - La zone où afficher les demandes de formation.
+     * @param {array} demandes - Les demandes de formation à afficher.
+     */
+    function displayDemandesFormation(contentArea, demandes) {
+        let html = '<h2 class="text-center mb-4">Demandes de formation</h2>';
+        html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th>';
+        html += '</tr></thead><tbody>';
+
+        demandes.forEach(demande => {
+            html += '<tr>';
+            html += '<td>' + demande.nom + ' ' + demande.prenom + '</td>';
+            html += '<td><a href="mailto:' + demande.mail + '">' + demande.mail + '</a></td>';
+            html += '<td>' + demande.telephone + '</td>';
+            html += '<td>' + demande.message + '</td>';
+            html += '<td>' + demande.date + '</td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        contentArea.innerHTML = html;
+    }
+
+
+    /**
+     * Fonction pour afficher les demandes d'intervention.
+     * @param {HTMLElement} contentArea - La zone où afficher les demandes d'intervention.
+     * @param {array} demandes - Les demandes d'intervention à afficher.
+     */
+    function displayDemandesIntervention(contentArea, demandes) {
+        let html = '<h2 class="text-center mb-4">Demandes d\'intervention</h2>';
+        html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        html += '<th>Établissement</th><th>SIRET</th><th>Référent</th><th>Email</th><th>Téléphone</th><th>Date</th><th>Date d\'intervention</th>';
+        html += '</tr></thead><tbody>';
+
+        demandes.forEach(demande => {
+            html += '<tr>';
+            html += '<td>' + demande.nom_etablissement + '</td>';
+            html += '<td>' + demande.numero_siret + '</td>';
+            html += '<td>' + demande.nom_referent_projet + ' ' + demande.prenom_referent_projet + '</td>';
+            html += '<td><a href="mailto:' + demande.mail + '">' + demande.mail + '</a></td>';
+            html += '<td>' + demande.telephone + '</td>';
+            html += '<td>' + demande.date + '</td>';
+            html += '<td>' + demande.date_souhaite_intervention + '</td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        contentArea.innerHTML = html;
     }
 
 </script>
