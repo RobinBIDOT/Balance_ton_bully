@@ -16,7 +16,7 @@ session_start()
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <?php include('../includes/headerNav.php')?>
+    <?php include('../includes/headerNav.php') ?>
     <!-- Section pour afficher les statistiques -->
     <div class="container-stats">
         <div class="statistiques">
