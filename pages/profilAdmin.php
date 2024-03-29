@@ -142,10 +142,11 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/styleProfilAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/styleClock.css">
 </head>
 <?php include('../includes/headerNav.php') ?>
 <body>
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-5 ">
     <h1 class="text-center mb-4">Administration</h1>
     <div class="row justify-content-center my-5">
         <div class="col-6 col-md-8 d-flex flex-wrap justify-content-around mb-5">
@@ -157,6 +158,15 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
             <button onclick="loadContent('messages_contact')" class="btn btn-primary admin-btn"><i class="fa-solid fa-address-book"></i> Messages de contact</button>
             <button onclick="loadContent('demandes_formation')" class="btn btn-primary admin-btn"><i class="fa-brands fa-leanpub"></i>Demandes de formation</button>
             <button onclick="loadContent('demandes_intervention')" class="btn btn-primary admin-btn"><i class="fa-solid fa-school"></i> Demandes d'intervention</button>
+        </div>
+    </div>
+    <div class="container-fluid mb-4">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-6">
+                <div class="wrapper">
+                    <main></main>
+                </div>
+            </div>
         </div>
     </div>
     <div class="content-area">
@@ -266,6 +276,7 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
 <?php include('../includes/footer.php') ?>
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../js/scriptClock.js"></script>
 <script>
     // Rend les données PHP disponibles en tant qu'objet JavaScript
     var donsData = <?php echo $jsonDonsData; ?>;
@@ -283,38 +294,52 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
      */
     function loadContent(type) {
         var contentArea = document.querySelector('.content-area');
+        const wrapper = document.querySelector('.wrapper');
         switch (type) {
             case 'actualites':
                 displayActualites(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'dons':
                 displayDons(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'utilisateurs':
                 displayUtilisateurs(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'signalements':
                 fetch('load_signalements.php')
                     .then(response => response.json())
                     .then(data => displaySignalements(data, document.querySelector('.content-area')))
                     .catch(error => console.error('Erreur:', error));
+                wrapper.style.display = 'none';
                 break;
             case 'pro_sante':
                 displayProSante(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'messages_contact':
                 displayMessagesContact(contentArea, messagesContactData);
+                wrapper.style.display = 'none';
                 break;
             case 'demandes_formation':
                 displayDemandesFormation(contentArea, demandesFormationData);
+                wrapper.style.display = 'none';
                 break;
             case 'demandes_intervention':
                 displayDemandesIntervention(contentArea, demandesInterventionData);
+                wrapper.style.display = 'none';
                 break;
             default:
                 contentArea.innerHTML = '<p class="text-center mb-4">Choisissez une option pour commencer.</p>';
+                wrapper.style.display = 'block';
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadContent(null);
+    });
 
     /**
      * Affiche les informations sur les actualités dans la zone de contenu.
