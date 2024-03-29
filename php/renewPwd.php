@@ -32,21 +32,10 @@ if ($mail) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <style>
-    .custom-icon {
-    color: black;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 10px;
-    }
-    .custom-submit-btn:hover {background-color: #e8f0fe;}
-    .bg-custom {background-color: #0854C7;padding: 40px;border-radius: 15px;}
-    .custom-form-input-group {position: relative;}
-    .custom-form-input-group input[type=password] {padding-right: 40px;}
-    </style>
+    <link href="../css/styleRenewPwd.css" rel="stylesheet">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Changement de mot de passe</title>
 </head>
@@ -68,8 +57,8 @@ if ($mail) {
                                 <input type="password" class="form-control custom-form-input" name="verifPwd" placeholder="Confirmez le mot de passe">
                                 <i class="fas fa-lock custom-icon"></i>
                             </div>
-                            <div class="d-grid">
-                                <input type="submit" class="btn custom-submit-btn text-white" name="submit" value="valider">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                <button type="submit" class="btn btn-primary text-white" name="submit" value="Valider">Valider</button>
                             </div>
                         </form>
                     </div>

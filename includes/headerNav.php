@@ -59,7 +59,7 @@
                 </div>
                 <!-- Menu déroulant (toujours visible) -->
                 <div class="d-none d-md-block dropdown custom-bg-dropdown rounded-bottom ">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Vous êtes une école
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -94,7 +94,7 @@
                                     </a>
                                 </div>
                                 <div class="dropdown mt-2">
-                                    <a class="nav-link dropdown-toggle nav-link text-black text-center mx-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="nav-link dropdown-toggle nav-link text-center mx-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Vous êtes une école
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
