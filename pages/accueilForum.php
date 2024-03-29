@@ -178,7 +178,7 @@ try {
                                 <small><?php echo $row['userName']; ?> - <?php echo $row['date_creation']; ?> </small>
                             </div>
                             <div class="nombre-reponses">
-                                <span class="badge bg-primary"><?php echo $row['nombre_reponses']; ?> Réponses</span>
+                                <span class="text-decoration-underline text-primary" style="cursor: pointer;" ><?php echo $row['nombre_reponses']; ?> Réponses</span>
                             </div>
                             <!-- Bouton Supprimer -->
                             <?php if(isset($_SESSION['nickName']) && ($_SESSION['nickName'] === $row['userName'] || $_SESSION['id_role'] == 1)) : ?>

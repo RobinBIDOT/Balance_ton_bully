@@ -315,8 +315,8 @@ $jsonHorairesData = json_encode($horairesData);
             tableHtml += "<td><a href='" + actu.lien_article + "'>Lien</a></td>";
             tableHtml += "<td>" + actu.date_publication + "</td>";
             tableHtml += "<td>";
-            tableHtml += "<button class='btn btn-outline-primary mb-1' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
-            tableHtml += "<button class='btn btn-outline-danger' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
+            tableHtml += "<button class='btn btn-outline-primary mb-1' style='width: 100px;' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-outline-danger' style='width: 100px;' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
         });
@@ -499,7 +499,7 @@ $jsonHorairesData = json_encode($horairesData);
     function displayUtilisateurs(contentArea) {
         var tableHtml = '<h2 class="text-center mb-4">Gestion des utilisateurs</h2>';
         tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
-        tableHtml += '<th>Prénom</th><th>Nom</th><th>Pseudo</th><th>Mail</th><th>Photo Avatar</th><th>Rôle</th><th>Actions</th>';
+        tableHtml += '<th>Prénom</th><th>Nom</th><th>Pseudo</th><th>Mail</th><th>Photo Avatar</th><th>Rôle</th><th class=text-center pe-4>Actions</th>';
         tableHtml += '</tr></thead><tbody>';
 
         utilisateursData.forEach(function(user) {
@@ -508,10 +508,10 @@ $jsonHorairesData = json_encode($horairesData);
             tableHtml += "<td>" + user.name + "</td>";
             tableHtml += "<td>" + user.userName + "</td>";
             tableHtml += "<td>" + user.mail + "</td>";
-            tableHtml += "<td><img src='" + user.photo_avatar + "' alt='Avatar' style='width: 50px;'></td>";
+            tableHtml += "<td><img src='" + user.photo_avatar + "' alt='Avatar' class=img-fluid style='width: 50px; max-width: 60px; '></td>";
             tableHtml += "<td>" + user.role + "</td>";
-            tableHtml += "<td>";
-            tableHtml += "<button class='btn btn-outline-primary' onclick='editUser(" + user.id + ")'>Modifier</button> ";
+            tableHtml += "<td class=text-center pe-4>";
+            tableHtml += "<button class='btn btn-outline-primary me-2' onclick='editUser(" + user.id + ")'>Modifier</button> ";
             tableHtml += "<button class='btn btn-outline-danger' onclick='deleteUser(" + user.id + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
@@ -620,9 +620,9 @@ $jsonHorairesData = json_encode($horairesData);
             <td>${signalement.dateReponse}</td>
             <td>${signalement.contenuReponse}</td>
             <td>${signalement.dateSignalement}</td>
-            <td>
-                <button class='btn btn-outline-primary mb-1' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
-                <button class='btn btn-outline-danger' onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
+            <td class='align-middle'>
+                <button class='btn btn-outline-primary mb-1' style='width: 100px;' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
+                <button class='btn btn-outline-danger mb-1' style='width: 100px;' onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
             </td>
         </tr>`;
         });
@@ -746,7 +746,7 @@ $jsonHorairesData = json_encode($horairesData);
             var horairesHtml = Array.from(horairesSet).join('<br>');
             tableHtml += `<td class="align-middle">${horairesHtml}</td>`;
 
-            tableHtml += "<td class='align-middle'><button class='btn btn-outline-primary'>Modifier</button> <button class='btn btn-outline-danger'>Supprimer</button></td>";
+            tableHtml += "<td class='align-middle'><button class='btn btn-outline-primary w-75 my-1'>Modifier</button> <button class='btn btn-outline-danger w-75 my-1'>Supprimer</button></td>";
             tableHtml += '</tr>';
         });
 
