@@ -116,22 +116,79 @@ $horairesData = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
 $jsonHorairesData = json_encode($horairesData);
 
 // Récupérer les messages de contact depuis la base de données
-$stmtMessagesContact = $dbh->prepare("SELECT nom, prenom, mail, telephone, message, date FROM messages_contact ORDER BY date DESC");
+$stmtMessagesContact = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM messages_contact ORDER BY date DESC");
 $stmtMessagesContact->execute();
 $messagesContactData = $stmtMessagesContact->fetchAll(PDO::FETCH_ASSOC);
 $jsonMessagesContactData = json_encode($messagesContactData);
 
 // Récupérer les demandes de formation depuis la base de données
-$stmtDemandesFormation = $dbh->prepare("SELECT nom, prenom, mail, telephone, message, date FROM demandes_formation ORDER BY date DESC");
+$stmtDemandesFormation = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM demandes_formation ORDER BY date DESC");
 $stmtDemandesFormation->execute();
 $demandesFormationData = $stmtDemandesFormation->fetchAll(PDO::FETCH_ASSOC);
 $jsonDemandesFormationData = json_encode($demandesFormationData);
 
 // Récupérer les demandes d'intervention depuis la base de données
-$stmtDemandesIntervention = $dbh->prepare("SELECT nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention FROM demandes_intervention ORDER BY date DESC");
+$stmtDemandesIntervention = $dbh->prepare("SELECT id, nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention, est_traite FROM demandes_intervention ORDER BY date DESC");
 $stmtDemandesIntervention->execute();
 $demandesInterventionData = $stmtDemandesIntervention->fetchAll(PDO::FETCH_ASSOC);
 $jsonDemandesInterventionData = json_encode($demandesInterventionData);
+
+if(isset($_GET['updateStatus'])) {
+    $messageId = $_GET['messageId'];
+    $newStatus = $_GET['newStatus'];
+    $type = $_GET['type'];
+
+    switch ($type) {
+        case 'messages_contact':
+            $updateQuery = "UPDATE messages_contact SET est_traite = :newStatus WHERE id = :id";
+            break;
+        case 'demandes_formation':
+            $updateQuery = "UPDATE demandes_formation SET est_traite = :newStatus WHERE id = :id";
+            break;
+        case 'demandes_intervention':
+            $updateQuery = "UPDATE demandes_intervention SET est_traite = :newStatus WHERE id = :id";
+            break;
+        default:
+            break;
+    }
+
+    if (isset($updateQuery)) {
+        $stmt = $dbh->prepare($updateQuery);
+        $stmt->bindParam(':newStatus', $newStatus, PDO::PARAM_BOOL);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    // Après la mise à jour, renvoyer les données mises à jour pour le type spécifique
+    switch ($type) {
+        case 'messages_contact':
+            // Récupérer les messages de contact mis à jour et les renvoyer
+            $stmtUpdatedMessagesContact = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM messages_contact ORDER BY date DESC");
+            $stmtUpdatedMessagesContact->execute();
+            $updatedMessagesContactData = $stmtUpdatedMessagesContact->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($updatedMessagesContactData);
+            break;
+        case 'demandes_formation':
+            // Récupérer les demandes de formation mises à jour et les renvoyer
+            $stmtUpdatedDemandesFormation = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM demandes_formation ORDER BY date DESC");
+            $stmtUpdatedDemandesFormation->execute();
+            $updatedDemandesFormationData = $stmtUpdatedDemandesFormation->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($updatedDemandesFormationData);
+            break;
+        case 'demandes_intervention':
+            // Récupérer les demandes d'intervention mises à jour et les renvoyer
+            $stmtUpdatedDemandesIntervention = $dbh->prepare("SELECT id, nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention, est_traite FROM demandes_intervention ORDER BY date DESC");
+            $stmtUpdatedDemandesIntervention->execute();
+            $updatedDemandesInterventionData = $stmtUpdatedDemandesIntervention->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($updatedDemandesInterventionData);
+            break;
+        default:
+            break;
+    }
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -825,8 +882,19 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
      */
     function displayMessagesContact(contentArea, messages) {
         let html = '<h2 class="text-center mb-4">Messages de contact</h2>';
+        html += `
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-2 filter-button" data-status="all">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
+                    <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
+                </div>
+            </div>
+        </div>
+    `;
         html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
-        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th>';
+        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Suivi</th>';
         html += '</tr></thead><tbody>';
 
         messages.forEach(message => {
@@ -836,13 +904,17 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
             html += '<td>' + message.telephone + '</td>';
             html += '<td>' + message.message + '</td>';
             html += '<td>' + message.date + '</td>';
+            let btnClass = message.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnText = message.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
+            let newStatus = !message.est_traite;
+            html += '<td>' + (message.est_traite ? 'Terminée' : 'À faire') +
+                ` <button class="${btnClass} update-button" data-message-id="${message.id}" data-new-status="${newStatus}" data-type="messages_contact">${btnText}</button></td>`;
             html += '</tr>';
         });
 
         html += '</tbody></table></div>';
         contentArea.innerHTML = html;
     }
-
 
     /**
      * Fonction pour afficher les demandes de formation.
@@ -851,8 +923,19 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
      */
     function displayDemandesFormation(contentArea, demandes) {
         let html = '<h2 class="text-center mb-4">Demandes de formation</h2>';
+        html += `
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-2 filter-button" data-status="all">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
+                    <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
+                </div>
+            </div>
+        </div>
+    `;
         html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
-        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th>';
+        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Suivi</th>';
         html += '</tr></thead><tbody>';
 
         demandes.forEach(demande => {
@@ -862,13 +945,17 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
             html += '<td>' + demande.telephone + '</td>';
             html += '<td>' + demande.message + '</td>';
             html += '<td>' + demande.date + '</td>';
+            let btnClass = demande.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnText = demande.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
+            let newStatus = !demande.est_traite;
+            html += '<td>' + (demande.est_traite ? 'Terminée' : 'À faire') +
+                ` <button class="${btnClass} update-button" data-message-id="${demande.id}" data-new-status="${newStatus}" data-type="demandes_formation">${btnText}</button></td>`;
             html += '</tr>';
         });
 
         html += '</tbody></table></div>';
         contentArea.innerHTML = html;
     }
-
 
     /**
      * Fonction pour afficher les demandes d'intervention.
@@ -877,8 +964,19 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
      */
     function displayDemandesIntervention(contentArea, demandes) {
         let html = '<h2 class="text-center mb-4">Demandes d\'intervention</h2>';
+        html += `
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-2 filter-button" data-status="all">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
+                    <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
+                </div>
+            </div>
+        </div>
+    `;
         html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
-        html += '<th>Établissement</th><th>SIRET</th><th>Référent</th><th>Email</th><th>Téléphone</th><th>Date</th><th>Date d\'intervention</th>';
+        html += '<th>Établissement</th><th>SIRET</th><th>Référent</th><th>Email</th><th>Téléphone</th><th>Date</th><th>Date d\'intervention souhaitée</th><th>Suivi</th>';
         html += '</tr></thead><tbody>';
 
         demandes.forEach(demande => {
@@ -890,6 +988,11 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
             html += '<td>' + demande.telephone + '</td>';
             html += '<td>' + demande.date + '</td>';
             html += '<td>' + demande.date_souhaite_intervention + '</td>';
+            let btnClass = demande.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnText = demande.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
+            let newStatus = !demande.est_traite;
+            html += '<td>' + (demande.est_traite ? 'Terminée' : 'À faire') +
+                ` <button class="${btnClass} update-button" data-message-id="${demande.id}" data-new-status="${newStatus}" data-type="demandes_intervention">${btnText}</button></td>`;
             html += '</tr>';
         });
 
@@ -897,6 +1000,72 @@ $jsonDemandesInterventionData = json_encode($demandesInterventionData);
         contentArea.innerHTML = html;
     }
 
+    /**
+     * Récupère et affiche le contenu mis à jour pour la zone spécifiée.
+     */
+    function updateContent() {
+        $.ajax({
+            url: '../pages/profilAdmin.php',
+            type: 'GET',
+            success: function(response) {
+                console.log(response);
+                displayMessagesContact(document.querySelector('.content-area'), response.messages);
+            },
+            error: function(error) {
+                console.error('Erreur lors de la récupération des messages:', error);
+            }
+        });
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const status = this.getAttribute('data-status');
+                filterContent(status);
+            });
+        });
+
+
+        const updateButtons = document.querySelectorAll('.update-button');
+        updateButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const messageId = this.getAttribute('data-message-id');
+                const newStatus = this.getAttribute('data-new-status') === 'true';
+                const type = this.getAttribute('data-type');
+                updateStatus(messageId, newStatus, type);
+            });
+        });
+    });
+
+    /**
+     * Met à jour le statut d'un message et rafraîchit le contenu.
+     * @param {number} messageId - L'identifiant du message à mettre à jour.
+     * @param {boolean} newStatus - Le nouveau statut à appliquer au message.
+     * @param {string} type - Le type de données à mettre à jour ('messages_contact', 'demandes_formation', 'demandes_intervention').
+     */
+    function updateStatus(messageId, newStatus, type) {
+        // Envoi des données au serveur pour la mise à jour
+        window.location.href = '../pages/profilAdmin.php?updateStatus=true&messageId=' + messageId + '&newStatus=' + newStatus + '&type=' + type;
+    }
+
+
+    /**
+     * Filtre les messages affichés en fonction du statut.
+     * @param {string} status - Le statut pour filtrer ('all', 'done', 'todo').
+     */
+    function filterContent(status) {
+        const rows = document.querySelectorAll('.content-area tr');
+        rows.forEach(row => {
+            const isDone = row.querySelector('td:nth-last-child(2)').textContent.trim() === 'Terminée';
+            if (status === 'all' || (status === 'done' && isDone) || (status === 'todo' && !isDone)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
 </script>
 </body>
 </html>

@@ -78,6 +78,7 @@ CREATE TABLE `utilisateurs` (
     `password` varchar(255) NOT NULL,      -- Une colonne pour le mot de passe (qui doit être stocké de manière sécurisée, par exemple après hashage)
     `token` varchar(50) DEFAULT NULL,
     `id_role` int(11) DEFAULT 2,            -- Une colonne pour l'ID du rôle de l'utilisateur, faisant référence à la table `roles`
+    est_supprime BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`id`)                     -- La colonne 'id' est définie comme la clé primaire de la table
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -551,6 +552,7 @@ CREATE TABLE professionnels_sante (
     ville VARCHAR(255) NOT NULL,
     code_postal VARCHAR(10) NOT NULL,
     presentation TEXT NOT NULL,
+    est_supprime BOOLEAN DEFAULT FALSE,
     photo VARCHAR(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png'
 );
 
@@ -789,6 +791,7 @@ CREATE TABLE messages_contact (
     mail VARCHAR(255) NOT NULL,
     telephone VARCHAR(10) NOT NULL,
     message TEXT NOT NULL,
+    est_traite BOOLEAN DEFAULT FALSE,
     date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
@@ -814,6 +817,7 @@ CREATE TABLE demandes_formation (
     mail VARCHAR(255) NOT NULL,
     telephone VARCHAR(10) NOT NULL,
     message TEXT NOT NULL,
+    est_traite BOOLEAN DEFAULT FALSE,
     date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
@@ -840,6 +844,7 @@ CREATE TABLE demandes_intervention (
     prenom_referent_projet VARCHAR(255) NOT NULL,
     mail VARCHAR(255) NOT NULL,
     telephone VARCHAR(10) NOT NULL,
+    est_traite BOOLEAN DEFAULT FALSE,
     date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     date_souhaite_intervention DATETIME NOT NULL
 );
