@@ -19,7 +19,7 @@ main {
     --l: 50%;
     display: flex;
     color: hsl(210deg, var(--s), var(--l));
-    gap: 1rem;
+    gap: 0.7rem;
     width: 100%;
     height: 100%;
     position: relative;
@@ -38,7 +38,7 @@ main {
 
         .group {
             display: flex;
-            gap: 0.8rem;
+            gap: 0.7rem;
 
             .digit {
                 position: relative;
