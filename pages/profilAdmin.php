@@ -138,6 +138,8 @@ if(isset($_GET['updateStatus'])) {
     $newStatus = $_GET['newStatus'];
     $type = $_GET['type'];
 
+    var_dump($messageId, $newStatus, $type);
+
     switch ($type) {
         case 'messages_contact':
             $updateQuery = "UPDATE messages_contact SET est_traite = :newStatus WHERE id = :id";
@@ -166,21 +168,21 @@ if(isset($_GET['updateStatus'])) {
             $stmtUpdatedMessagesContact = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM messages_contact ORDER BY date DESC");
             $stmtUpdatedMessagesContact->execute();
             $updatedMessagesContactData = $stmtUpdatedMessagesContact->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($updatedMessagesContactData);
+            $jsonUpdatedMessagesContactData = json_encode($updatedMessagesContactData);
             break;
         case 'demandes_formation':
             // Récupérer les demandes de formation mises à jour et les renvoyer
             $stmtUpdatedDemandesFormation = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM demandes_formation ORDER BY date DESC");
             $stmtUpdatedDemandesFormation->execute();
             $updatedDemandesFormationData = $stmtUpdatedDemandesFormation->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($updatedDemandesFormationData);
+            $jsonUpdatedDemandesFormationData = json_encode($updatedDemandesFormationData);
             break;
         case 'demandes_intervention':
             // Récupérer les demandes d'intervention mises à jour et les renvoyer
             $stmtUpdatedDemandesIntervention = $dbh->prepare("SELECT id, nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention, est_traite FROM demandes_intervention ORDER BY date DESC");
             $stmtUpdatedDemandesIntervention->execute();
             $updatedDemandesInterventionData = $stmtUpdatedDemandesIntervention->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($updatedDemandesInterventionData);
+            $jsonUpdatedDemandesInterventionData = json_encode($updatedDemandesInterventionData);
             break;
         default:
             break;
@@ -344,6 +346,10 @@ if(isset($_GET['updateStatus'])) {
     var messagesContactData = <?php echo $jsonMessagesContactData; ?>;
     var demandesFormationData = <?php echo $jsonDemandesFormationData; ?>;
     var demandesInterventionData = <?php echo $jsonDemandesInterventionData; ?>;
+    var updatedMessagesContactData = <?php echo isset($jsonUpdatedMessagesContactData) ? $jsonUpdatedMessagesContactData : '[]'; ?>;
+    var updatedDemandesFormationData = <?php echo isset($jsonUpdatedDemandesFormationData) ? $jsonUpdatedDemandesFormationData : '[]'; ?>;
+    var updatedDemandesInterventionData = <?php echo isset($jsonUpdatedDemandesInterventionData) ? $jsonUpdatedDemandesInterventionData : '[]'; ?>;
+
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -744,8 +750,6 @@ if(isset($_GET['updateStatus'])) {
      * @param {number} idReponse - L'identifiant de la réponse à modifier.
      */
     function editReponse(idReponse) {
-        // Ici, vous devez obtenir les données de la réponse par une requête AJAX ou en les stockant en JavaScript
-        // Pour l'exemple, les données sont saisies directement
         fetch(`get_reponse_data.php?id=${idReponse}`)
             .then(response => response.json())
             .then(data => {
@@ -886,13 +890,14 @@ if(isset($_GET['updateStatus'])) {
         <div class="container">
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-primary m-2 filter-button" data-status="all">Tout afficher</button>
+                    <button class="btn btn-primary m-2 filter-button" data-status="messages_contact">Tout afficher</button>
                     <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
                     <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
                 </div>
             </div>
         </div>
-    `;
+        <div class="no-items-message text-center mt-3" style="display: none;">Aucun message traité.</div>
+        `;
         html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
         html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Suivi</th>';
         html += '</tr></thead><tbody>';
@@ -927,13 +932,14 @@ if(isset($_GET['updateStatus'])) {
         <div class="container">
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-primary m-2 filter-button" data-status="all">Tout afficher</button>
-                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
+                    <button class="btn btn-primary m-2 filter-button" data-status="demandes_formation">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminées</button>
                     <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
                 </div>
             </div>
         </div>
-    `;
+        <div class="no-items-message text-center mt-3" style="display: none;">Aucune demande de formation traitée.</div>
+        `;
         html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
         html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Suivi</th>';
         html += '</tr></thead><tbody>';
@@ -957,6 +963,7 @@ if(isset($_GET['updateStatus'])) {
         contentArea.innerHTML = html;
     }
 
+
     /**
      * Fonction pour afficher les demandes d'intervention.
      * @param {HTMLElement} contentArea - La zone où afficher les demandes d'intervention.
@@ -968,13 +975,14 @@ if(isset($_GET['updateStatus'])) {
         <div class="container">
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-primary m-2 filter-button" data-status="all">Tout afficher</button>
-                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
+                    <button class="btn btn-primary m-2 filter-button" data-status="demandes_intervention">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminées</button>
                     <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
                 </div>
             </div>
         </div>
-    `;
+        <div class="no-items-message text-center mt-3" style="display: none;">Aucune demande d'intervention traitée.</div>
+        `;
         html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
         html += '<th>Établissement</th><th>SIRET</th><th>Référent</th><th>Email</th><th>Téléphone</th><th>Date</th><th>Date d\'intervention souhaitée</th><th>Suivi</th>';
         html += '</tr></thead><tbody>';
@@ -1000,6 +1008,7 @@ if(isset($_GET['updateStatus'])) {
         contentArea.innerHTML = html;
     }
 
+
     /**
      * Récupère et affiche le contenu mis à jour pour la zone spécifiée.
      */
@@ -1023,10 +1032,22 @@ if(isset($_GET['updateStatus'])) {
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const status = this.getAttribute('data-status');
-                filterContent(status);
+                // Appeler la fonction correspondante selon le type de contenu
+                switch (status) {
+                    case 'messages_contact':
+                        displayMessagesContact(document.querySelector('.content-area'), messagesContactData);
+                        break;
+                    case 'demandes_formation':
+                        displayDemandesFormation(document.querySelector('.content-area'), demandesFormationData);
+                        break;
+                    case 'demandes_intervention':
+                        displayDemandesIntervention(document.querySelector('.content-area'), demandesInterventionData);
+                        break;
+                    default:
+                        break;
+                }
             });
         });
-
 
         const updateButtons = document.querySelectorAll('.update-button');
         updateButtons.forEach(button => {
@@ -1039,6 +1060,7 @@ if(isset($_GET['updateStatus'])) {
         });
     });
 
+
     /**
      * Met à jour le statut d'un message et rafraîchit le contenu.
      * @param {number} messageId - L'identifiant du message à mettre à jour.
@@ -1046,8 +1068,22 @@ if(isset($_GET['updateStatus'])) {
      * @param {string} type - Le type de données à mettre à jour ('messages_contact', 'demandes_formation', 'demandes_intervention').
      */
     function updateStatus(messageId, newStatus, type) {
-        // Envoi des données au serveur pour la mise à jour
-        window.location.href = '../pages/profilAdmin.php?updateStatus=true&messageId=' + messageId + '&newStatus=' + newStatus + '&type=' + type;
+        $.ajax({
+            url: '../pages/profilAdmin.php',
+            type: 'POST',
+            data: {
+                'updateStatus': true,
+                'messageId': messageId,
+                'newStatus': newStatus,
+                'type': type
+            },
+            success: function() {
+                updateContent(type);
+            },
+            error: function(error) {
+                console.error('Erreur lors de la mise à jour :', error);
+            }
+        });
     }
 
 
@@ -1057,15 +1093,29 @@ if(isset($_GET['updateStatus'])) {
      */
     function filterContent(status) {
         const rows = document.querySelectorAll('.content-area tr');
+        let anyDone = false; // Variable pour vérifier si au moins un élément est terminé
         rows.forEach(row => {
             const isDone = row.querySelector('td:nth-last-child(2)').textContent.trim() === 'Terminée';
+            console.log('Row status:', isDone ? 'Terminée' : 'Non terminée');
             if (status === 'all' || (status === 'done' && isDone) || (status === 'todo' && !isDone)) {
                 row.style.display = '';
+                if (isDone) {
+                    anyDone = true;
+                }
             } else {
                 row.style.display = 'none';
             }
         });
+
+        // Si aucun élément n'est terminé et que le statut est 'done', affichez un message
+        if (status === 'done' && !anyDone) {
+            console.log('Aucun élément n\'est terminé.');
+            document.querySelector('.no-items-message').style.display = 'block';
+        } else {
+            document.querySelector('.no-items-message').style.display = 'none';
+        }
     }
+
 </script>
 </body>
 </html>
