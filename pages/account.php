@@ -145,6 +145,6 @@ if(isset($_POST['suppr'])){
 
 </div>
 <?php include('../includes/footer.php') ?>
-<script src="../js/app.js"></script>
+<script src="../js/userMod.js"></script>
 </body>
 </html>

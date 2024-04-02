@@ -129,7 +129,7 @@ try {
                             // Afficher les boutons de modification et de suppression si l'utilisateur est l'auteur de la réponse
                             echo '<div class="d-flex">';
                             echo '<a href="modifierReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-info">Modifier</a>';
-                            echo '<a href="supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
+                            echo '<a href="../php/supprimerReponse.php?id=' . $rowReponse['id_reponse'] . '&idSujet=' . $idSujet . '" class="btn btn-outline-danger">Supprimer</a>';
                             echo '</div>';
 
 
@@ -214,7 +214,7 @@ try {
                 <?php if (isset($_SESSION['nickName'])) : ?>
                     <div class="mt-5">
                         <h2 class="text-2xl font-bold mb-4">Ajouter une réponse</h2>
-                        <form action="ajouterReponse.php" method="post">
+                        <form action="../php/ajouterReponse.php" method="post">
                             <div class="form-group">
                                 <label for="contenuReponse">Contenu de la réponse :</label>
                                 <textarea class="form-control" id="contenuReponse" name="contenuReponse" rows="4" required></textarea>
