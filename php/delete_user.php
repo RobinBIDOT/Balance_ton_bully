@@ -44,11 +44,16 @@ if (isset($_POST['id'])) {
         }
 
         if ($stmt->rowCount() > 0) {
-            echo json_encode(['success' => true]);
-            error_log("Utilisateur supprimé avec succès pour l'ID : " . $id);
+            echo json_encode([
+                'status' => 'success',
+                'message' =>  "Utilisateur supprimé avec succès"
+            ]);
+
         } else {
-            echo json_encode(['success' => false, 'error' => 'Erreur lors de la suppression ou utilisateur déjà supprimé']);
-            error_log("Erreur ou utilisateur déjà supprimé pour l'ID : " . $id);
+            echo json_encode([
+                'status' => 'error',
+                'message' => "Erreur ou utilisateur déjà supprimé"
+            ]);
         }
 
         $dbh->commit();

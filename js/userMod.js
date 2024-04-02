@@ -25,7 +25,7 @@ async function postUserData(data){
         body: formData
     })
     let json = await response.json();
-    if (json.status == 'success'){
+    if (json.status === 'success'){
         console.log(json.message)
         alert(json.message)
     }

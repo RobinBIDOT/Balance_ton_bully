@@ -1,5 +1,5 @@
 <?php
-include 'tools/functions.php';
+include '../php/tools/functions.php';
 $dbConnexion = dbConnexion();
 if (isset($_GET['token']) && $_GET['token'] != ''){
     $stmt = $dbConnexion->prepare('SELECT mail FROM utilisateurs WHERE token = ?');
