@@ -1,14 +1,14 @@
 <link rel="stylesheet" href="../css/style.css">
-
+<link rel="stylesheet" href="../css/styleFooter.css">
 <footer class="footer pt-3 py-xl-8">
-
+<!--    Waves   -->
+    <div class="wave-container">
+        <canvas id="canvas"></canvas>
+    </div>
     <div class="container-fluid p-0 mt-2 rounded">
         <div class="container-fluid bg-light">
-
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11">
-
-                    <!-- Widgets - Bootstrap Brain Component -->
                     <section class="py-4 py-md-5 py-xl-8">
                         <div class="container-fluid overflow-hidden">
                             <div class="row gy-4 gy-lg-0 justify-content-xl-between">
@@ -32,13 +32,13 @@
                                         <h4 class="widget-title mb-4">Liens utiles</h4>
                                         <ul class="list-unstyled">
                                             <li class="mb-2">
-                                                <a href="#!" class="text-decoration-none">e-enfance</a>
+                                                <a href="https://e-enfance.org/" class="text-decoration-none" target="_blank">e-enfance</a>
                                             </li>
                                             <li class="mb-2">
-                                                <a href="#!" class="text-decoration-none">Site du gouvernement</a>
+                                                <a href="https://www.education.gouv.fr/non-au-harcelement/politique-de-lutte-contre-le-harcelement-l-ecole-289530" class="text-decoration-none" target="_blank">Site du gouvernement</a>
                                             </li>
                                             <li class="mb-2">
-                                                <a href="#!" class="text-decoration-none">Eduscol</a>
+                                                <a href="https://eduscol.education.fr/" class="text-decoration-none" target="_blank">Eduscol</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -55,8 +55,6 @@
                             </div>
                         </div>
                     </section>
-
-                    <!-- Copyright - Bootstrap Brain Component -->
                     <div class="py-4 py-md-5 py-xl-8 border-top border-light-subtle">
                         <div class="container-fluid overflow-hidden">
                             <div class="row gy-4 gy-md-0">
@@ -64,11 +62,7 @@
                                     <div class="copyright text-center text-md-start">
                                         &copy; 2024. All Rights Reserved.
                                     </div>
-                                    <div class="credits text-secondary text-center text-md-start mt-2 fs-7">
-                                        Built by <a href="https://bootstrapbrain.com/" class="link-secondary text-decoration-none">Balance ton bully</a> with <span class="text-primary">&#9829;</span>
-                                    </div>
                                 </div>
-
                                 <div class="col-xs-12 col-md-5 order-0 order-md-1">
                                     <ul class="nav justify-content-center justify-content-md-end" style="--bs-nav-link-padding-x: .8rem;">
                                         <li class="nav-item">
@@ -104,9 +98,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </footer>
+<script src="../js/scriptFooter.js" ></script>

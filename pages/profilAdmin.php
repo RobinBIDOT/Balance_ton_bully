@@ -114,6 +114,83 @@ $stmtHoraires = $dbh->prepare($queryHoraires);
 $stmtHoraires->execute();
 $horairesData = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
 $jsonHorairesData = json_encode($horairesData);
+
+// Récupérer les messages de contact depuis la base de données
+$stmtMessagesContact = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM messages_contact ORDER BY date DESC");
+$stmtMessagesContact->execute();
+$messagesContactData = $stmtMessagesContact->fetchAll(PDO::FETCH_ASSOC);
+$jsonMessagesContactData = json_encode($messagesContactData);
+
+// Récupérer les demandes de formation depuis la base de données
+$stmtDemandesFormation = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM demandes_formation ORDER BY date DESC");
+$stmtDemandesFormation->execute();
+$demandesFormationData = $stmtDemandesFormation->fetchAll(PDO::FETCH_ASSOC);
+$jsonDemandesFormationData = json_encode($demandesFormationData);
+
+// Récupérer les demandes d'intervention depuis la base de données
+$stmtDemandesIntervention = $dbh->prepare("SELECT id, nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention, est_traite FROM demandes_intervention ORDER BY date DESC");
+$stmtDemandesIntervention->execute();
+$demandesInterventionData = $stmtDemandesIntervention->fetchAll(PDO::FETCH_ASSOC);
+$jsonDemandesInterventionData = json_encode($demandesInterventionData);
+
+if(isset($_GET['updateStatus'])) {
+    $messageId = $_GET['messageId'];
+    $newStatus = $_GET['newStatus'];
+    $type = $_GET['type'];
+
+    var_dump($messageId, $newStatus, $type);
+
+    switch ($type) {
+        case 'messages_contact':
+            $updateQuery = "UPDATE messages_contact SET est_traite = :newStatus WHERE id = :id";
+            break;
+        case 'demandes_formation':
+            $updateQuery = "UPDATE demandes_formation SET est_traite = :newStatus WHERE id = :id";
+            break;
+        case 'demandes_intervention':
+            $updateQuery = "UPDATE demandes_intervention SET est_traite = :newStatus WHERE id = :id";
+            break;
+        default:
+            break;
+    }
+
+    if (isset($updateQuery)) {
+        $stmt = $dbh->prepare($updateQuery);
+        $stmt->bindParam(':newStatus', $newStatus, PDO::PARAM_BOOL);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    // Après la mise à jour, renvoyer les données mises à jour pour le type spécifique
+    switch ($type) {
+        case 'messages_contact':
+            // Récupérer les messages de contact mis à jour et les renvoyer
+            $stmtUpdatedMessagesContact = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM messages_contact ORDER BY date DESC");
+            $stmtUpdatedMessagesContact->execute();
+            $updatedMessagesContactData = $stmtUpdatedMessagesContact->fetchAll(PDO::FETCH_ASSOC);
+            $jsonUpdatedMessagesContactData = json_encode($updatedMessagesContactData);
+            break;
+        case 'demandes_formation':
+            // Récupérer les demandes de formation mises à jour et les renvoyer
+            $stmtUpdatedDemandesFormation = $dbh->prepare("SELECT id, nom, prenom, mail, telephone, message, date, est_traite FROM demandes_formation ORDER BY date DESC");
+            $stmtUpdatedDemandesFormation->execute();
+            $updatedDemandesFormationData = $stmtUpdatedDemandesFormation->fetchAll(PDO::FETCH_ASSOC);
+            $jsonUpdatedDemandesFormationData = json_encode($updatedDemandesFormationData);
+            break;
+        case 'demandes_intervention':
+            // Récupérer les demandes d'intervention mises à jour et les renvoyer
+            $stmtUpdatedDemandesIntervention = $dbh->prepare("SELECT id, nom_etablissement, numero_siret, nom_referent_projet, prenom_referent_projet, mail, telephone, date, date_souhaite_intervention, est_traite FROM demandes_intervention ORDER BY date DESC");
+            $stmtUpdatedDemandesIntervention->execute();
+            $updatedDemandesInterventionData = $stmtUpdatedDemandesIntervention->fetchAll(PDO::FETCH_ASSOC);
+            $jsonUpdatedDemandesInterventionData = json_encode($updatedDemandesInterventionData);
+            break;
+        default:
+            break;
+    }
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -122,27 +199,33 @@ $jsonHorairesData = json_encode($horairesData);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page administrateur</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        .admin-btn {
-            margin: 10px;
-            transition: transform 0.3s ease;
-        }
-        .admin-btn:hover {
-            transform: scale(1.05);
-        }
-    </style>
+    <link rel="stylesheet" href="../css/styleProfilAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/styleClock.css">
 </head>
 <?php include('../includes/headerNav.php') ?>
 <body>
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-5 ">
     <h1 class="text-center mb-4">Administration</h1>
     <div class="row justify-content-center my-5">
         <div class="col-6 col-md-8 d-flex flex-wrap justify-content-around mb-5">
-            <button onclick="loadContent('actualites')" class="btn btn-primary admin-btn">Gérer les actualités</button>
-            <button onclick="loadContent('dons')" class="btn btn-success admin-btn">Gérer les dons</button>
-            <button onclick="loadContent('utilisateurs')" class="btn btn-warning admin-btn">Gérer les utilisateurs</button>
-            <button onclick="loadContent('signalements')" class="btn btn-danger admin-btn">Voir les signalements</button>
-            <button onclick="loadContent('pro_sante')" class="btn btn-info admin-btn">Gérer les professionnels de santé</button>
+            <button onclick="loadContent('actualites')" class="btn btn-primary admin-btn"><i class="fa-solid fa-newspaper"></i> Gérer les actualités</button>
+            <button onclick="loadContent('dons')" class="btn btn-primary admin-btn"><i class="fa-solid fa-credit-card"></i> Gérer les dons</button>
+            <button onclick="loadContent('utilisateurs')" class="btn btn-primary admin-btn"><i class="fa-regular fa-user"></i> Gérer les utilisateurs</button>
+            <button onclick="loadContent('signalements')" class="btn btn-primary admin-btn"><i class="fa-solid fa-circle-exclamation"></i> Voir les signalements</button>
+            <button onclick="loadContent('pro_sante')" class="btn btn-primary admin-btn"><i class="fa-solid fa-notes-medical"></i> Gérer les professionnels de santé</button>
+            <button onclick="loadContent('messages_contact')" class="btn btn-primary admin-btn"><i class="fa-solid fa-address-book"></i> Messages de contact</button>
+            <button onclick="loadContent('demandes_formation')" class="btn btn-primary admin-btn"><i class="fa-brands fa-leanpub"></i>Demandes de formation</button>
+            <button onclick="loadContent('demandes_intervention')" class="btn btn-primary admin-btn"><i class="fa-solid fa-school"></i> Demandes d'intervention</button>
+        </div>
+    </div>
+    <div class="container-fluid mb-4">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-6">
+                <div class="wrapper">
+                    <main></main>
+                </div>
+            </div>
         </div>
     </div>
     <div class="content-area">
@@ -252,6 +335,7 @@ $jsonHorairesData = json_encode($horairesData);
 <?php include('../includes/footer.php') ?>
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../js/scriptClock.js"></script>
 <script>
     // Rend les données PHP disponibles en tant qu'objet JavaScript
     var donsData = <?php echo $jsonDonsData; ?>;
@@ -259,6 +343,13 @@ $jsonHorairesData = json_encode($horairesData);
     var utilisateursData = <?php echo $jsonUtilisateursData; ?>;
     var reponsesData = <?php echo $jsonReponsesData; ?>;
     var prosData = <?php echo $jsonProsData; ?>;
+    var messagesContactData = <?php echo $jsonMessagesContactData; ?>;
+    var demandesFormationData = <?php echo $jsonDemandesFormationData; ?>;
+    var demandesInterventionData = <?php echo $jsonDemandesInterventionData; ?>;
+    var updatedMessagesContactData = <?php echo isset($jsonUpdatedMessagesContactData) ? $jsonUpdatedMessagesContactData : '[]'; ?>;
+    var updatedDemandesFormationData = <?php echo isset($jsonUpdatedDemandesFormationData) ? $jsonUpdatedDemandesFormationData : '[]'; ?>;
+    var updatedDemandesInterventionData = <?php echo isset($jsonUpdatedDemandesInterventionData) ? $jsonUpdatedDemandesInterventionData : '[]'; ?>;
+
 
     /**
      * Charge le contenu spécifique en fonction du type sélectionné.
@@ -266,30 +357,52 @@ $jsonHorairesData = json_encode($horairesData);
      */
     function loadContent(type) {
         var contentArea = document.querySelector('.content-area');
+        const wrapper = document.querySelector('.wrapper');
         switch (type) {
             case 'actualites':
                 displayActualites(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'dons':
                 displayDons(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'utilisateurs':
                 displayUtilisateurs(contentArea);
+                wrapper.style.display = 'none';
                 break;
             case 'signalements':
                 fetch('load_signalements.php')
                     .then(response => response.json())
                     .then(data => displaySignalements(data, document.querySelector('.content-area')))
                     .catch(error => console.error('Erreur:', error));
+                wrapper.style.display = 'none';
                 break;
             case 'pro_sante':
                 displayProSante(contentArea);
+                wrapper.style.display = 'none';
+                break;
+            case 'messages_contact':
+                displayMessagesContact(contentArea, messagesContactData);
+                wrapper.style.display = 'none';
+                break;
+            case 'demandes_formation':
+                displayDemandesFormation(contentArea, demandesFormationData);
+                wrapper.style.display = 'none';
+                break;
+            case 'demandes_intervention':
+                displayDemandesIntervention(contentArea, demandesInterventionData);
+                wrapper.style.display = 'none';
                 break;
             default:
                 contentArea.innerHTML = '<p class="text-center mb-4">Choisissez une option pour commencer.</p>';
+                wrapper.style.display = 'block';
         }
-
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadContent(null);
+    });
 
     /**
      * Affiche les informations sur les actualités dans la zone de contenu.
@@ -414,7 +527,7 @@ $jsonHorairesData = json_encode($horairesData);
      * @param {HTMLElement} contentArea - L'élément dans lequel afficher les données.
      */
     function displayDons(contentArea) {
-        var tableHtml = '<h2 class="text-center mb-4">Ici, vous pouvez visualiser les dons.</h2>';
+        var tableHtml = '<h2 class="text-center mb-4">Visualiser les dons. Arrêter les paiements récurrents.</h2>';
         tableHtml += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
         tableHtml += '<th>Type de don</th><th>Montant</th><th>Prénom</th><th>Nom</th><th>Email</th>';
         tableHtml += '<th>Date de naissance</th><th>Adresse</th><th>Code Postal</th><th>Ville</th><th>Pays</th>';
@@ -637,8 +750,6 @@ $jsonHorairesData = json_encode($horairesData);
      * @param {number} idReponse - L'identifiant de la réponse à modifier.
      */
     function editReponse(idReponse) {
-        // Ici, vous devez obtenir les données de la réponse par une requête AJAX ou en les stockant en JavaScript
-        // Pour l'exemple, les données sont saisies directement
         fetch(`get_reponse_data.php?id=${idReponse}`)
             .then(response => response.json())
             .then(data => {
@@ -766,6 +877,243 @@ $jsonHorairesData = json_encode($horairesData);
      */
     function formatHoraires(pro) {
         return pro.jour_semaine + ' ' + pro.heure_debut_matin + ' - ' + pro.heure_fin_matin + ' / ' + pro.heure_debut_apres_midi + ' - ' + pro.heure_fin_apres_midi;
+    }
+
+    /**
+     * Fonction pour afficher les messages de contact.
+     * @param {HTMLElement} contentArea - La zone où afficher les messages de contact.
+     * @param {array} messages - Les messages à afficher.
+     */
+    function displayMessagesContact(contentArea, messages) {
+        let html = '<h2 class="text-center mb-4">Messages de contact</h2>';
+        html += `
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-2 filter-button" data-status="messages_contact">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminés</button>
+                    <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
+                </div>
+            </div>
+        </div>
+        <div class="no-items-message text-center mt-3" style="display: none;">Aucun message traité.</div>
+        `;
+        html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Suivi</th>';
+        html += '</tr></thead><tbody>';
+
+        messages.forEach(message => {
+            html += '<tr>';
+            html += '<td>' + message.nom + ' ' + message.prenom + '</td>';
+            html += '<td><a href="mailto:' + message.mail + '">' + message.mail + '</a></td>';
+            html += '<td>' + message.telephone + '</td>';
+            html += '<td>' + message.message + '</td>';
+            html += '<td>' + message.date + '</td>';
+            let btnClass = message.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnText = message.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
+            let newStatus = !message.est_traite;
+            html += '<td>' + (message.est_traite ? 'Terminée' : 'À faire') +
+                ` <button class="${btnClass} update-button" data-message-id="${message.id}" data-new-status="${newStatus}" data-type="messages_contact">${btnText}</button></td>`;
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        contentArea.innerHTML = html;
+    }
+
+    /**
+     * Fonction pour afficher les demandes de formation.
+     * @param {HTMLElement} contentArea - La zone où afficher les demandes de formation.
+     * @param {array} demandes - Les demandes de formation à afficher.
+     */
+    function displayDemandesFormation(contentArea, demandes) {
+        let html = '<h2 class="text-center mb-4">Demandes de formation</h2>';
+        html += `
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-2 filter-button" data-status="demandes_formation">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminées</button>
+                    <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
+                </div>
+            </div>
+        </div>
+        <div class="no-items-message text-center mt-3" style="display: none;">Aucune demande de formation traitée.</div>
+        `;
+        html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        html += '<th>Nom</th><th>Email</th><th>Téléphone</th><th>Message</th><th>Date</th><th>Suivi</th>';
+        html += '</tr></thead><tbody>';
+
+        demandes.forEach(demande => {
+            html += '<tr>';
+            html += '<td>' + demande.nom + ' ' + demande.prenom + '</td>';
+            html += '<td><a href="mailto:' + demande.mail + '">' + demande.mail + '</a></td>';
+            html += '<td>' + demande.telephone + '</td>';
+            html += '<td>' + demande.message + '</td>';
+            html += '<td>' + demande.date + '</td>';
+            let btnClass = demande.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnText = demande.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
+            let newStatus = !demande.est_traite;
+            html += '<td>' + (demande.est_traite ? 'Terminée' : 'À faire') +
+                ` <button class="${btnClass} update-button" data-message-id="${demande.id}" data-new-status="${newStatus}" data-type="demandes_formation">${btnText}</button></td>`;
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        contentArea.innerHTML = html;
+    }
+
+
+    /**
+     * Fonction pour afficher les demandes d'intervention.
+     * @param {HTMLElement} contentArea - La zone où afficher les demandes d'intervention.
+     * @param {array} demandes - Les demandes d'intervention à afficher.
+     */
+    function displayDemandesIntervention(contentArea, demandes) {
+        let html = '<h2 class="text-center mb-4">Demandes d\'intervention</h2>';
+        html += `
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-2 filter-button" data-status="demandes_intervention">Tout afficher</button>
+                    <button class="btn btn-success m-2 filter-button" data-status="done">Terminées</button>
+                    <button class="btn btn-warning m-2 filter-button" data-status="todo">À faire</button>
+                </div>
+            </div>
+        </div>
+        <div class="no-items-message text-center mt-3" style="display: none;">Aucune demande d'intervention traitée.</div>
+        `;
+        html += '<div class="table-responsive"><table class="table table-striped mt-4"><thead><tr>';
+        html += '<th>Établissement</th><th>SIRET</th><th>Référent</th><th>Email</th><th>Téléphone</th><th>Date</th><th>Date d\'intervention souhaitée</th><th>Suivi</th>';
+        html += '</tr></thead><tbody>';
+
+        demandes.forEach(demande => {
+            html += '<tr>';
+            html += '<td>' + demande.nom_etablissement + '</td>';
+            html += '<td>' + demande.numero_siret + '</td>';
+            html += '<td>' + demande.nom_referent_projet + ' ' + demande.prenom_referent_projet + '</td>';
+            html += '<td><a href="mailto:' + demande.mail + '">' + demande.mail + '</a></td>';
+            html += '<td>' + demande.telephone + '</td>';
+            html += '<td>' + demande.date + '</td>';
+            html += '<td>' + demande.date_souhaite_intervention + '</td>';
+            let btnClass = demande.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnText = demande.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
+            let newStatus = !demande.est_traite;
+            html += '<td>' + (demande.est_traite ? 'Terminée' : 'À faire') +
+                ` <button class="${btnClass} update-button" data-message-id="${demande.id}" data-new-status="${newStatus}" data-type="demandes_intervention">${btnText}</button></td>`;
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        contentArea.innerHTML = html;
+    }
+
+
+    /**
+     * Récupère et affiche le contenu mis à jour pour la zone spécifiée.
+     */
+    function updateContent() {
+        $.ajax({
+            url: '../pages/profilAdmin.php',
+            type: 'GET',
+            success: function(response) {
+                console.log(response);
+                displayMessagesContact(document.querySelector('.content-area'), response.messages);
+            },
+            error: function(error) {
+                console.error('Erreur lors de la récupération des messages:', error);
+            }
+        });
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const status = this.getAttribute('data-status');
+                // Appeler la fonction correspondante selon le type de contenu
+                switch (status) {
+                    case 'messages_contact':
+                        displayMessagesContact(document.querySelector('.content-area'), messagesContactData);
+                        break;
+                    case 'demandes_formation':
+                        displayDemandesFormation(document.querySelector('.content-area'), demandesFormationData);
+                        break;
+                    case 'demandes_intervention':
+                        displayDemandesIntervention(document.querySelector('.content-area'), demandesInterventionData);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+
+        const updateButtons = document.querySelectorAll('.update-button');
+        updateButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const messageId = this.getAttribute('data-message-id');
+                const newStatus = this.getAttribute('data-new-status') === 'true';
+                const type = this.getAttribute('data-type');
+                updateStatus(messageId, newStatus, type);
+            });
+        });
+    });
+
+
+    /**
+     * Met à jour le statut d'un message et rafraîchit le contenu.
+     * @param {number} messageId - L'identifiant du message à mettre à jour.
+     * @param {boolean} newStatus - Le nouveau statut à appliquer au message.
+     * @param {string} type - Le type de données à mettre à jour ('messages_contact', 'demandes_formation', 'demandes_intervention').
+     */
+    function updateStatus(messageId, newStatus, type) {
+        $.ajax({
+            url: '../pages/profilAdmin.php',
+            type: 'POST',
+            data: {
+                'updateStatus': true,
+                'messageId': messageId,
+                'newStatus': newStatus,
+                'type': type
+            },
+            success: function() {
+                updateContent(type);
+            },
+            error: function(error) {
+                console.error('Erreur lors de la mise à jour :', error);
+            }
+        });
+    }
+
+
+    /**
+     * Filtre les messages affichés en fonction du statut.
+     * @param {string} status - Le statut pour filtrer ('all', 'done', 'todo').
+     */
+    function filterContent(status) {
+        const rows = document.querySelectorAll('.content-area tr');
+        let anyDone = false; // Variable pour vérifier si au moins un élément est terminé
+        rows.forEach(row => {
+            const isDone = row.querySelector('td:nth-last-child(2)').textContent.trim() === 'Terminée';
+            console.log('Row status:', isDone ? 'Terminée' : 'Non terminée');
+            if (status === 'all' || (status === 'done' && isDone) || (status === 'todo' && !isDone)) {
+                row.style.display = '';
+                if (isDone) {
+                    anyDone = true;
+                }
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Si aucun élément n'est terminé et que le statut est 'done', affichez un message
+        if (status === 'done' && !anyDone) {
+            console.log('Aucun élément n\'est terminé.');
+            document.querySelector('.no-items-message').style.display = 'block';
+        } else {
+            document.querySelector('.no-items-message').style.display = 'none';
+        }
     }
 
 </script>

@@ -125,14 +125,9 @@ $professionnels = getProfessionnels($dbh, $offset, $elementsParPage, $nomRecherc
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <style>
         .blue {
             background-color: #52B5EF;
-        }
-        .btn-rechercher {
-            background-color: #A42AF0;
-            border-color: #A42AF0;
         }
         .card-footer {
             background-color: #D9D9D9;
@@ -214,7 +209,6 @@ $professionnels = getProfessionnels($dbh, $offset, $elementsParPage, $nomRecherc
         <?php endforeach; ?>
     </div>
 </div>
-
 <!-- Pagination -->
 <nav aria-label="Pagination">
     <ul class="pagination justify-content-center">

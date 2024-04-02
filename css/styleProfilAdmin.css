@@ -1,0 +1,40 @@
+.btn {
+    border-radius: 5px;
+    padding: 15px 25px;
+    font-size: 22px;
+    text-decoration: none;
+    margin: 20px;
+    color: #fff;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.btn:active {
+    transform: translate(0px, 5px);
+    box-shadow: 0px 1px 0px 0px;
+}
+
+.btn-primary.admin-btn:nth-child(odd) {
+    background-color: #A42AF0;
+    box-shadow: 0px 5px 0px 0px #7A17A5;
+}
+
+.btn-primary.admin-btn:nth-child(odd):active {
+    background-color: #A42AF0;
+    box-shadow: 0px 1px 0px 0px;
+}
+
+.btn-primary.admin-btn:nth-child(even) {
+    background-color: #0854C7;
+    box-shadow: 0px 5px 0px 0px #00328E;
+}
+
+.btn-primary.admin-btn:nth-child(even):active {
+    background-color: #0854C7;
+    box-shadow: 0px 1px 0px 0px;
+}
+
+.admin-btn:hover {
+    filter: brightness(110%);
+}
