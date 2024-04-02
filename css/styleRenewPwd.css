@@ -1,0 +1,10 @@
+.custom-icon {
+    color: black;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+}
+.bg-custom {background-color: #0854C7;padding: 40px;border-radius: 15px;}
+.custom-form-input-group {position: relative;}
+.custom-form-input-group input[type=password] {padding-right: 40px;}

@@ -31,22 +31,56 @@ if ($mail) {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport"content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
+    <link href="../css/styleRenewPwd.css" rel="stylesheet">
+    <style>
+    .custom-icon {
+    color: black;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    }
+    .custom-submit-btn:hover {background-color: #e8f0fe;}
+    .bg-custom {background-color: #0854C7;padding: 40px;border-radius: 15px;}
+    .custom-form-input-group {position: relative;}
+    .custom-form-input-group input[type=password] {padding-right: 40px;}
+    </style>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Changement de mot de passe</title>
 </head>
 <body>
-<?php include('../includes/headerNav.php') ?>
-<h1>Récuperation de mot de passe</h1>
-<form method="post">
-    <label for="newPwd">Nouveau mot de passe :</label>
-    <input type="password" name="newPwd">
-    <input type="password" name="verifPwd">
-    <input type="submit" name="submit" value="valider">
+    <?php include('../includes/headerNav.php') ?>
 
-</form>
-<?php include('../includes/footer.php') ?>
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="bg-custom">
+                        <h1 class="text-center text-white mb-4">Récuperation de mot de passe</h1>
+                        <form method="post">
+                                <label for="newPwd" class="form-label custom-form-label text-white">Nouveau mot de passe :</label>
+                            <div class="mb-3 custom-form-input-group">
+                                <input type="password" class="form-control custom-form-input" name="newPwd" placeholder="Nouveau mot de passe">
+                                <i class="fas fa-lock custom-icon"></i>
+                            </div>
+                            <div class="mb-3 custom-form-input-group">
+                                <input type="password" class="form-control custom-form-input" name="verifPwd" placeholder="Confirmez le mot de passe">
+                                <i class="fas fa-lock custom-icon"></i>
+                            </div>
+                            <div class="d-grid">
+                                <input type="submit" class="btn custom-submit-btn text-white" name="submit" value="valider">
+>>>>>>> 16119a2 (MAJ page qui-somme-nous & renewPwd)
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <?php include('../includes/footer.php') ?>
 </body>
 </html>
 <?php } else{
