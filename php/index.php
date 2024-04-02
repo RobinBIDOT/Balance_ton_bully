@@ -1,9 +1,14 @@
 <?php
-session_start()
+// Inclusion du fichier de connexion à la base de données
+include('../php/tools/functions.php');
+$dbh = dbConnexion();
+session_start();
+
+$stmt = $dbh->prepare("SELECT * FROM actualites ORDER BY date_publication DESC LIMIT 9");
+$stmt->execute();
+$actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
-
-
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -14,9 +19,27 @@ session_start()
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styleCarousselIndex.css">
 </head>
 <body>
     <?php include('../includes/headerNav.php')?>
+    <h2 class="text-center mt-5" style="font-family: 'Roboto', sans-serif;">Les dernières actualités sur le harcèlement scolaire</h2>
+    <div class="container">
+        <div id="carousel">
+            <?php foreach ($actualites as $actu): ?>
+                <figure>
+                    <img src="<?php echo htmlspecialchars($actu['photo']); ?>" alt="Image d'actualité">
+                    <figcaption>
+                        <h3><?php echo htmlspecialchars($actu['titre']); ?></h3>
+                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>">Lire l'article</a>
+                        <span><?php echo htmlspecialchars(date('d/m/Y', strtotime($actu['date_publication']))); ?></span>
+                    </figcaption>
+                </figure>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <br><br><br><br>
+    <div class="transition mt-5"></div>
     <!-- Section pour afficher les statistiques -->
     <div class="container-stats">
         <div class="statistiques">
@@ -26,7 +49,7 @@ session_start()
             </div>
             <div class="second-stat">
                 <p class="second-percent">22%</p>
-                <p class="high-school-harassment">Des élèves harcelés au lycées osent en parler</p>
+                <p class="high-school-harassment">Des élèves harcelés au lycée osent en parler</p>
             </div>
         </div>
         <div class="video-container">
@@ -111,7 +134,18 @@ session_start()
         })
         .setTween(timeline) // Utilisez la timeline GSAP comme tween
         .addTo(controller);
+
+        // Pour le caroussel
+        document.addEventListener("DOMContentLoaded", function() {
+            var carousel = document.getElementById('carousel');
+            var figures = carousel.getElementsByTagName('figure');
+            var angle = 360 / figures.length;
+            var radius = 350; // Rayon du cercle sur lequel les figures sont disposées
+
+            Array.prototype.forEach.call(figures, function(figure, i) {
+                figure.style.transform = `rotateY(${angle * i}deg) translateZ(${radius}px)`;
+            });
+        });
     </script>
-    
 </body>
 </html>
