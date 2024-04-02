@@ -2,9 +2,9 @@
 <link rel="stylesheet" href="../css/styleFooter.css">
 <footer class="footer pt-3 py-xl-8">
 <!--    Waves   -->
-<!--    <div class="wave-container">-->
-<!--        <canvas id="canvas"></canvas>-->
-<!--    </div>-->
+    <div class="wave-container">
+        <canvas id="canvas"></canvas>
+    </div>
     <div class="container-fluid p-0 mt-2 rounded">
         <div class="container-fluid bg-light">
             <div class="row justify-content-center">

@@ -214,7 +214,7 @@ try {
                 <?php if (isset($_SESSION['nickName'])) : ?>
                     <div class="mt-5">
                         <h2 class="text-2xl font-bold mb-4">Ajouter une réponse</h2>
-                        <form action="ajouterReponse.php" method="post">
+                        <form action="../pages/ajouterReponse.php" method="post">
                             <div class="form-group">
                                 <label for="contenuReponse">Contenu de la réponse :</label>
                                 <textarea class="form-control" id="contenuReponse" name="contenuReponse" rows="4" required></textarea>
