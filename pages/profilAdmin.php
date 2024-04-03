@@ -512,7 +512,7 @@ $jsonHorairesData = json_encode($horairesData);
             tableHtml += "<td>" + user.role + "</td>";
             tableHtml += "<td>";
             tableHtml += "<button class='btn btn-outline-primary' onclick='editUser(" + user.id + ")'>Modifier</button> ";
-            tableHtml += "<button class='btn btn-outline-danger' onclick='deleteUser(" + user.id + ")'>Supprimer</button>";
+            tableHtml += "<button class='btn btn-outline-danger' onclick='deleteUser("+ user.id + ")' >Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
         });
@@ -540,7 +540,7 @@ $jsonHorairesData = json_encode($horairesData);
 
             // Effectuer une requête AJAX pour récupérer d'autres données de l'utilisateur si nécessaire
             $.ajax({
-                url: "../pages/delete_user.php",
+                url: "../php/update_user.php",
                 type: "POST",
                 data: { id: user.id },
                 dataType: "json",
@@ -583,7 +583,6 @@ $jsonHorairesData = json_encode($horairesData);
             if (json.status === 'success'){
                 console.log(json.message)
                 alert(json.message)
-                location.reload();
             }
             console.log(json);
         }
