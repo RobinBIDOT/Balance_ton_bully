@@ -19,50 +19,17 @@ $dbh = dbConnexion();
 
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
-    error_log("ID reçu : " . $id);
-
     try {
-        $dbh->beginTransaction();
 
-        // Vérifier si l'utilisateur existe
-        $checkStmt = $dbh->prepare("SELECT COUNT(*) FROM utilisateurs WHERE id = ?");
-        $checkStmt->execute([$id]);
-        $userExists = $checkStmt->fetchColumn() > 0;
-
-        if (!$userExists) {
-            echo json_encode(['success' => false, 'error' => 'Utilisateur introuvable']);
-            error_log("Erreur : Utilisateur introuvable pour l'ID : " . $id);
-            $dbh->rollBack();
-            exit;
-        }
-
-        // Suppression de l'utilisateur
         $stmt = $dbh->prepare("DELETE FROM utilisateurs WHERE id = ?");
         $stmt->execute([$id]);
-        if ($stmt->errorCode() != '00000') {
-            error_log("Erreur SQL lors de la suppression dans utilisateurs : " . implode(";", $stmt->errorInfo()));
-        }
-
-        if ($stmt->rowCount() > 0) {
-            echo json_encode([
-                'status' => 'success',
-                'message' =>  "Utilisateur supprimé avec succès"
-            ]);
-
-        } else {
-            echo json_encode([
-                'status' => 'error',
-                'message' => "Erreur ou utilisateur déjà supprimé"
-            ]);
-        }
-
-        $dbh->commit();
+        echo json_encode([
+            'status' => 'success',
+            'message' => "Utilisateur supprimé avec succès"
+        ]);
     } catch (PDOException $e) {
-        $dbh->rollBack();
-        error_log("Erreur de transaction : " . $e->getMessage());
-        echo json_encode(['success' => false, 'error' => 'Erreur lors de la transaction']);
+        echo json_encode([
+            'success' => false,
+            'message' => "Erreur ou utilisateur déjà supprimé" . $e]);
     }
-} else {
-    echo json_encode(['success' => false, 'error' => 'Aucun ID fourni']);
-    error_log("Erreur : Aucun ID fourni dans la requête POST");
 }

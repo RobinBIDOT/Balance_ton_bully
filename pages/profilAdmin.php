@@ -653,7 +653,7 @@ if(isset($_GET['updateStatus'])) {
 
             // Effectuer une requête AJAX pour récupérer d'autres données de l'utilisateur si nécessaire
             $.ajax({
-                url: "../pages/delete_user.php",
+                url: "../php/update_user.php",
                 type: "POST",
                 data: { id: user.id },
                 dataType: "json",
@@ -696,7 +696,6 @@ if(isset($_GET['updateStatus'])) {
             if (json.status === 'success'){
                 console.log(json.message)
                 alert(json.message)
-                location.reload();
             }
             console.log(json);
         }
