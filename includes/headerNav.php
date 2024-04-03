@@ -48,15 +48,14 @@
                                 <?php
                                     // Bouton pour accéder à la page de profil administrateur 
                                     if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'administrateur') { ?>
-                                    <a href="../pages/profilAdmin.php" class="btn btn-warning my-2">Profil admin</a>
+                                    <a href="../pages/profilAdmin.php" class="profil-btn">Profil admin</a>
                                 <?php }
                                     // Bouton pour accéder à la page de profil professionnel de santé
                                     if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'sante') { ?>
                                         <a href="../pages/profilSante.php" class="btn btn-success my-2">Profil santé</a>
                                     <?php } ?>
-                                <a href="../pages/deconnexion.php" class="deconnexion-btn">Déconnexion</a>
-                                <a href="../pages/account.php" class="btn btn-primary my-2">Votre profil</a>
-                                    <a href="../php/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
+                                <a href="../pages/account.php" class="profil-btn">Votre profil</a>
+                                <a href="../php/deconnexion.php" class="deconnexion-btn">Déconnexion</a>
                             </div>
                         <?php } ?>
                     </div>
@@ -155,12 +154,17 @@
 
     /**
      * Cette fonction est exécutée lorsque le document HTML est complètement chargé et prêt à être manipulé.
-     * Elle bascule l'affichage de la barre de recherche lors du clic sur l'élément avec la classe 'search-bar__submit'.
-     * Elle utilise la fonction click de jQuery pour détecter le clic et toggleClass pour ajouter ou supprimer la classe 'show-search'.
+     * Elle gère l'affichage de la barre de recherche en fonction des clics sur l'élément avec la classe 'search-bar__submit' ou sur le champ d'entrée.
+     * Elle utilise la fonction click de jQuery pour détecter les clics et toggleClass pour ajouter ou supprimer la classe 'show-search'.
      */
     $(document).ready(function() {
-        $(".search-bar__submit").click(function() {
-            // Bascule l'affichage de la barre de recherche
+        // Empêche la fermeture de la barre de recherche lorsqu'on clique sur la zone de saisie ou sur le bouton
+        $(".search-bar__input, .search-bar__submit").click(function(event) {
+            event.stopPropagation();
+        });
+
+        // Bascule l'affichage de la barre de recherche lors du clic sur le bouton ou sur le champ d'entrée
+        $(".search-bar__submit, .search-bar__input").click(function() {
             $(".search-bar__input").toggleClass("show-search");
         });
     });

@@ -236,7 +236,7 @@ header a:hover{
 }
 
 .search-bar__input {
-    display: none;
+    /*display: none;*/
     color: #333;
     background: transparent;
     flex-grow: 1;
