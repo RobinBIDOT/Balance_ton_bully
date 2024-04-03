@@ -17,8 +17,8 @@
 <div class='container-fluid p-0 rounded'>
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
-            <div class='col-12 col-md-auto p-2 text-center perso_logoBright'>
-                <a href='../php/index.php'>
+            <div class='col-12 col-md-auto p-2 text-center'>
+                <a href='../pages/index.php'>
                     <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
                 </a>
             </div>
@@ -34,8 +34,8 @@
             </div>
             <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section '>
                 <!-- Icône de connexion et navigation (toujours visible) -->
-                <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top align-items-center">
-                    <a href="../php/connexion.php" class="d-block mb-2" style="max-width: 50px;">
+                <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top">
+                    <a href="../pages/connexion.php" class="d-block mb-2" style="max-width: 50px;">
                         <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
                     <div class="container my-3">
@@ -45,7 +45,6 @@
                                 <div class="mb-2">
                                     <p class="text-primary text-white mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                                 </div>
-                                <a href="../php/account.php" class="profil-btn">Votre profil</a>
                                 <?php
                                     // Bouton pour accéder à la page de profil administrateur 
                                     if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'administrateur') { ?>
@@ -56,6 +55,8 @@
                                         <a href="../pages/profilSante.php" class="btn btn-success my-2">Profil santé</a>
                                     <?php } ?>
                                 <a href="../pages/deconnexion.php" class="deconnexion-btn">Déconnexion</a>
+                                <a href="../pages/account.php" class="btn btn-primary my-2">Votre profil</a>
+                                    <a href="../php/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
                             </div>
                         <?php } ?>
                     </div>
@@ -87,7 +88,7 @@
                             <!-- Élément supplémentaire pour le responsive -->
                             <div class="d-md-none">
                                 <div class="mt-2">
-                                    <a href="../php/connexion.php" class="d-block nav-link text-black text-center mx-3 mx-md-5">
+                                    <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
                                         Connexion
                                     </a>
                                 </div>

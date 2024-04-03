@@ -8,6 +8,7 @@
 -- Version de PHP : 8.2.12
 
 -- Création de la base de données si elle n'existe pas
+DROP DATABASE IF EXISTS balance_ton_bully;
 CREATE DATABASE IF NOT EXISTS balance_ton_bully;
 USE balance_ton_bully;
 

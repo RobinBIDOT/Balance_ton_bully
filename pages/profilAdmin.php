@@ -372,7 +372,7 @@ if(isset($_GET['updateStatus'])) {
                 wrapper.style.display = 'none';
                 break;
             case 'signalements':
-                fetch('load_signalements.php')
+                fetch('../php/load_signalements.php')
                     .then(response => response.json())
                     .then(data => displaySignalements(data, document.querySelector('.content-area')))
                     .catch(error => console.error('Erreur:', error));
@@ -451,7 +451,7 @@ if(isset($_GET['updateStatus'])) {
             let formData = new FormData();
             formData.append('id', id);
 
-            fetch('delete_actualite.php', {
+            fetch('../php/delete_actualite.php', {
                 method: 'POST',
                 body: formData
             })
@@ -581,7 +581,7 @@ if(isset($_GET['updateStatus'])) {
         let formData = new FormData();
         formData.append('donId', donId);
 
-        fetch('stop_don_mensuel.php', {
+        fetch('../php/stop_don_mensuel.php', {
             method: 'POST',
             body: formData
         })
@@ -653,7 +653,7 @@ if(isset($_GET['updateStatus'])) {
 
             // Effectuer une requête AJAX pour récupérer d'autres données de l'utilisateur si nécessaire
             $.ajax({
-                url: "../pages/delete_user.php",
+                url: "../php/update_user.php",
                 type: "POST",
                 data: { id: user.id },
                 dataType: "json",
@@ -682,24 +682,22 @@ if(isset($_GET['updateStatus'])) {
      * Envoie une requête POST au serveur pour effectuer la suppression.
      * @param {number} id - L'identifiant de l'utilisateur à supprimer.
      */
-    function deleteUser(id) {
+    async function deleteUser(id) {
         if(confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
+            console.log(id)
             let formData = new FormData();
             formData.append('id', id);
-            fetch("../pages/delete_user.php", {
+            console.log(formData)
+            const response = await fetch("../php/delete_user.php", {
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        alert('Utilisateur et ses données associées supprimés avec succès.');
-                        loadContent('utilisateurs');
-                    } else {
-                        alert('Erreur lors de la suppression.');
-                    }
-                })
-                .catch(error => console.error('Erreur:', error));
+            let json = await response.json();
+            if (json.status === 'success'){
+                console.log(json.message)
+                alert(json.message)
+            }
+            console.log(json);
         }
     }
 
@@ -750,7 +748,9 @@ if(isset($_GET['updateStatus'])) {
      * @param {number} idReponse - L'identifiant de la réponse à modifier.
      */
     function editReponse(idReponse) {
-        fetch(`get_reponse_data.php?id=${idReponse}`)
+        // Ici, vous devez obtenir les données de la réponse par une requête AJAX ou en les stockant en JavaScript
+        // Pour l'exemple, les données sont saisies directement
+        fetch(`../php/get_reponse_data.php?id=${idReponse}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('editReponseId').value = idReponse;
@@ -772,7 +772,7 @@ if(isset($_GET['updateStatus'])) {
     function deleteReponse(idReponse) {
         if(confirm('Voulez-vous vraiment supprimer cette réponse ?')) {
             console.log("Envoi de la requête avec l'ID :", JSON.stringify({ id: idReponse }));
-            fetch('delete_reponse.php', {
+            fetch('../php/delete_reponse.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -805,7 +805,7 @@ if(isset($_GET['updateStatus'])) {
         formData.append('id', document.getElementById('editReponseId').value);
         formData.append('contenu', document.getElementById('editReponseContenu').value);
 
-        fetch('update_reponse.php', {
+        fetch('../php/update_reponse.php', {
             method: 'POST',
             body: formData
         })

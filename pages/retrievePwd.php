@@ -37,7 +37,7 @@ if (isset($_POST['sendMail'])) {
     </style>
 </head>
 <body>
-    <?php include '../includes/headerNav.php'?>
+    <?php include '../includes/headerNav.php' ?>
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -57,4 +57,4 @@ if (isset($_POST['sendMail'])) {
             </div>
         </div>
     </div>
-    <?php include '../includes/footer.php'?>
+    <?php include '../includes/footer.php' ?>
