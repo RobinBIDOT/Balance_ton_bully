@@ -12,7 +12,7 @@
  */
 
 // Inclusion du fichier de fonctions et démarrage de la session
-include 'tools/functions.php';
+include '../php/tools/functions.php';
 session_start();
 
 

@@ -31,9 +31,3 @@ async function postUserData(data){
     }
     console.log(json);
 }
-
-let btnDelContent = document.getElementById('delContent');
-btnDelContent.addEventListener('click', (e)=>{
-    e.preventDefault()
-})
-

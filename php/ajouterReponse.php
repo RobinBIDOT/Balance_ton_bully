@@ -10,35 +10,36 @@ session_start();
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['nickName'])) {
-    header("Location: ../php/connexion.php");
+    header("Location: ../pages/connexion.php");
     exit();
 }
 
-//var_dump($_POST['contenuReponse']);
-//var_dump($_POST['id']);
+var_dump($_POST['contenuReponse']);
+var_dump($_POST['idSujet']);
 
 // Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if(isset($_POST['contenuReponse']) && isset($_POST['id'])) {
-        $idSujet = $_POST['id'];
+    if(isset($_POST['contenuReponse']) && isset($_POST['idSujet'])) {
+        $idSujet = $_POST['idSujet'];
         $contenu = $_POST['contenuReponse'];
-
+        var_dump($idSujet);
         try {
             ajouterReponse($dbh, $idSujet, $contenu, $_SESSION['nickName']);
             // Rediriger vers la page du sujet après l'ajout de la réponse
-            header("Location: sujet.php?id=" . $idSujet);
+
+            header("Location: ../pages/sujet.php?id=" . $idSujet);
             exit();
         } catch (PDOException $e) {
             echo "Erreur : " . $e->getMessage();
         }
     } else {
-        // Si les données du formulaire sont manquantes, rediriger vers la page d'accueil
+        //Si les données du formulaire sont manquantes, rediriger vers la page d'accueil
         //header("Location: accueilForum.php");
         exit();
     }
 } else {
     // Si le formulaire n'a pas été soumis, rediriger vers la page d'accueil
-    header("Location: accueilForum.php");
+    header("Location: ../pages/accueilForum.php");
     exit();
 }
 

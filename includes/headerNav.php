@@ -46,7 +46,7 @@
                                     <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                                 </div>
                                 <a href="../pages/account.php" class="btn btn-primary my-2">Votre profil</a>
-                                    <a href="../pages/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
+                                    <a href="../php/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
                             </div>
                         <?php } ?>
                     </div>

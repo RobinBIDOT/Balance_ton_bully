@@ -151,9 +151,9 @@ try {
                             </div>
                             <!-- Bouton Supprimer -->
                             <?php if(isset($_SESSION['nickName']) && ($_SESSION['nickName'] === $row['userName'] || $_SESSION['id_role'] == 1)) : ?>
-                                <form action="supprimerSujet.php" method="post">
-                                    <input type="hidden" name="id_sujet" value="<?php echo $row['id']; ?>">
-                                    <button type="submit" class="btn btn-danger btn-sm ms-2">Supprimer</button>
+                                <form action="../php/supprimerSujet.php" method="post">
+                                    <input type="hidden" name="id_sujet" id="id_sujet" value="<?php echo $row['id']; ?>">
+                                    <button type="submit" id="delContent" class="btn btn-danger btn-sm ms-2">Supprimer</button>
                                 </form>
                             <?php endif; ?>
                         </div>
@@ -215,7 +215,7 @@ if(isset($_SESSION['nickName'])) :
                 Créer un nouveau sujet
             </div>
             <div class="card-body">
-                <form method="post" action="../pages/ajouterSujet.php">
+                <form method="post" action="../php/ajouterSujet.php">
                     <div class="form-group">
                         <label for="titre">Titre du sujet</label>
                         <input type="text" class="form-control" id="titre" name="titre" required>
@@ -232,10 +232,11 @@ if(isset($_SESSION['nickName'])) :
 <?php else : ?>
     <div class="container mt-5">
         <div class="alert alert-warning" role="alert">
-            Connectez-vous pour pouvoir ajouter une réponse. <a href="../php/connexion.php" class="alert-link">Se connecter</a>.
+            Connectez-vous pour pouvoir ajouter une réponse. <a href="connexion.php" class="alert-link">Se connecter</a>.
         </div>
     </div>
 <?php endif; ?>
 <?php include('../includes/footer.php') ?>
+
 </body>
 </html>
