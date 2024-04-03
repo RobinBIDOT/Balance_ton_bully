@@ -23,23 +23,6 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <?php include('../includes/headerNav.php')?>
-    <h2 class="text-center mt-5" style="font-family: 'Roboto', sans-serif;">Les dernières actualités sur le harcèlement scolaire</h2>
-    <div class="container">
-        <div id="carousel">
-            <?php foreach ($actualites as $actu): ?>
-                <figure>
-                    <img src="<?php echo htmlspecialchars($actu['photo']); ?>" alt="Image d'actualité">
-                    <figcaption>
-                        <h3><?php echo htmlspecialchars($actu['titre']); ?></h3>
-                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>">Lire l'article</a>
-                        <span><?php echo htmlspecialchars(date('d/m/Y', strtotime($actu['date_publication']))); ?></span>
-                    </figcaption>
-                </figure>
-            <?php endforeach; ?>
-        </div>
-    </div>
-    <br><br><br><br>
-    <div class="transition mt-5"></div>
     <!-- Section pour afficher les statistiques -->
     <div class="container-stats">
         <div class="statistiques">
@@ -56,6 +39,23 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <iframe class="video" src="https://www.youtube.com/embed/EJVeyg5v2Xw"></iframe>
         </div>
     </div>
+    <div class="transition mt-5"></div>
+    <h2 class="text-center mt-5" style="font-family: 'Roboto', sans-serif;">Les dernières actualités sur le harcèlement scolaire</h2>
+    <div class="container">
+        <div id="carousel">
+            <?php foreach ($actualites as $actu): ?>
+                <figure>
+                    <img src="<?php echo htmlspecialchars($actu['photo']); ?>" alt="Image d'actualité">
+                    <figcaption>
+                        <h3><?php echo htmlspecialchars($actu['titre']); ?></h3>
+                        <a href="<?php echo htmlspecialchars($actu['lien_article']); ?>">Lire l'article</a>
+                        <span><?php echo htmlspecialchars(date('d/m/Y', strtotime($actu['date_publication']))); ?></span>
+                    </figcaption>
+                </figure>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <br><br><br><br>
     <div class="transition"></div>
     <div class="solutions">
         <div class="animated-element first-solution">
@@ -80,7 +80,6 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div class="transition"></div>
     <?php include('../includes/footer.php') ?>
-
     <!-- Script pour l'animation des pourcentages -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -104,7 +103,6 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
             incrementerPourcentage($('.second-percent'), 22); // Deuxième valeur cible: 22%
         });
     </script>
-
     <!-- Script pour l'animation du scroll trigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js"></script>
