@@ -36,6 +36,8 @@ if ($mail) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
     <link href="../css/styleRenewPwd.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Changement de mot de passe</title>
     <style>
     .custom-icon {
     color: black;
@@ -49,8 +51,6 @@ if ($mail) {
     .custom-form-input-group {position: relative;}
     .custom-form-input-group input[type=password] {padding-right: 40px;}
     </style>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Changement de mot de passe</title>
 </head>
 <body>
     <?php include('../includes/headerNav.php') ?>
@@ -72,7 +72,6 @@ if ($mail) {
                             </div>
                             <div class="d-grid">
                                 <input type="submit" class="btn custom-submit-btn text-white" name="submit" value="valider">
->>>>>>> 16119a2 (MAJ page qui-somme-nous & renewPwd)
                             </div>
                         </form>
                     </div>
@@ -80,7 +79,7 @@ if ($mail) {
             </div>
         </div>
 
-    <?php include('../includes/footer.php') ?>
+<?php include('../includes/footer.php') ?>
 </body>
 </html>
 <?php } else{
