@@ -18,7 +18,7 @@
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-12 col-md-auto p-2 text-center'>
-                <a href='../php/index.php'>
+                <a href='../pages/index.php'>
                     <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
                 </a>
             </div>
@@ -35,7 +35,7 @@
             <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section '>
                 <!-- Icône de connexion et navigation (toujours visible) -->
                 <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top">
-                    <a href="../php/connexion.php" class="d-block mb-2" style="max-width: 50px;">
+                    <a href="../pages/connexion.php" class="d-block mb-2" style="max-width: 50px;">
                         <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
                     <div class="container my-3">
@@ -45,7 +45,7 @@
                                 <div class="mb-2">
                                     <p class="text-primary mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                                 </div>
-                                <a href="../php/account.php" class="btn btn-primary my-2">Votre profil</a>
+                                <a href="../pages/account.php" class="btn btn-primary my-2">Votre profil</a>
                                     <a href="../pages/deconnexion.php" class="btn btn-danger my-2">Déconnexion</a>
                             </div>
                         <?php } ?>
@@ -81,7 +81,7 @@
                             </li>
                             <div class="d-md-none">
                                 <div class="mt-2">
-                                    <a href="../php/connexion.php" class="d-block nav-link text-black text-center mx-5">
+                                    <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
                                         Connexion
                                     </a>
                                 </div>

@@ -97,37 +97,6 @@ try {
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/styleForum.css">
 
-    <!-- <style>
-        /* Styles globaux */
-        .container {
-            margin-top: 20px;
-        }
-
-        /* Styles spécifiques à la jumbotron */
-        .jumbotron {
-            padding: 2rem; 
-            margin: 1rem 0; 
-            border-radius: 15px; 
-            /* background-color: #007bff;  */
-            color: white; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-        }
-
-        h1, h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        p {
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        hr.my-4 {
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-color: #fff; 
-        }
-    </style> -->
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>

@@ -12,7 +12,7 @@
  * @package  BalanceTonBully
  */
 
-include('tools/functions.php'); // Inclusion du fichier de fonctions
+include('../php/tools/functions.php'); // Inclusion du fichier de fonctions
 $dbConnect = dbConnexion(); // Connexion à la base de données
 session_start(); // Démarrage de la session
 
@@ -68,29 +68,6 @@ if(isset($_POST['suppr'])){
     header('Location: connexion.php'); // Redirection vers la page de connexion
     exit();
 }
-
-// Traitement de la modification des informations de l'utilisateur
-if(isset($_POST['modName'])){
-    $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET name = ? WHERE id = ?');
-    $stmt->execute([$newName, $userId]);
-    $user['name'] = $newName;
-
-}
-if(isset($_POST['modFName'])){
-    $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET firstName = ? WHERE id = ?');
-    $stmt->execute([$newFName, $userId]);
-    $user['firstName'] = $newName;
-}
-if(isset($_POST['modUName'])){
-    $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET userName = ? WHERE id = ?');
-    $stmt->execute([$newUName, $userId]);
-    $user['userName'] = $newName;
-}
-if(isset($_POST['modMail'])){
-    $stmt = $dbConnect ->prepare('UPDATE utilisateurs SET mail = ? WHERE id = ?');
-    $stmt->execute([$newMail, $userId]);
-    $user['mail'] = $newName;
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -111,10 +88,10 @@ if(isset($_POST['modMail'])){
         <div class="row mb-3">
             <label for="newName" class="col-sm-2 col-form-label">Nom :</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="newName" value="<?php echo $user['name'] ?>" name="newName">
+                <input type="text" class="form-control" id="inputName" value="<?php echo $user['name'] ?>" name="newName">
             </div>
             <div class="col-sm-2">
-                <button type="submit" class="btn btn-primary" name="modName">Modifier</button>
+                <button type="submit" class="btn btn-primary" id="newName" name="modName">Modifier</button>
             </div>
         </div>
         <div class="row mb-3">
@@ -122,26 +99,17 @@ if(isset($_POST['modMail'])){
             <div class="col-sm-8">
                 <input type="text" class="form-control" id="newFName" value="<?php echo $user['firstName'] ?>" name="newFName">
             </div>
-            <div class="col-sm-2">
-                <button type="submit" class="btn btn-primary" name="modFName">Modifier</button>
-            </div>
         </div>
         <div class="row mb-3">
             <label for="newUName" class="col-sm-2 col-form-label">Nom d'utilisateur :</label>
             <div class="col-sm-8">
                 <input type="text" class="form-control" id="newUName" value="<?php echo $user['userName'] ?>" name="newUName">
             </div>
-            <div class="col-sm-2">
-                <button type="submit" class="btn btn-primary" name="modUName">Modifier</button>
-            </div>
         </div>
         <div class="row mb-3">
             <label for="newMail" class="col-sm-2 col-form-label">Adresse mail :</label>
             <div class="col-sm-8">
                 <input type="text" class="form-control" id="newMail" value="<?php echo $user['mail'] ?>" name="newMail">
-            </div>
-            <div class="col-sm-2">
-                <button type="submit" class="btn btn-primary" name="modMail">Modifier</button>
             </div>
         </div>
 
@@ -164,7 +132,7 @@ if(isset($_POST['modMail'])){
                         // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
                         if ($_SESSION['id_role'] == 1) {
                             // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
-                            echo '<a href="../pages/profilAdmin.php" class="btn btn-success">Admin</a>';
+                            echo '<a href="profilAdmin.php" class="btn btn-success">Admin</a>';
                         }
                     //} else {
                         // Gérer le cas où le rôle de l'utilisateur n'a pas pu être récupéré de la base de données
@@ -177,6 +145,6 @@ if(isset($_POST['modMail'])){
 
 </div>
 <?php include('../includes/footer.php') ?>
-
+<script src="../js/app.js"></script>
 </body>
 </html>

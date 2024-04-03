@@ -226,7 +226,7 @@ try {
                 <?php else : ?>
                     <div class="container mt-5">
                         <div class="alert alert-warning" role="alert">
-                            Connectez-vous pour pouvoir ajouter une réponse. <a href="../php/connexion.php" class="alert-link">Se connecter</a>.
+                            Connectez-vous pour pouvoir ajouter une réponse. <a href="connexion.php" class="alert-link">Se connecter</a>.
                         </div>
                     </div>
                 <?php endif; ?>
