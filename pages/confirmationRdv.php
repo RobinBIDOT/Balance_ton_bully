@@ -18,23 +18,10 @@ if (isset($_GET['date_heure']) && isset($_GET['professionnel_id'])) {
         // Formatter la date pour qu'elle soit au format DATETIME
         $date_heure_formattee = $date_heure_obj->format('Y-m-d H:i:s');
 
-        // Vérifier les valeurs récupérées avec var_dump
-        echo "Date et heure du rendez-vous : ";
-        var_dump($date_heure_formattee);
-        echo "<br>";
-        echo "ID du professionnel : ";
-        var_dump($professionnel_id);
-        echo "<br>";
-
         // Récupérer les informations sur le professionnel de santé
         $stmt_pro = $dbh->prepare("SELECT * FROM professionnels_sante WHERE id = ?");
         $stmt_pro->execute([$professionnel_id]);
         $professionnel = $stmt_pro->fetch(PDO::FETCH_ASSOC);
-
-        // Vérifier les informations sur le professionnel de santé avec var_dump
-        echo "Informations sur le professionnel de santé : ";
-        var_dump($professionnel);
-        echo "<br>";
 
         // Vérifier si l'utilisateur est connecté
         if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
@@ -43,63 +30,42 @@ if (isset($_GET['date_heure']) && isset($_GET['professionnel_id'])) {
             $stmt_user->execute([$_SESSION['id']]);
             $utilisateur = $stmt_user->fetch(PDO::FETCH_ASSOC);
 
-            // Vérifier les informations sur l'utilisateur avec var_dump
-            echo "Informations sur l'utilisateur : ";
-            var_dump($utilisateur);
-            echo "<br>";
+            // Vérifier si les informations sur le professionnel et l'utilisateur sont présentes
+            if ($professionnel && $utilisateur) {
+                // Insérer le rendez-vous dans la base de données
+                $professionnel_id = $professionnel['id'];
+                $utilisateur_id = $_SESSION['id'];
+                $confirme = true;
+
+                // Préparer la requête SQL pour insérer le rendez-vous dans la base de données
+                $sql = "INSERT INTO rendez_vous (professionnel_id, utilisateur_id, date_heure, confirme) VALUES (?, ?, ?, ?)";
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute([$professionnel_id, $utilisateur_id, $date_heure_formattee, $confirme]);
+
+                // Vérifier si l'insertion a réussi
+                if ($stmt->rowCount() > 0) {
+                    // Le rendez-vous a été enregistré avec succès
+                    echo "<script>alert('Le rendez-vous a été enregistré avec succès dans la base de données.');</script>";
+                } else {
+                    // Une erreur s'est produite lors de l'enregistrement du rendez-vous
+                    echo "<script>alert('Une erreur s\'est produite lors de l\'enregistrement du rendez-vous.');</script>";
+                }
+            } else {
+                // Informations manquantes sur le professionnel ou l'utilisateur
+                echo "<script>alert('Erreur : Informations manquantes sur le professionnel ou l\'utilisateur.');</script>";
+            }
+        } else {
+            // L'utilisateur n'est pas connecté
+            echo "<script>alert('Erreur : L\'utilisateur n\'est pas connecté.');</script>";
         }
     } else {
         // La conversion de la date a échoué
-        echo "Erreur : La date et l'heure ne sont pas au format valide.";
+        echo "<script>alert('Erreur : La date et l'heure ne sont pas au format valide.');</script>";
     }
 } else {
     // Afficher un message d'erreur ou rediriger vers une autre page
     echo "Erreur : Les paramètres requis ne sont pas spécifiés.";
     exit(); // Arrêter l'exécution du script
-}
-
-// Vérifier si le formulaire de confirmation a été soumis
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_rdv'])) {
-    // Vérifier si la date et l'heure sont définies dans le formulaire
-    if (isset($_POST['confirmDate'])) { // Assurez-vous que le nom du champ est correct ici
-        // Convertir la chaîne de caractères en objet DateTime
-        $date_heure_obj = date_create_from_format('Y-m-d\TH:i:s', $_POST['confirmDate']); // Assurez-vous que le nom du champ est correct ici
-
-        // Vérifier si la conversion a réussi
-        if ($date_heure_obj !== false) {
-            // Formatter la date pour qu'elle soit au format DATETIME
-            $date_heure_formattee = $date_heure_obj->format('Y-m-d H:i:s');
-
-            // Récupérer les données du formulaire
-            $professionnel_id = $professionnel['id']; // Utiliser l'ID du professionnel récupéré précédemment
-            $utilisateur_id = $_SESSION['id'];
-            $confirme = true; // Définir le champ confirme à true
-
-            // Préparer la requête SQL pour insérer le rendez-vous dans la base de données
-            $sql = "INSERT INTO rendez_vous (professionnel_id, utilisateur_id, date_heure, confirme) VALUES (?, ?, ?, ?)";
-            $stmt = $dbh->prepare($sql);
-
-            // Exécuter la requête avec les valeurs des paramètres
-            $stmt->execute([$professionnel_id, $utilisateur_id, $date_heure_formattee, $confirme]);
-
-            // Vérifier si l'insertion a réussi
-            if ($stmt->rowCount() > 0) {
-                // Le rendez-vous a été enregistré avec succès
-                echo "<script>alert('Le rendez-vous a été enregistré avec succès dans la base de données.');</script>";
-            } else {
-                // Une erreur s'est produite lors de l'enregistrement du rendez-vous
-                echo "<script>alert('Une erreur s\'est produite lors de l\'enregistrement du rendez-vous.');</script>";
-            }
-        } else {
-            // La conversion de la date a échoué
-            echo "<script>alert('Erreur : La date et l\'heure ne sont pas au format valide.');</script>";
-        }
-    } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // La date et l'heure ne sont pas définies dans le formulaire
-        echo "<script>alert('Erreur : La date et l\'heure ne sont pas spécifiées dans le formulaire.');</script>";
-    }
-} else {
-    echo "<script>alert('Erreur : Le formulaire de confirmation n\'a pas été soumis.');</script>";
 }
 ?>
 <!DOCTYPE html>
@@ -120,14 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_rdv'])) {
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-8 blue-bg p-4 shadow-lg rounded">
-            <h1 class="text-white">Confirmation de rendez-vous</h1>
-            <p class="text-white">Veuillez confirmer votre rendez-vous en cliquant sur le bouton ci-dessous :</p>
+            <h1 class="text-white">Confirmation de votre rendez-vous</h1>
             <!-- Affiche le message de succès si défini -->
             <?php if (!empty($successMessage)) echo $successMessage; ?>
             <!-- Affichage de la date du rendez-vous -->
             <p class="text-white">Date du rendez-vous : <?php echo isset($date_heure_formattee) ? $date_heure_formattee : ''; ?></p>
             <!-- Ajout du var_dump pour vérifier la valeur de $date_heure_formattee -->
-            <?php var_dump($date_heure_formattee); ?>
             <div class="mb-3">
                 <p class="text-white">Informations sur le professionnel de santé :</p>
                 <ul class="text-white">
@@ -149,18 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_rdv'])) {
                     </ul>
                 </div>
             <?php endif; ?>
-            <form method="post" action="">
-                <div class="row">
-                    <!-- Champ caché pour stocker la date et l'heure -->
-                    <input  name="confirmDate" value="<?php echo htmlspecialchars($date_heure_formattee ?? '', ENT_QUOTES); ?>">
-                    <div class="col-md-6 mb-3">
-                        <button type="submit" class="btn btn-primary w-100" name="confirm_rdv">Confirmer</button>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <button type="submit" class="btn btn-danger w-100" formaction="../pages/rdv.php">Annuler</button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </div>
