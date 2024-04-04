@@ -786,6 +786,16 @@ CREATE TABLE rendez_vous (
     FOREIGN KEY (professionnel_id) REFERENCES professionnels_sante(id)
 );
 
+INSERT INTO rendez_vous (professionnel_id, utilisateur_id, date_heure, confirme) VALUES
+    -- Rendez-vous avec le professionnel_id 14 le Lundi à 09h30
+    (14, 16, '2024-04-02 09:30:00', TRUE),
+    -- Rendez-vous avec le professionnel_id 12 le Mardi à 10h00
+    (12, 16, '2024-03-26 10:00:00', TRUE),
+    -- Rendez-vous avec le professionnel_id 10 le Mercredi à 11h00
+    (10, 16, '2024-03-27 11:00:00', TRUE),
+    -- Rendez-vous avec le professionnel_id 6 le Vendredi à 14h30
+    (6, 16, '2024-03-29 14:30:00', TRUE);
+
 -- Table des messages issus du formulaire de contact
 CREATE TABLE messages_contact (
     id INT AUTO_INCREMENT PRIMARY KEY,
