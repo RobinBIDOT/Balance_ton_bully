@@ -68,6 +68,75 @@ if(isset($_POST['suppr'])){
     header('Location: connexion.php'); // Redirection vers la page de connexion
     exit();
 }
+
+/**
+ * Affiche les rendez-vous médicaux de l'utilisateur.
+ *
+ * Cette fonction récupère et affiche les rendez-vous médicaux de l'utilisateur
+ * en cours à partir de la base de données. Elle distingue les rendez-vous passés
+ * et à venir et permet à l'utilisateur d'annuler les rendez-vous à venir.
+ *
+ * @param PDO $dbConnect La connexion à la base de données.
+ * @param int $userId L'identifiant de l'utilisateur pour lequel afficher les rendez-vous.
+ * @return string HTML représentant la liste des rendez-vous.
+ */
+function afficherRendezVous($dbConnect, $userId) {
+    $stmt = $dbConnect->prepare("
+        SELECT rv.*, ps.nom, ps.prenom, ps.profession, ps.adresse, ps.ville, ps.code_postal 
+        FROM rendez_vous rv 
+        JOIN professionnels_sante ps ON rv.professionnel_id = ps.id 
+        WHERE rv.utilisateur_id = ? 
+        ORDER BY rv.date_heure
+    ");
+    $stmt->execute([$userId]);
+    $rendezVous = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($rendezVous)) {
+        return '<div class="alert alert-info mt-4">Vous n\'avez aucun rendez-vous médical programmé.</div>';
+    } else {
+        $html = '<h2 class="text-center mt-4 mb-3">Vos Rendez-Vous Médicaux</h2><div class="list-group">';
+        $html = '<div class="text-center mt-4 mb-2">';
+        $html .= '<button id="toggleRdvFilter" class="btn btn-info">Afficher/Masquer les RDV Passés</button>';
+        $html .= '</div>';
+        foreach ($rendezVous as $rdv) {
+            $rdvDate = new DateTime($rdv['date_heure']);
+            $now = new DateTime();
+            $rdvStatus = $rdvDate < $now ? 'Passé' : 'À venir';
+
+            $html .= '<div class="list-group-item list-group-item-action bg-white mb-2 text-black p-2">';
+            $html .= '<div class="d-flex justify-content-between">';
+            $html .= '<div>';
+            $html .= "<div><strong>{$rdv['nom']} {$rdv['prenom']}</strong> - {$rdv['profession']}</div>";
+            $html .= "<div>{$rdv['adresse']}, {$rdv['ville']}, {$rdv['code_postal']}</div>";
+            $html .= "<div>Date et Heure : " . $rdvDate->format('d/m/Y H:i') . "</div>";
+            $html .= '</div>';
+
+            $html .= '<div>';
+            $html .= "<div class='badge bg-" . ($rdvStatus == 'Passé' ? 'secondary' : 'primary') . "'>$rdvStatus</div>";
+
+            if ($rdvStatus == 'À venir') {
+                $html .= "<form method='post' action='account.php' class='mt-2'>";
+                $html .= "<input type='hidden' name='rdvId' value='{$rdv['id']}'>";
+                $html .= "<input type='submit' class='btn btn-danger btn-sm' value='Annuler'>";
+                $html .= "</form>";
+            }
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+        $html .= '</div>';
+        return $html;
+    }
+}
+
+if (isset($_POST['rdvId'])) {
+    $stmt = $dbConnect->prepare('DELETE FROM rendez_vous WHERE id = ?');
+    $stmt->execute([$_POST['rdvId']]);
+
+    header('Location: account.php?message=RDV annulé');
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -142,9 +211,21 @@ if(isset($_POST['suppr'])){
             </div>
         </div>
     </form>
-
+    <?php
+    echo afficherRendezVous($dbConnect, $userId);
+    ?>
 </div>
 <?php include('../includes/footer.php') ?>
 <script src="../js/userMod.js"></script>
+<script>
+    document.getElementById('toggleRdvFilter').addEventListener('click', function() {
+        let rendezVousItems = document.querySelectorAll('.list-group-item');
+        rendezVousItems.forEach(function(item) {
+            if (item.querySelector('.badge.bg-secondary')) { // RDV Passé
+                item.classList.toggle('d-none');
+            }
+        });
+    });
+</script>
 </body>
 </html>
