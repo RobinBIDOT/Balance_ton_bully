@@ -147,7 +147,12 @@ try {
                                 <small><?php echo $row['userName']; ?> - <?php echo $row['date_creation']; ?> </small>
                             </div>
                             <div class="nombre-reponses">
-                                <span class="text-decoration-underline text-primary" style="cursor: pointer;" ><?php echo $row['nombre_reponses']; ?> Réponses</span>
+                                <span class="text-decoration-underline text-primary" style="cursor: pointer;" >
+                                    <?php if ($row['nombre_reponses'] > 1){
+                                        echo $row['nombre_reponses'] ?> Réponses</span> <?php
+                                    } else {
+                                       echo $row['nombre_reponses']; ?> Réponse</span> <?php
+                                    }?>
                             </div>
                             <!-- Bouton Supprimer -->
                             <?php if(isset($_SESSION['nickName']) && ($_SESSION['nickName'] === $row['userName'] || $_SESSION['id_role'] == 1)) : ?>
@@ -166,40 +171,41 @@ try {
         </div>
     </div>
     <br>
-    <?php if ($totalPages > 1) : ?>
-        <!-- Affichage de la pagination -->
-        <nav aria-label="Pagination" class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?php echo $page - 1; ?>" tabindex="-1">Précédent</a>
-                </li>
-                <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                    <?php
-                    // Afficher uniquement les pages proches de la page actuelle plus quelques pages autour
-                    $pageDelta = 2;
-                    if ($i >= $page - $pageDelta && $i <= $page + $pageDelta) :
-                        ?>
-                        <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                        </li>
-                    <?php elseif ($i == 1 || $i == $totalPages) : ?>
-                        <!-- Afficher toujours la première et la dernière page -->
-                        <li class="page-item">
-                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                        </li>
-                    <?php elseif ($i == $page - $pageDelta - 1 || $i == $page + $pageDelta + 1) : ?>
-                        <!-- Afficher des points de suspension pour les pages éloignées -->
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                    <?php endif; ?>
-                <?php endfor; ?>
-                <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?php echo $page + 1; ?>">Suivant</a>
-                </li>
-            </ul>
-        </nav>
-    <?php endif; ?>
+    <?php
+    if (empty($_GET['searchTitle']) && empty($_GET['searchUser']) && ($totalPages > 1) ): ?>
+            <!-- Affichage de la pagination -->
+            <nav aria-label="Pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $page - 1; ?>" tabindex="-1">Précédent</a>
+                    </li>
+                    <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                        <?php
+                        // Afficher uniquement les pages proches de la page actuelle plus quelques pages autour
+                        $pageDelta = 2;
+                        if ($i >= $page - $pageDelta && $i <= $page + $pageDelta) :
+                            ?>
+                            <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php elseif ($i == 1 || $i == $totalPages) : ?>
+                            <!-- Afficher toujours la première et la dernière page -->
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php elseif ($i == $page - $pageDelta - 1 || $i == $page + $pageDelta + 1) : ?>
+                            <!-- Afficher des points de suspension pour les pages éloignées -->
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+                    <li class="page-item <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $page + 1; ?>">Suivant</a>
+                    </li>
+                </ul>
+            </nav>
+        <?php endif; ?>
     <br>
     <div class="transition"></div>
 </div>
