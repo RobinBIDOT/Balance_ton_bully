@@ -137,6 +137,81 @@ if (isset($_POST['rdvId'])) {
     exit();
 }
 
+/**
+ * Génère et retourne le HTML du profil professionnel de santé.
+ *
+ * Cette fonction récupère les informations, expertises, horaires et rendez-vous d'un professionnel
+ * de santé et retourne une chaîne de caractères contenant le HTML pour afficher ces informations.
+ *
+ * @param PDO $dbh La connexion à la base de données.
+ * @param int $userId L'identifiant de l'utilisateur pour lequel afficher le profil.
+ * @return string HTML représentant le profil professionnel de santé.
+ */
+function afficherProfilProfessionnelSante($dbh, $userId) {
+    $stmt = $dbh->prepare("SELECT * FROM professionnels_sante WHERE utilisateur_id = ?");
+    $stmt->execute([$userId]);
+    $profil = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$profil) {
+        return " ";
+    }
+
+    $stmtExpertise = $dbh->prepare("SELECT e.nom FROM expertise e JOIN professionnel_expertise pe ON e.id = pe.expertise_id WHERE pe.professionnel_id = ?");
+    $stmtExpertise->execute([$profil['id']]);
+    $expertises = $stmtExpertise->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtHoraires = $dbh->prepare("SELECT * FROM horaires_professionnels WHERE professionnel_id = ?");
+    $stmtHoraires->execute([$profil['id']]);
+    $horaires = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtRdv = $dbh->prepare("SELECT * FROM rendez_vous WHERE professionnel_id = ? ORDER BY date_heure");
+    $stmtRdv->execute([$profil['id']]);
+    $rendezVous = $stmtRdv->fetchAll(PDO::FETCH_ASSOC);
+
+    $expertisesString = join(', ', array_map(function($e) { return htmlspecialchars($e['nom']); }, $expertises));
+
+    $htmlHoraires = '';
+    foreach ($horaires as $horaire) {
+        $htmlHoraires .= "<tr>
+                            <td>" . htmlspecialchars($horaire['jour_semaine']) . "</td>
+                            <td>" . htmlspecialchars($horaire['heure_debut_matin']) . ' - ' . htmlspecialchars($horaire['heure_fin_matin']) . "</td>
+                            <td>" . htmlspecialchars($horaire['heure_debut_apres_midi']) . ' - ' . htmlspecialchars($horaire['heure_fin_apres_midi']) . "</td>
+                          </tr>";
+    }
+
+    $htmlRendezVous = '';
+    foreach ($rendezVous as $rdv) {
+        $stmtUser = $dbh->prepare("SELECT userName FROM utilisateurs WHERE id = ?");
+        $stmtUser->execute([$rdv['utilisateur_id']]);
+        $client = $stmtUser->fetch(PDO::FETCH_ASSOC);
+        $htmlRendezVous .= "<tr>
+                              <td>" . htmlspecialchars(date('d/m/Y H:i', strtotime($rdv['date_heure']))) . "</td>
+                              <td>" . htmlspecialchars($client['userName']) . "</td>
+                              <td>" . ($rdv['confirme'] ? 'Confirmé' : 'Non confirmé') . "</td>
+                            </tr>";
+    }
+    if ($profil) {
+        return "<div class='container mt-5'>
+                  <h1 class='text-center'>Profil Professionnel de Santé</h1>
+                  <div class='row mt-4'>
+                    <div class='col-md-4'><img src='" . htmlspecialchars($profil['photo']) . "' class='img-fluid rounded' style='max-width: 200px; background-color: white;' alt='Photo de profil'></div>
+                    <div class='col-md-8'>
+                      <h2>" . htmlspecialchars($profil['prenom']) . ' ' . htmlspecialchars($profil['nom']) . "</h2>
+                      <p><strong>Profession :</strong> " . htmlspecialchars($profil['profession']) . "</p>
+                      <p><strong>Adresse :</strong> " . htmlspecialchars($profil['adresse']) . ', ' . htmlspecialchars($profil['ville']) . ' ' . htmlspecialchars($profil['code_postal']) . "</p>
+                      <p><strong>Présentation :</strong> " . nl2br(htmlspecialchars($profil['presentation'])) . "</p>
+                      <p><strong>Expertises :</strong> $expertisesString</p>
+                    </div>
+                  </div>
+                  <h3 class='mt-5'>Horaires</h3>
+                  <table class='table table-bordered'><thead><tr><th>Jour</th><th>Matin</th><th>Après-midi</th></tr></thead><tbody>$htmlHoraires</tbody></table>
+                  <h3 class='mt-5'>Rendez-vous</h3>
+                  <table class='table table-bordered'><thead><tr><th>Date et Heure</th><th>Client</th><th>Statut</th></tr></thead><tbody>$htmlRendezVous</tbody></table>
+                </div>";
+    }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -212,7 +287,12 @@ if (isset($_POST['rdvId'])) {
         </div>
     </form>
     <?php
-    echo afficherRendezVous($dbConnect, $userId);
+    if ($_SESSION['id_role'] == 2) {
+        echo afficherRendezVous($dbConnect, $userId);
+    }
+    if (isset($userId)) {
+        echo afficherProfilProfessionnelSante($dbConnect, $userId);
+    }
     ?>
 </div>
 <?php include('../includes/footer.php') ?>

@@ -554,27 +554,29 @@ CREATE TABLE professionnels_sante (
     code_postal VARCHAR(10) NOT NULL,
     presentation TEXT NOT NULL,
     est_supprime BOOLEAN DEFAULT FALSE,
-    photo VARCHAR(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png'
+    photo VARCHAR(255) DEFAULT '/Balance_ton_bully/assets/avatarProfil.png',
+    utilisateur_id INT NOT NULL,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id)
 );
 
-INSERT INTO professionnels_sante (nom, prenom, profession, adresse, ville, code_postal, presentation)
+INSERT INTO professionnels_sante (nom, prenom, profession, adresse, ville, code_postal, presentation, utilisateur_id)
 VALUES
-    ('Dupont', 'Marie', 'Psychologue', '10 Rue des Écoles', 'Paris', '75001', 'Psychologue spécialisée dans la lutte contre le harcèlement scolaire.'),
-    ('Martin', 'Jean', 'Conseiller d\'orientation', '15 Rue des Lycées', 'Marseille', '13001', 'Conseiller d\'orientation passionné par le bien-être des élèves et la prévention du harcèlement.'),
-    ('Leclerc', 'Sophie', 'Pédopsychiatre', '20 Avenue des Collèges', 'Lyon', '69001', 'Pédopsychiatre expérimentée, engagée dans la protection des enfants contre le harcèlement à l\'école.'),
-    ('Dubois', 'Thomas', 'Éducateur spécialisé', '5 Boulevard des Étudiants', 'Bordeaux', '33001', 'Éducateur spécialisé dédié à accompagner les victimes de harcèlement scolaire vers la résilience.'),
-    ('Moreau', 'Catherine', 'Infirmière scolaire', '8 Rue des Écoliers', 'Toulouse', '31001', 'Infirmière scolaire engagée dans la sensibilisation et le soutien des élèves face au harcèlement.'),
-    ('Lefebvre', 'Pierre', 'Médecin généraliste', '25 Rue des Collèges', 'Lille', '59001', 'Médecin généraliste impliqué dans la prévention du harcèlement scolaire et le soutien aux familles.'),
-    ('Girard', 'Julie', 'Psychothérapeute', '30 Avenue des Lycées', 'Nice', '06001', 'Psychothérapeute spécialisée dans l\'accompagnement des jeunes confrontés au harcèlement et à la violence.'),
-    ('Roux', 'Nicolas', 'Assistant social', '12 Rue des Étudiants', 'Strasbourg', '67001', 'Assistant social engagé dans la lutte contre le harcèlement scolaire et la promotion du bien-être des élèves.'),
-    ('Gonzalez', 'Maria', 'Orthophoniste', '40 Rue des Écoles', 'Paris', '75002', 'Orthophoniste spécialisée dans l\'accompagnement des enfants victimes de harcèlement scolaire.'),
-    ('Leroy', 'David', 'Psychiatre', '35 Rue des Lycées', 'Marseille', '13002', 'Psychiatre expert en troubles de l\'adolescence et en gestion du harcèlement scolaire.'),
-    ('Bernard', 'Juliette', 'Psychomotricienne', '25 Avenue des Collèges', 'Lyon', '69002', 'Psychomotricienne dédiée à aider les enfants en difficulté scolaire, y compris les victimes de harcèlement.'),
-    ('Morel', 'Luc', 'Socio-éducatif', '10 Boulevard des Étudiants', 'Bordeaux', '33002', 'Éducateur spécialisé dans la prévention du harcèlement scolaire et l\'accompagnement des familles.'),
-    ('Fournier', 'Sarah', 'Orthoptiste', '5 Rue des Écoliers', 'Toulouse', '31002', 'Orthoptiste engagée dans la prise en charge des séquelles du harcèlement sur la vision des enfants.'),
-    ('Petit', 'Anne', 'Diététicienne', '20 Rue des Collèges', 'Lille', '59002', 'Diététicienne spécialisée dans la santé des adolescents et la gestion du stress lié au harcèlement scolaire.'),
-    ('Dubois', 'Marcel', 'Coach scolaire', '15 Avenue des Lycées', 'Nice', '06002', 'Coach scolaire accompagnant les élèves victimes de harcèlement pour retrouver confiance et motivation.'),
-    ('Renaud', 'Paul', 'Ergothérapeute', '8 Rue des Étudiants', 'Strasbourg', '67002', 'Ergothérapeute spécialisé dans l\'intégration des enfants harcelés dans le milieu scolaire.');
+    ('Dupont', 'Marie', 'Psychologue', '10 Rue des Écoles', 'Paris', '75001', 'Psychologue spécialisée dans la lutte contre le harcèlement scolaire.', '31'),
+    ('Martin', 'Jean', 'Conseiller d\'orientation', '15 Rue des Lycées', 'Marseille', '13001', 'Conseiller d\'orientation passionné par le bien-être des élèves et la prévention du harcèlement.', '32'),
+    ('Leclerc', 'Sophie', 'Pédopsychiatre', '20 Avenue des Collèges', 'Lyon', '69001', 'Pédopsychiatre expérimentée, engagée dans la protection des enfants contre le harcèlement à l\'école.', '33'),
+    ('Dubois', 'Thomas', 'Éducateur spécialisé', '5 Boulevard des Étudiants', 'Bordeaux', '33001', 'Éducateur spécialisé dédié à accompagner les victimes de harcèlement scolaire vers la résilience.', '34'),
+    ('Moreau', 'Catherine', 'Infirmière scolaire', '8 Rue des Écoliers', 'Toulouse', '31001', 'Infirmière scolaire engagée dans la sensibilisation et le soutien des élèves face au harcèlement.', '35'),
+    ('Lefebvre', 'Pierre', 'Médecin généraliste', '25 Rue des Collèges', 'Lille', '59001', 'Médecin généraliste impliqué dans la prévention du harcèlement scolaire et le soutien aux familles.', '36'),
+    ('Girard', 'Julie', 'Psychothérapeute', '30 Avenue des Lycées', 'Nice', '06001', 'Psychothérapeute spécialisée dans l\'accompagnement des jeunes confrontés au harcèlement et à la violence.', '37'),
+    ('Roux', 'Nicolas', 'Assistant social', '12 Rue des Étudiants', 'Strasbourg', '67001', 'Assistant social engagé dans la lutte contre le harcèlement scolaire et la promotion du bien-être des élèves.', '38'),
+    ('Gonzalez', 'Maria', 'Orthophoniste', '40 Rue des Écoles', 'Paris', '75002', 'Orthophoniste spécialisée dans l\'accompagnement des enfants victimes de harcèlement scolaire.', '39'),
+    ('Leroy', 'David', 'Psychiatre', '35 Rue des Lycées', 'Marseille', '13002', 'Psychiatre expert en troubles de l\'adolescence et en gestion du harcèlement scolaire.', '40'),
+    ('Bernard', 'Juliette', 'Psychomotricienne', '25 Avenue des Collèges', 'Lyon', '69002', 'Psychomotricienne dédiée à aider les enfants en difficulté scolaire, y compris les victimes de harcèlement.', '41'),
+    ('Morel', 'Luc', 'Socio-éducatif', '10 Boulevard des Étudiants', 'Bordeaux', '33002', 'Éducateur spécialisé dans la prévention du harcèlement scolaire et l\'accompagnement des familles.', '40'),
+    ('Fournier', 'Sarah', 'Orthoptiste', '5 Rue des Écoliers', 'Toulouse', '31002', 'Orthoptiste engagée dans la prise en charge des séquelles du harcèlement sur la vision des enfants.', '43'),
+    ('Petit', 'Anne', 'Diététicienne', '20 Rue des Collèges', 'Lille', '59002', 'Diététicienne spécialisée dans la santé des adolescents et la gestion du stress lié au harcèlement scolaire.','44'),
+    ('Dubois', 'Marcel', 'Coach scolaire', '15 Avenue des Lycées', 'Nice', '06002', 'Coach scolaire accompagnant les élèves victimes de harcèlement pour retrouver confiance et motivation.', '45'),
+    ('Renaud', 'Paul', 'Ergothérapeute', '8 Rue des Étudiants', 'Strasbourg', '67002', 'Ergothérapeute spécialisé dans l\'intégration des enfants harcelés dans le milieu scolaire.', '46');
 
 -- Table expertise
 CREATE TABLE expertise (
