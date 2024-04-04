@@ -22,14 +22,14 @@
     display: block;
     position: absolute;
     width: 200px;
-    height: 150px;
+    height: 180px;
     left: 50%;
     top: 50%;
     --i: 0;
     transform: rotateY(calc(var(--i) * 1turn / 9)) translateZ(1000px);
     background: black;
     overflow: hidden;
-    border: solid 5px black;
+    border: solid 1px black;
     transition: transform 1s;
     cursor: pointer;
 }
