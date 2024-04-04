@@ -192,11 +192,9 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
     }
     if ($profil) {
         return "<div class='container mt-5'>
-                  <h1 class='text-center'>Profil Professionnel de Santé</h1>
                   <div class='row mt-4'>
                     <div class='col-md-4'><img src='" . htmlspecialchars($profil['photo']) . "' class='img-fluid rounded' style='max-width: 200px; background-color: white;' alt='Photo de profil'></div>
                     <div class='col-md-8'>
-                      <h2>" . htmlspecialchars($profil['prenom']) . ' ' . htmlspecialchars($profil['nom']) . "</h2>
                       <p><strong>Profession :</strong> " . htmlspecialchars($profil['profession']) . "</p>
                       <p><strong>Adresse :</strong> " . htmlspecialchars($profil['adresse']) . ', ' . htmlspecialchars($profil['ville']) . ' ' . htmlspecialchars($profil['code_postal']) . "</p>
                       <p><strong>Présentation :</strong> " . nl2br(htmlspecialchars($profil['presentation'])) . "</p>
