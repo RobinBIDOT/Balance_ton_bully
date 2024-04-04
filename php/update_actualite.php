@@ -11,7 +11,7 @@
  * @package    balance_ton_bully
  * @subpackage admin
  */
-
+session_start();
 // Connection à la base de données et mise à jour l'actualité
 include('../php/tools/functions.php');
 $dbh = dbConnexion();

@@ -14,7 +14,7 @@
  * @param string $_POST['contenu'] - Le nouveau contenu de la réponse.
  * @return json - Renvoie un objet JSON indiquant le succès ou l'échec de la mise à jour.
  */
-
+session_start();
 
 include('../php/tools/functions.php');
 $dbh = dbConnexion();

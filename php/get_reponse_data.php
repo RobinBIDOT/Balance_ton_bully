@@ -12,7 +12,7 @@
  * @param int $_GET['id'] - L'identifiant de la réponse dont on souhaite récupérer les informations.
  * @return json - Renvoie un objet JSON contenant les détails de la réponse ou un message d'erreur.
  */
-
+session_start();
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
 

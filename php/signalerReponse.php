@@ -8,7 +8,7 @@
 * @package balance_ton_bully
 * @subpackage forum
 */
-
+session_start();
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
 
