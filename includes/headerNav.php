@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-compatible" content="ie-edge">
-    <title>Balance Ton Bully - Header</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/styleNav.css" rel="stylesheet">
-</head>
-<body>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="../css/style.css" rel="stylesheet">
 <div class='container-fluid p-0 rounded'>
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
@@ -45,15 +34,6 @@
                                 <div class="mb-2">
                                     <p class="text-primary text-black mb-2">Bienvenue, <?php echo htmlspecialchars($_SESSION['nickName']); ?></p>
                                 </div>
-<!--                                --><?php
-//                                    // Bouton pour accéder à la page de profil administrateur
-//                                    if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'administrateur') { ?>
-<!--                                    <a href="../pages/profilAdmin.php" class="profil-btn">Profil admin</a>-->
-<!--                                --><?php //}
-//                                    // Bouton pour accéder à la page de profil professionnel de santé
-//                                    if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'sante') { ?>
-<!--                                        <a href="../pages/profilSante.php" class="btn btn-success my-2">Profil santé</a>-->
-<!--                                    --><?php //} ?>
                                 <a href="../pages/account.php" class="profil-btn">Votre profil</a>
                                 <a href="../php/deconnexion.php" class="deconnexion-btn">Déconnexion</a>
                             </div>
