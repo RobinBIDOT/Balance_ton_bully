@@ -9,11 +9,19 @@ include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
 
+
+//// Vérifier si l'utilisateur est connecté
+//if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
+//    // Rediriger l'utilisateur vers la page de connexion
+//    header('Location: ../pages/connexion.php');
+//    exit();
+//}
+
 // Récupérer l'ID du professionnel depuis l'URL
 if (isset($_GET['professionnel_id'])) {
     $professionnel_id = intval($_GET['professionnel_id']);
     echo "Professionnel ID : ";
-    var_dump($professionnel_id);
+//    var_dump($professionnel_id);
     echo "<br><br>";
 } else {
     // Rediriger vers une page d'erreur si l'ID n'est pas fourni
@@ -103,7 +111,7 @@ function verifierCreneaux($heure_debut, $heure_fin, $duree_rdv, $professionnel_i
                     'title' => 'Disponible',
                     'start' => date('Y-m-d\TH:i:s', $heure_debut_ts),
                     'end' => date('Y-m-d\TH:i:s', $heure_debut_ts + $duree_rdv * 60),
-                    'url' => 'confirmation_rdv.php?professionnel_id=' . $professionnel_id . '&date_heure=' . date('Y-m-d\TH:i:s', $heure_debut_ts),
+                    'url' => 'confirmationRdv.php?professionnel_id=' . $professionnel_id . '&date_heure=' . date('Y-m-d\TH:i:s', $heure_debut_ts),
                     'backgroundColor' => '#28a745',
                     'borderColor' => '#28a745'
                 );
@@ -137,38 +145,6 @@ $evenements_json = json_encode($evenements);
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js"></script>
     <link href="../css/style.css" rel="stylesheet">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                headerToolbar: {
-                    left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-                    center: 'title',
-                    right: "prev,next"
-                },
-                navLinks: true,
-                buttonText: {
-                    dayGridMonth: 'Mois',
-                    timeGridWeek: 'Semaine',
-                    timeGridDay: 'Jour',
-                    listWeek: 'Liste semaine'
-                },
-                height: '70%',
-                dayHeaders: true,
-                initialDate: "<?php echo $date_aujourdhui; ?>",
-                editable: true,
-                eventContent: function(arg) {
-                    return {
-                        html: arg.event.title
-                    };
-                },
-                events: <?php echo $evenements_json; ?> // Charger les événements à partir du JSON
-            });
-
-            calendar.render();
-        });
-    </script>
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
@@ -178,5 +154,47 @@ $evenements_json = json_encode($evenements);
     <div id="calendar"></div>
 </div>
 <?php include('../includes/footer.php') ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+                center: 'title',
+                right: 'prev,next'
+            },
+            navLinks: true,
+            buttonText: {
+                dayGridMonth: 'Mois',
+                timeGridWeek: 'Semaine',
+                timeGridDay: 'Jour',
+                listWeek: 'Liste semaine'
+            },
+            height: '70%',
+            dayHeaders: true,
+            initialDate: "<?php echo $date_aujourdhui; ?>",
+            editable: true,
+            eventContent: function(arg) {
+                return {
+                    html: arg.event.title
+                };
+            },
+            events: <?php echo $evenements_json; ?> // Charger les événements à partir du JSON
+        });
+
+        calendar.render();
+
+    });
+    // Gestionnaire d'événements pour le clic sur un créneau disponible
+    calendar.on('dateClick', function(info) {
+        // Récupérer la date et l'heure du clic
+        var clickedDate = info.dateStr;
+        // Récupérer l'ID du professionnel
+        var professionnel_id = <?php echo $professionnel_id; ?>;
+        // Rediriger vers la page de confirmation avec les paramètres appropriés
+        window.location.href = 'confirmationRdv.php?date_heure=' + clickedDate + '&professionnel_id=' + professionnel_id;
+    });
+</script>
 </body>
 </html>

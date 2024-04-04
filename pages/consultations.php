@@ -9,22 +9,23 @@ include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
 
+var_dump($_SESSION);
+
 // Récupérer les données des professionnels de la santé avec leurs expertises depuis la base de données
-$sql = "SELECT
-            ps.id AS professionnel_id,
-            ps.nom,
-            ps.prenom,
-            ps.profession,
-            ps.adresse,
-            ps.ville,
-            ps.code_postal,
-            ps.presentation,
-            ps.photo,
-            GROUP_CONCAT(DISTINCT e.nom) AS expertises
-        FROM professionnels_sante ps
-        LEFT JOIN professionnel_expertise pe ON ps.id = pe.professionnel_id
-        LEFT JOIN expertise e ON pe.expertise_id = e.id
-        GROUP BY ps.id";
+$sql = "SELECT ps.id AS professionnel_id,
+           ps.nom,
+           ps.prenom,
+           ps.profession,
+           ps.adresse,
+           ps.ville,
+           ps.code_postal,
+           ps.presentation,
+           ps.photo,
+           GROUP_CONCAT(DISTINCT e.nom) AS expertises
+    FROM professionnels_sante ps
+    LEFT JOIN professionnel_expertise pe ON ps.id = pe.professionnel_id
+    LEFT JOIN expertise e ON pe.expertise_id = e.id
+    GROUP BY ps.id;";
 $stmt = $dbh->query($sql);
 $professionnels = array();
 
@@ -48,9 +49,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     // Ajouter chaque expertise au tableau d'expertises du professionnel
     if (!empty($row['expertises'])) {
         $expertises = explode(',', $row['expertises']);
+//        var_dump($expertises);
         foreach ($expertises as $expertise) {
             $professionnels[$id]['expertises'][] = $expertise;
+//            var_dump($expertise);
         }
+    }else {
+        error_log("Expertises are empty for professional ID: $id"); // Log si les expertises sont vides
     }
 }
 
@@ -125,18 +130,7 @@ $professionnels = getProfessionnels($dbh, $offset, $elementsParPage, $nomRecherc
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        .blue {
-            background-color: #52B5EF;
-        }
-        .card-footer {
-            background-color: #D9D9D9;
-        }
-        .expertise-item {
-            background-color: #D9D9D9;
-            padding: 5px 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/styleConsultations.css">
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
@@ -173,32 +167,38 @@ $professionnels = getProfessionnels($dbh, $offset, $elementsParPage, $nomRecherc
                  data-aos="<?php echo $key % 2 == 0 ? 'fade-right' : 'fade-left'; ?>"
                  data-aos-delay="<?php echo $key * 100; ?>">
                 <div class="row no-gutters align-items-center">
-                    <div class="col-md-4 mt-2 mb-2">
-                        <div class="ml-5">
-                            <img src="<?php echo $professionnel['photo']; ?>" class="card-img-top img-thumbnail img-fluid mb-3" alt="Photo de <?php echo $professionnel['prenom'] . ' ' . $professionnel['nom']; ?>" style="max-width: 100px;">
+                    <div class="col-md-4 mt-1 mb-1">
+                        <div class="ml-3">
+                            <img src="<?php echo $professionnel['photo']; ?>" class="card-img-top img-thumbnail img-fluid mb-1" alt="Photo de <?php echo $professionnel['prenom'] . ' ' . $professionnel['nom']; ?>" style="max-width: 100px;">
                             <h5 class="card-title"><?php echo $professionnel['prenom'] . ' ' . $professionnel['nom']; ?></h5>
-                            <p class="card-text"><?php echo $professionnel['profession']; ?></p>
-                            <p class="card-text"><?php echo $professionnel['adresse']; ?></p>
-                            <p class="card-text"><?php echo $professionnel['ville']; ?></p>
-                            <p class="card-text"><?php echo $professionnel['code_postal']; ?></p>
-                            <a href="../pages/rdv.php?professionnel_id=<?php echo $professionnel['id']; ?>" class="btn btn-primary mb-1">Prendre rendez-vous</a>
+                            <p class="card-text mb-1"><?php echo $professionnel['profession']; ?></p>
+                            <p class="card-text mb-1"><?php echo $professionnel['adresse']; ?></p>
+                            <p class="card-text mb-1"><?php echo $professionnel['ville']; ?></p>
+                            <p class="card-text mb-1"><?php echo $professionnel['code_postal']; ?></p>
+                            <a href="../pages/rdv.php?professionnel_id=<?php echo $professionnel['id']; ?>" class="btn btn-primary btn-sm mb-1">Prendre rendez-vous</a>
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-footer blue">
                             <div class="col">
-                                <div class="col mb-5">
-                                    <h6 class="col mb-3">Expertises :</h6>
-                                    <ul class="list-inline">
-                                        <?php if(isset($professionnel['expertises']) && is_array($professionnel['expertises'])): ?>
-                                            <?php foreach ($professionnel['expertises'] as $expertise): ?>
-                                                <li class="list-inline-item expertise-item"><?php echo $expertise; ?></li>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
+                                <div class="col mb-1">
+                                    <h6 class="col mb-2">Expertises :</h6>
+                                    <ul class="list-inline" style="margin-bottom: 0;">
+                                        <?php
+                                        if(isset($professionnel['expertises'])) {
+                                            // Si $professionnel['expertises'] est une chaîne, convertissons-la en un tableau
+                                            $expertises = is_array($professionnel['expertises']) ? $professionnel['expertises'] : explode(',', $professionnel['expertises']);
+                                            foreach ($expertises as $expertise) {
+                                                echo '<li class="list-inline-item expertise-item">';
+                                                echo htmlspecialchars($expertise);
+                                                echo '</li>';
+                                            }
+                                        }
+                                        ?>
                                     </ul>
                                 </div>
                                 <div class="col mt-3">
-                                    <h6 class="col mb-3">Présentation :</h6>
+                                    <h6 class="col mb-2">Présentation :</h6>
                                     <p><?php echo $professionnel['presentation']; ?></p>
                                 </div>
                             </div>

@@ -23,13 +23,13 @@ $dbh = dbConnexion();
 session_start();
 
 // Affichage des données de la session et du formulaire pour le débogage
-echo "<pre>Données de la session : ";
-var_dump($_SESSION);
-echo "</pre>";
-
-echo "<pre>Données du formulaire : ";
-var_dump($_POST);
-echo "</pre>";
+//echo "<pre>Données de la session : ";
+//var_dump($_SESSION);
+//echo "</pre>";
+//
+//echo "<pre>Données du formulaire : ";
+//var_dump($_POST);
+//echo "</pre>";
 
 // Vérification des données de session
 $donId = $_SESSION['donId'] ?? null;

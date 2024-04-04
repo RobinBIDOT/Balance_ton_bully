@@ -39,9 +39,9 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <iframe class="video" src="https://www.youtube.com/embed/EJVeyg5v2Xw"></iframe>
         </div>
     </div>
-    <div class="transition mt-5"></div>
-    <h2 class="text-center mt-5" style="font-family: 'Roboto', sans-serif;">Les dernières actualités sur le harcèlement scolaire</h2>
-    <div class="container">
+    <div class="transition mt-5 carousel-transition"></div>
+    <h2 class="text-center mt-5 carousel-title" style="font-family: 'Roboto', sans-serif;">Les dernières actualités sur le harcèlement scolaire</h2>
+    <div class="container carousel-container">
         <div id="carousel">
             <?php foreach ($actualites as $actu): ?>
                 <figure>
@@ -55,7 +55,7 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </div>
     </div>
-    <br><br><br><br>
+    <br class="carousel-transition"><br class="carousel-transition"><br class="carousel-transition"><br class="carousel-transition">
     <div class="transition"></div>
     <div class="solutions">
         <div class="animated-element first-solution">

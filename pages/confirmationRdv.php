@@ -1,41 +1,121 @@
 <?php
+// Inclure le fichier de fonctions et établir la connexion à la base de données
 include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
+
+// Vérifier si les paramètres sont passés dans l'URL
+if (isset($_GET['date_heure']) && isset($_GET['professionnel_id'])) {
+    // Récupérer les valeurs des paramètres
+    $date_heure = $_GET['date_heure'];
+    $professionnel_id = $_GET['professionnel_id'];
+
+    // Convertir la chaîne de caractères en objet DateTime
+    $date_heure_obj = date_create_from_format('Y-m-d\TH:i:s', $_GET['date_heure']);
+
+    // Vérifier si la conversion a réussi
+    if ($date_heure_obj !== false) {
+        // Formatter la date pour qu'elle soit au format DATETIME
+        $date_heure_formattee = $date_heure_obj->format('Y-m-d H:i:s');
+
+        // Récupérer les informations sur le professionnel de santé
+        $stmt_pro = $dbh->prepare("SELECT * FROM professionnels_sante WHERE id = ?");
+        $stmt_pro->execute([$professionnel_id]);
+        $professionnel = $stmt_pro->fetch(PDO::FETCH_ASSOC);
+
+        // Vérifier si l'utilisateur est connecté
+        if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
+            // Récupérer les informations sur l'utilisateur
+            $stmt_user = $dbh->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+            $stmt_user->execute([$_SESSION['id']]);
+            $utilisateur = $stmt_user->fetch(PDO::FETCH_ASSOC);
+
+            // Vérifier si les informations sur le professionnel et l'utilisateur sont présentes
+            if ($professionnel && $utilisateur) {
+                // Insérer le rendez-vous dans la base de données
+                $professionnel_id = $professionnel['id'];
+                $utilisateur_id = $_SESSION['id'];
+                $confirme = true;
+
+                // Préparer la requête SQL pour insérer le rendez-vous dans la base de données
+                $sql = "INSERT INTO rendez_vous (professionnel_id, utilisateur_id, date_heure, confirme) VALUES (?, ?, ?, ?)";
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute([$professionnel_id, $utilisateur_id, $date_heure_formattee, $confirme]);
+
+                // Vérifier si l'insertion a réussi
+                if ($stmt->rowCount() > 0) {
+                    // Le rendez-vous a été enregistré avec succès
+                    echo "<script>alert('Le rendez-vous a été enregistré avec succès dans la base de données.');</script>";
+                } else {
+                    // Une erreur s'est produite lors de l'enregistrement du rendez-vous
+                    echo "<script>alert('Une erreur s\'est produite lors de l\'enregistrement du rendez-vous.');</script>";
+                }
+            } else {
+                // Informations manquantes sur le professionnel ou l'utilisateur
+                echo "<script>alert('Erreur : Informations manquantes sur le professionnel ou l\'utilisateur.');</script>";
+            }
+        } else {
+            // L'utilisateur n'est pas connecté
+            echo "<script>alert('Erreur : L\'utilisateur n\'est pas connecté.');</script>";
+        }
+    } else {
+        // La conversion de la date a échoué
+        echo "<script>alert('Erreur : La date et l'heure ne sont pas au format valide.');</script>";
+    }
+} else {
+    // Afficher un message d'erreur ou rediriger vers une autre page
+    echo "Erreur : Les paramètres requis ne sont pas spécifiés.";
+    exit(); // Arrêter l'exécution du script
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page en Construction</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Ajoutez vos propres styles ici -->
-    <style>
-        /* Style spécifique à la page en construction */
-        .construction-container {
-            margin-top: 50px;
-        }
-        .construction-info {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-        }
-    </style>
+    <title>Confirmation de rendez-vous</title>
+    <!-- Liens vers les styles CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styleContact.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
-<?php include('../includes/headerNav.php') ?>
 <body>
-<div class="container construction-container">
-    <h1 class="text-center mb-4">Page en Construction</h1>
+<?php include('../includes/headerNav.php') ?>
+<div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="construction-info">
-                <p>Cette page est en construction. Merci de revenir plus tard.</p>
+        <div class="col-lg-8 blue-bg p-4 shadow-lg rounded">
+            <h1 class="text-white">Confirmation de votre rendez-vous</h1>
+            <!-- Affiche le message de succès si défini -->
+            <?php if (!empty($successMessage)) echo $successMessage; ?>
+            <!-- Affichage de la date du rendez-vous -->
+            <p class="text-white">Date du rendez-vous : <?php echo isset($date_heure_formattee) ? $date_heure_formattee : ''; ?></p>
+            <!-- Ajout du var_dump pour vérifier la valeur de $date_heure_formattee -->
+            <div class="mb-3">
+                <p class="text-white">Informations sur le professionnel de santé :</p>
+                <ul class="text-white">
+                    <li>Nom : <?php echo $professionnel['nom']; ?></li>
+                    <li>Prénom : <?php echo $professionnel['prenom']; ?></li>
+                    <li>Profession : <?php echo $professionnel['profession']; ?></li>
+                    <li>Adresse : <?php echo $professionnel['adresse']; ?></li>
+                    <li>Ville : <?php echo $professionnel['ville']; ?></li>
+                    <li>Code Postal : <?php echo $professionnel['code_postal']; ?></li>
+                </ul>
             </div>
+            <?php if (isset($utilisateur) && !empty($utilisateur)) : ?>
+                <div class="mb-3">
+                    <p class="text-white">Informations sur l'utilisateur :</p>
+                    <ul class="text-white">
+                        <li>Nom : <?php echo $utilisateur['name']; ?></li>
+                        <li>Prénom : <?php echo $utilisateur['firstName']; ?></li>
+                        <li>Email : <?php echo $utilisateur['mail']; ?></li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

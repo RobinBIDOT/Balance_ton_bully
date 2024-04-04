@@ -70,7 +70,7 @@ $("document").ready(function(){
     // Redirection vers index.php après que l'opacité de l'élément .foo ait atteint 0
     $(".foo").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function(){
         setTimeout(function(){
-            window.location.href = "../php/index.php";
+            window.location.href = "../pages/index.php";
         }, delayBeforeRedirect);
     });
 });
