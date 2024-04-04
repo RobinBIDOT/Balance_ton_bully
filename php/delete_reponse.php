@@ -9,7 +9,7 @@
  * @package balance_ton_bully
  * @subpackage forum
  */
-
+session_start();
 // Activation de l'affichage des erreurs pour le débogage
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

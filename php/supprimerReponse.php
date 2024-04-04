@@ -12,7 +12,7 @@
  * @param int $idSujet - L'identifiant du sujet auquel la réponse appartient.
  * @return void
  */
-
+session_start();
 // Inclusion du fichier de connexion à la base de données
 include('../php/tools/functions.php');
 $dbh = dbConnexion();

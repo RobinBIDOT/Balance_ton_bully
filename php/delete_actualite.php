@@ -9,7 +9,7 @@
  * @package    balance_ton_bully
  * @subpackage admin
  */
-
+session_start();
 // Vérifiez que l'ID de l'actualité est fourni
 if (isset($_POST['id'])) {
     $id = $_POST['id'];

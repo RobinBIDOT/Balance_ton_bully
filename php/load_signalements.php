@@ -14,7 +14,7 @@
  * @return json - Renvoie un tableau de signalements au format JSON, avec des détails sur le sujet,
  *                la réponse, l'auteur du sujet, l'auteur de la réponse, et la date du signalement.
  */
-
+session_start();
 
 include('../php/tools/functions.php');
 $dbh = dbConnexion();

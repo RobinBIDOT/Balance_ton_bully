@@ -10,7 +10,7 @@
  * @category Payment
  * @package  MovEase
  */
-
+session_start();
 // Inclusion des outils et fonctions
 include('tools/functions.php');
 
