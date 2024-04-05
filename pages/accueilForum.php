@@ -88,23 +88,13 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil du forum</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-
-    <link rel="stylesheet" href="../css/style.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="../css/styleForum.css">
-
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
 <div class="container mt-5">
-
     <div class="jumbotron jumbotron-fluid jumbotron-primary text-white rounded-3 p-5 shadow">
-
-
         <h1 class="display-4">Bienvenue sur le forum de Balance ton bully</h1>
         <p class="lead">Voici un espace d'échange pour discuter des différents sujets concernant le phénomène de harcèlement et de cyber-harcèlement. Respectez les règles du forum et contribuez à créer un environnement sûr et bienveillant pour tous.</p>
         <hr class="my-4 bg-light">
@@ -113,7 +103,6 @@ try {
         <p>2. Évitez les propos offensants, agressifs ou discriminatoires.</p>
         <p>3. N'abusez pas des majuscules ni des caractères spéciaux.</p>
         <p>4. Signalez tout contenu inapproprié ou non conforme aux règles.</p>
-
     </div>
     <br>
     <!-- Formulaire de recherche -->
@@ -131,7 +120,6 @@ try {
             <a href="accueilForum.php" class="btn btn-secondary">Réinitialiser</a>
         </div>
     </form>
-
     <br>
     <div class="transition"></div>
     <div class="sujets-container">
@@ -147,7 +135,7 @@ try {
                                 <small><?php echo $row['userName']; ?> - <?php echo $row['date_creation']; ?> </small>
                             </div>
                             <div class="nombre-reponses">
-                                <span class="text-decoration-underline text-primary" style="cursor: pointer;" >
+                                <span class="text-primary" style="cursor: pointer;" >
                                     <?php if ($row['nombre_reponses'] > 1){
                                         echo $row['nombre_reponses'] ?> Réponses</span> <?php
                                     } else {
@@ -209,7 +197,6 @@ try {
     <br>
     <div class="transition"></div>
 </div>
-
 <?php
 // Vérifier si l'utilisateur est connecté pour afficher le formulaire de création de sujet
 if(isset($_SESSION['nickName'])) :
@@ -243,5 +230,6 @@ if(isset($_SESSION['nickName'])) :
     </div>
 <?php endif; ?>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

@@ -15,10 +15,7 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Balance Ton Bully - Accueil</title>
     <!-- Liens vers les polices et la feuille de style -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="../css/styleCarousselIndex.css">
 </head>
 <body>
@@ -80,8 +77,8 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div class="transition"></div>
     <?php include('../includes/footer.php') ?>
+    <?php include('../includes/scriptLink.php') ?>
     <!-- Script pour l'animation des pourcentages -->
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <script>
         $(document).ready(function() {
             // Fonction pour incrémenter le pourcentage progressivement
@@ -144,6 +141,9 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 figure.style.transform = `rotateY(${angle * i}deg) translateZ(${radius}px)`;
             });
         });
+
+
+
     </script>
 </body>
 </html>

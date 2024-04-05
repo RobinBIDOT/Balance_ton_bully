@@ -34,7 +34,7 @@ if (isset($_POST['disconnect'])) {
     header('Location: connexion.php'); // Redirection vers la page de connexion
 }
 if (isset($_POST['delete'])) {
-echo '<div class="modal" id="alertModal">
+    echo '<div class="modal" id="alertModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -137,6 +137,8 @@ if (isset($_POST['rdvId'])) {
     exit();
 }
 
+
+
 /**
  * Génère et retourne le HTML du profil professionnel de santé.
  *
@@ -156,6 +158,7 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
         return " ";
     }
 
+    // Ajoutez le champ 'duree_rdv' à la liste des champs récupérés de la base de données
     $stmtExpertise = $dbh->prepare("SELECT e.nom FROM expertise e JOIN professionnel_expertise pe ON e.id = pe.expertise_id WHERE pe.professionnel_id = ?");
     $stmtExpertise->execute([$profil['id']]);
     $expertises = $stmtExpertise->fetchAll(PDO::FETCH_ASSOC);
@@ -164,52 +167,96 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
     $stmtHoraires->execute([$profil['id']]);
     $horaires = $stmtHoraires->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmtRdv = $dbh->prepare("SELECT * FROM rendez_vous WHERE professionnel_id = ? ORDER BY date_heure");
+    // Récupération des rendez-vous du professionnel de santé
+    $stmtRdv = $dbh->prepare("
+        SELECT rv.*, CONCAT(u.firstName, ' ', u.name) AS client_name
+        FROM rendez_vous rv
+        JOIN utilisateurs u ON rv.utilisateur_id = u.id
+        WHERE rv.professionnel_id = ?
+        ORDER BY rv.date_heure
+    ");
     $stmtRdv->execute([$profil['id']]);
     $rendezVous = $stmtRdv->fetchAll(PDO::FETCH_ASSOC);
 
     $expertisesString = join(', ', array_map(function($e) { return htmlspecialchars($e['nom']); }, $expertises));
 
-    $htmlHoraires = '';
+    $htmlHoraires = "<div class='mt-5'>
+                    <h3>Horaires</h3>
+                    <form method='post' action='modifierHoraires.php'> 
+                        <!-- Tableau des horaires -->
+                        <table class='table table-bordered'>
+                            <thead>
+                                <tr>
+                                    <th>Jour</th>
+                                    <th>Matin</th>
+                                    <th>Après-midi</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
     foreach ($horaires as $horaire) {
         $htmlHoraires .= "<tr>
-                            <td>" . htmlspecialchars($horaire['jour_semaine']) . "</td>
-                            <td>" . htmlspecialchars($horaire['heure_debut_matin']) . ' - ' . htmlspecialchars($horaire['heure_fin_matin']) . "</td>
-                            <td>" . htmlspecialchars($horaire['heure_debut_apres_midi']) . ' - ' . htmlspecialchars($horaire['heure_fin_apres_midi']) . "</td>
-                          </tr>";
+                        <td>" . htmlspecialchars($horaire['jour_semaine']) . "</td>
+                        <td>" . htmlspecialchars($horaire['heure_debut_matin']) . ' - ' . htmlspecialchars($horaire['heure_fin_matin']) . "</td>
+                        <td>" . htmlspecialchars($horaire['heure_debut_apres_midi']) . ' - ' . htmlspecialchars($horaire['heure_fin_apres_midi']) . "</td>
+                    </tr>";
     }
+    $htmlHoraires .= "</tbody></table></form></div>";
 
-    $htmlRendezVous = '';
+
+    // Génération du HTML pour les rendez-vous
+    $htmlRendezVous = "<div class='mt-5'>";
     foreach ($rendezVous as $rdv) {
-        $stmtUser = $dbh->prepare("SELECT userName FROM utilisateurs WHERE id = ?");
-        $stmtUser->execute([$rdv['utilisateur_id']]);
-        $client = $stmtUser->fetch(PDO::FETCH_ASSOC);
-        $htmlRendezVous .= "<tr>
-                              <td>" . htmlspecialchars(date('d/m/Y H:i', strtotime($rdv['date_heure']))) . "</td>
-                              <td>" . htmlspecialchars($client['userName']) . "</td>
-                              <td>" . ($rdv['confirme'] ? 'Confirmé' : 'Non confirmé') . "</td>
-                            </tr>";
+        $rdvDate = new DateTime($rdv['date_heure']);
+        $now = new DateTime();
+        $rdvStatus = $rdvDate < $now ? 'Passé' : 'À venir';
+
+        // Générer une classe CSS pour distinguer les rendez-vous passés et à venir
+        $statusClass = $rdvStatus == 'Passé' ? 'bg-secondary rdvPasse' : 'bg-primary';
+
+        // Générer le HTML pour chaque rendez-vous
+        $htmlRendezVous .= "<div class='list-group-item list-group-item-action mb-2 listeRdvPro' style='background-color: white; color: black; padding: 10px;'>
+                            <div class='d-flex justify-content-between'>
+                                <div>
+                                    <div><strong>Date et Heure :</strong> " . $rdvDate->format('d/m/Y H:i') . "</div>
+                                    <div><strong>Client :</strong> " . htmlspecialchars($rdv['client_name']) . "</div>
+                                </div>
+                                <div style='margin-right: 10px;'>
+                                    <div class='badge $statusClass'>$rdvStatus</div>";
+        if ($rdvStatus == 'À venir') {
+            $htmlRendezVous .= "<form method='post' action='account.php' class='mt-2'>
+                                <input type='hidden' name='rdvId' value='{$rdv['id']}'>
+                                <input type='submit' class='btn btn-danger btn-sm' value='Annuler'>
+                            </form>";
+        }
+        $htmlRendezVous .= "</div>
+                        </div>
+                    </div>";
     }
+    $htmlRendezVous .= "</div>";
+
     if ($profil) {
-        return "<div class='container mt-5'>
-                  <div class='row mt-4'>
+        $html = "<div class='container mt-5'>
+                <div class='row mt-4'>
                     <div class='col-md-4'><img src='" . htmlspecialchars($profil['photo']) . "' class='img-fluid rounded' style='max-width: 200px; background-color: white;' alt='Photo de profil'></div>
                     <div class='col-md-8'>
-                      <p><strong>Profession :</strong> " . htmlspecialchars($profil['profession']) . "</p>
-                      <p><strong>Adresse :</strong> " . htmlspecialchars($profil['adresse']) . ', ' . htmlspecialchars($profil['ville']) . ' ' . htmlspecialchars($profil['code_postal']) . "</p>
-                      <p><strong>Présentation :</strong> " . nl2br(htmlspecialchars($profil['presentation'])) . "</p>
-                      <p><strong>Expertises :</strong> $expertisesString</p>
+                        <p><strong>Profession :</strong> " . htmlspecialchars($profil['profession']) . "</p>
+                        <p><strong>Adresse :</strong> " . htmlspecialchars($profil['adresse']) . ', ' . htmlspecialchars($profil['ville']) . ' ' . htmlspecialchars($profil['code_postal']) . "</p>
+                        <p><strong>Présentation :</strong> " . nl2br(htmlspecialchars($profil['presentation'])) . "</p>
+                        <p><strong>Expertises :</strong> $expertisesString</p>
                     </div>
-                  </div>
-                  <h3 class='mt-5'>Horaires</h3>
-                  <table class='table table-bordered'><thead><tr><th>Jour</th><th>Matin</th><th>Après-midi</th></tr></thead><tbody>$htmlHoraires</tbody></table>
-                  <h3 class='mt-5'>Rendez-vous</h3>
-                  <table class='table table-bordered'><thead><tr><th>Date et Heure</th><th>Client</th><th>Statut</th></tr></thead><tbody>$htmlRendezVous</tbody></table>
-                </div>";
+                </div>
+                $htmlHoraires
+                <div class='mt-5'>
+                    <h3>Rendez-vous</h3>
+                    <!--<div class='text-center'> 
+                        <button id='toggleRdvFilterProfessionnel' class='btn btn-info' style='margin-bottom: 10px;'>Afficher/Masquer les RDV Passés</button>
+                    </div>-->
+                    $htmlRendezVous
+                </div>
+            </div>";
+        return $html;
     }
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -217,7 +264,7 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon compte</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="../css/styleDons.css">
 </head>
 <body>
@@ -262,22 +309,22 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
                 <button type="submit" class="btn btn-danger" name="delete">Supprimer Compte</button>
                 <!-- Bouton "Admin" (si l'utilisateur est un admin) -->
                 <?php
-                    // Vérification du rôle de l'utilisateur dans la base de données
-                   /* $stmt = $dbConnect->prepare('SELECT id_role FROM utilisateurs WHERE userName = ?');
-                    $stmt->execute(array($_SESSION['nickName']));
-                    $userRole = $stmt->fetchColumn();*/
+                // Vérification du rôle de l'utilisateur dans la base de données
+                /* $stmt = $dbConnect->prepare('SELECT id_role FROM utilisateurs WHERE userName = ?');
+                 $stmt->execute(array($_SESSION['nickName']));
+                 $userRole = $stmt->fetchColumn();*/
 
-                    // Vérifiez d'abord si le rôle de l'utilisateur a été récupéré avec succès
-                    //if ($userRole !== false){
-                        // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
-                        if ($_SESSION['id_role'] == 1) {
-                            // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
-                            echo '<a href="profilAdmin.php" class="btn btn-success">Admin</a>';
-                        }
-                    //} else {
-                        // Gérer le cas où le rôle de l'utilisateur n'a pas pu être récupéré de la base de données
-                      //  echo "Erreur : Impossible de récupérer le rôle de l'utilisateur depuis la base de données.";
-                    //}
+                // Vérifiez d'abord si le rôle de l'utilisateur a été récupéré avec succès
+                //if ($userRole !== false){
+                // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
+                if ($_SESSION['id_role'] == 1) {
+                    // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
+                    echo '<a href="profilAdmin.php" class="btn btn-success">Admin</a>';
+                }
+                //} else {
+                // Gérer le cas où le rôle de l'utilisateur n'a pas pu être récupéré de la base de données
+                //  echo "Erreur : Impossible de récupérer le rôle de l'utilisateur depuis la base de données.";
+                //}
                 ?>
             </div>
         </div>
@@ -292,6 +339,7 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
     ?>
 </div>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 <script src="../js/userMod.js"></script>
 <script>
     document.getElementById('toggleRdvFilter').addEventListener('click', function() {
@@ -302,6 +350,20 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
             }
         });
     });
+
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     document.body.addEventListener('click', function(event) {
+    //         if(event.target.id === 'toggleRdvFilterProfessionnel') {
+    //             let rendezVousItems = document.querySelectorAll('.listeRdvPro');
+    //             rendezVousItems.forEach(function(item) {
+    //                 if (item.querySelector('.rdvPasse')) {
+    //                     item.classList.toggle('d-none');
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
+
 </script>
 </body>
 </html>

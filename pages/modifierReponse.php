@@ -80,7 +80,7 @@ if (isset($_GET['id']) && isset($_GET['idSujet'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier la Réponse</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <?php include('../includes/headLink.php') ?>
 </head>
 <?php include('../includes/headerNav.php')?>
 <body>
@@ -95,5 +95,6 @@ if (isset($_GET['id']) && isset($_GET['idSujet'])) {
     </form>
 </div>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

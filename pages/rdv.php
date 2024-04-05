@@ -140,11 +140,9 @@ $evenements_json = json_encode($evenements);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prise de rendez-vous</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <?php include('../includes/headLink.php') ?>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js"></script>
-    <link href="../css/style.css" rel="stylesheet">
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
@@ -154,6 +152,7 @@ $evenements_json = json_encode($evenements);
     <div id="calendar"></div>
 </div>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');

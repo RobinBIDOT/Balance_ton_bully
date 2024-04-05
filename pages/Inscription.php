@@ -95,11 +95,8 @@ if (isset($_POST['submit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S'inscrire - Balance Ton Bully</title>
     <!-- Liens vers les styles CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="CSS/style.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="CSS/login_authentification.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <style>
         .blue-bg {
             background-color: #0854C7;
@@ -109,15 +106,11 @@ if (isset($_POST['submit'])) {
             display: flex;
             justify-content: center;
             align-items: center;
-
-        } 
-
-
+        }
     </style>
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
-
 <!-- <div class="container full-height"> -->
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="col-md-6 col-lg-4 blue-bg p-4 shadow-lg rounded">
@@ -177,8 +170,7 @@ if (isset($_POST['submit'])) {
             </form>
         </div>
     </div>
-<!-- </div> -->
 <?php include('../includes/footer.php') ?>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
+<?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

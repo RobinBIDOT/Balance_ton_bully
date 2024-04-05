@@ -82,10 +82,7 @@ if (isset($_POST['disconnect'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Se connecter - Balance Ton Bully</title>
     <!-- Liens vers les styles CSS -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="CSS/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <?php include('../includes/headLink.php') ?>
     <style>
         .blue-bg {
             background-color: #0854C7;
@@ -126,5 +123,6 @@ if (isset($_POST['disconnect'])) {
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 </body>
 </html>
