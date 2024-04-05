@@ -75,11 +75,8 @@ if (isset($_GET['date_heure']) && isset($_GET['professionnel_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmation de rendez-vous</title>
     <!-- Liens vers les styles CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="../css/styleContact.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 <body>
 <?php include('../includes/headerNav.php') ?>
@@ -117,5 +114,6 @@ if (isset($_GET['date_heure']) && isset($_GET['professionnel_id'])) {
     </div>
 </div>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

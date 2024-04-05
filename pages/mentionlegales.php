@@ -10,10 +10,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentions Légales</title>
-    <!-- <link rel="stylesheet" href="../css/style-mentionLegales.css"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-
+    <?php include('../includes/headLink.php') ?>
     <style>
         .custom-primary{color:#0854C7; }
         .custom-secondary{color:#58C1F5;}
@@ -21,7 +18,6 @@ session_start();
 </head>
 <body>
     <?php include('../includes/headerNav.php')?>
-
 <div class="container my-5">
     <h1 class="custom-primary mb-5 text-center">Mentions Légales</h1>
 
@@ -87,5 +83,6 @@ session_start();
 </div>
 
     <?php include('../includes/footer.php') ?>
+    <?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

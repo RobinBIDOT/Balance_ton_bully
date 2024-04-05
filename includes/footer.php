@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="../css/style.css">
-<link rel="stylesheet" href="../css/styleFooter.css">
 <footer class="footer pt-3 py-xl-8">
 <!--    Waves   -->
     <div class="wave-container">
@@ -103,4 +101,3 @@
         </div>
     </div>
 </footer>
-<script src="../js/scriptFooter.js" ></script>

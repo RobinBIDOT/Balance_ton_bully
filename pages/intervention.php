@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demande d'intervention contre le harcèlement scolaire</title>
+    <?php include('../includes/headLink.php') ?>
     <style>
         .blue-bg {
             background-color: #0854C7;
@@ -97,5 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <?php include('../includes/footer.php') ?>
+    <?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

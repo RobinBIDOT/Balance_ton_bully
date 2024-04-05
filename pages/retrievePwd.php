@@ -1,5 +1,5 @@
 <?php
-include 'tools/functions.php';
+include '../php/tools/functions.php';
 $dbConnexion = dbConnexion();
 session_start();
 @$mail = $_POST['mailRetrieve'];
@@ -30,6 +30,7 @@ if (isset($_POST['sendMail'])) {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Récuperation Mot de Passe - Balance Ton Bully</title>
+    <?php include('../includes/headLink.php') ?>
     <style>
         .blue-bg {
             background-color: #0854C7;
@@ -58,3 +59,6 @@ if (isset($_POST['sendMail'])) {
         </div>
     </div>
     <?php include '../includes/footer.php' ?>
+    <?php include('../includes/scriptLink.php') ?>
+    </body>
+</html>

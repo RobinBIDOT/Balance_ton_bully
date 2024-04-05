@@ -308,7 +308,25 @@ header a:hover{
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     text-decoration: none;
 }
+@media (max-width: 1200px) {
+    .navbar-nav .nav-link,
+    .navbar-nav .nav-item {
+        transform: none;
+        box-shadow: none;
+    }
 
+    .navbar-nav .nav-item:hover {
+        background-color: #f2f2f2;
+    }
+
+    .navbar-toggler {
+        display: block;
+    }
+
+    .navbar-nav {
+        display: none;
+    }
+}
 .navbar-toggler {
     display: none;
 }
@@ -389,40 +407,6 @@ header a:hover{
     }
     .illustrations {
         grid-column: 1; 
-    }
-}
-
-@media (max-width: 768px) {
-    figcaption {
-        font-size: 8px;
-    }
-    figcaption h3 {
-        font-size: 10px;
-    }
-    .container {
-        width: 400px;
-        height: 266px;
-    }
-    #carousel figure {
-        width: 200px;
-        height: 133px;
-    }
-}
-
-@media (max-width: 480px) {
-    figcaption {
-        font-size: 6px;
-    }
-    figcaption h3 {
-        font-size: 8px;
-    }
-    .container {
-        width: 300px;
-        height: 200px;
-    }
-    #carousel figure {
-        width: 150px;
-        height: 100px;
     }
 }
 

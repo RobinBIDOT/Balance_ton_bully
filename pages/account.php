@@ -34,7 +34,7 @@ if (isset($_POST['disconnect'])) {
     header('Location: connexion.php'); // Redirection vers la page de connexion
 }
 if (isset($_POST['delete'])) {
-echo '<div class="modal" id="alertModal">
+    echo '<div class="modal" id="alertModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -183,9 +183,6 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
     $htmlHoraires = "<div class='mt-5'>
                     <h3>Horaires</h3>
                     <form method='post' action='modifierHoraires.php'> 
-                        <p>Durée des rendez-vous : " . htmlspecialchars($profil['duree_rdv']) . " minutes
-                            <button id='editDurationBtn' class='btn btn-primary'>Modifier</button>
-                        </p>
                         <!-- Tableau des horaires -->
                         <table class='table table-bordered'>
                             <thead>
@@ -193,7 +190,6 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
                                     <th>Jour</th>
                                     <th>Matin</th>
                                     <th>Après-midi</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>";
@@ -202,11 +198,6 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
                         <td>" . htmlspecialchars($horaire['jour_semaine']) . "</td>
                         <td>" . htmlspecialchars($horaire['heure_debut_matin']) . ' - ' . htmlspecialchars($horaire['heure_fin_matin']) . "</td>
                         <td>" . htmlspecialchars($horaire['heure_debut_apres_midi']) . ' - ' . htmlspecialchars($horaire['heure_fin_apres_midi']) . "</td>
-                        <td>
-                            <form method='post' action='../pages/modifierHoraire.php'> 
-                                <button type='submit' class='btn btn-primary editScheduleBtn' name='scheduleId' value='" . $horaire['id'] . "'>Modifier</button>
-                            </form>
-                        </td>
                     </tr>";
     }
     $htmlHoraires .= "</tbody></table></form></div>";
@@ -220,10 +211,10 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
         $rdvStatus = $rdvDate < $now ? 'Passé' : 'À venir';
 
         // Générer une classe CSS pour distinguer les rendez-vous passés et à venir
-        $statusClass = $rdvStatus == 'Passé' ? 'bg-secondary' : 'bg-primary';
+        $statusClass = $rdvStatus == 'Passé' ? 'bg-secondary rdvPasse' : 'bg-primary';
 
         // Générer le HTML pour chaque rendez-vous
-        $htmlRendezVous .= "<div class='list-group-item list-group-item-action mb-2' style='background-color: white; color: black; padding: 10px;'>
+        $htmlRendezVous .= "<div class='list-group-item list-group-item-action mb-2 listeRdvPro' style='background-color: white; color: black; padding: 10px;'>
                             <div class='d-flex justify-content-between'>
                                 <div>
                                     <div><strong>Date et Heure :</strong> " . $rdvDate->format('d/m/Y H:i') . "</div>
@@ -257,27 +248,23 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
                 $htmlHoraires
                 <div class='mt-5'>
                     <h3>Rendez-vous</h3>
-                    <div class='text-center'> 
+                    <!--<div class='text-center'> 
                         <button id='toggleRdvFilterProfessionnel' class='btn btn-info' style='margin-bottom: 10px;'>Afficher/Masquer les RDV Passés</button>
-                    </div>
+                    </div>-->
                     $htmlRendezVous
                 </div>
             </div>";
         return $html;
     }
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Mon compte</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="../css/styleDons.css">
 </head>
 <body>
@@ -322,22 +309,22 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
                 <button type="submit" class="btn btn-danger" name="delete">Supprimer Compte</button>
                 <!-- Bouton "Admin" (si l'utilisateur est un admin) -->
                 <?php
-                    // Vérification du rôle de l'utilisateur dans la base de données
-                   /* $stmt = $dbConnect->prepare('SELECT id_role FROM utilisateurs WHERE userName = ?');
-                    $stmt->execute(array($_SESSION['nickName']));
-                    $userRole = $stmt->fetchColumn();*/
+                // Vérification du rôle de l'utilisateur dans la base de données
+                /* $stmt = $dbConnect->prepare('SELECT id_role FROM utilisateurs WHERE userName = ?');
+                 $stmt->execute(array($_SESSION['nickName']));
+                 $userRole = $stmt->fetchColumn();*/
 
-                    // Vérifiez d'abord si le rôle de l'utilisateur a été récupéré avec succès
-                    //if ($userRole !== false){
-                        // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
-                        if ($_SESSION['id_role'] == 1) {
-                            // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
-                            echo '<a href="profilAdmin.php" class="btn btn-success">Admin</a>';
-                        }
-                    //} else {
-                        // Gérer le cas où le rôle de l'utilisateur n'a pas pu être récupéré de la base de données
-                      //  echo "Erreur : Impossible de récupérer le rôle de l'utilisateur depuis la base de données.";
-                    //}
+                // Vérifiez d'abord si le rôle de l'utilisateur a été récupéré avec succès
+                //if ($userRole !== false){
+                // Utilisez le rôle de l'utilisateur pour déterminer s'il est un administrateur
+                if ($_SESSION['id_role'] == 1) {
+                    // Afficher des fonctionnalités spécifiques pour les utilisateurs avec le rôle "Admin"
+                    echo '<a href="profilAdmin.php" class="btn btn-success">Admin</a>';
+                }
+                //} else {
+                // Gérer le cas où le rôle de l'utilisateur n'a pas pu être récupéré de la base de données
+                //  echo "Erreur : Impossible de récupérer le rôle de l'utilisateur depuis la base de données.";
+                //}
                 ?>
             </div>
         </div>
@@ -352,6 +339,7 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
     ?>
 </div>
 <?php include('../includes/footer.php') ?>
+<?php include('../includes/scriptLink.php') ?>
 <script src="../js/userMod.js"></script>
 <script>
     document.getElementById('toggleRdvFilter').addEventListener('click', function() {
@@ -363,23 +351,18 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        let toggleRdvFilterProfessionnel = document.getElementById('toggleRdvFilterProfessionnel');
-        if (toggleRdvFilterProfessionnel) {
-            toggleRdvFilterProfessionnel.addEventListener('click', function() {
-                toggleElementsVisibility('.list-group-item', '.badge.bg-secondary');
-            });
-        }
-    });
-
-    function toggleElementsVisibility(itemClass, statusClass) {
-        let elements = document.querySelectorAll(itemClass);
-        elements.forEach(function(element) {
-            if (element.querySelector(statusClass)) {
-                element.classList.toggle('d-none');
-            }
-        });
-    }
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     document.body.addEventListener('click', function(event) {
+    //         if(event.target.id === 'toggleRdvFilterProfessionnel') {
+    //             let rendezVousItems = document.querySelectorAll('.listeRdvPro');
+    //             rendezVousItems.forEach(function(item) {
+    //                 if (item.querySelector('.rdvPasse')) {
+    //                     item.classList.toggle('d-none');
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
 
 </script>
 </body>

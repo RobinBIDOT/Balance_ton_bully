@@ -40,11 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <?php include('../includes/headLink.php') ?>
     <link rel="stylesheet" href="../css/styleContact.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 <body>
 <?php include('../includes/headerNav.php'); ?>
@@ -116,5 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- Chargement de l'API Google Maps -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABCTt9uLNjRLOX9NQqcThmUT5mPtW8p7A&callback=initMap"></script>
 <?php include('../includes/footer.php'); ?>
+<?php include('../includes/scriptLink.php') ?>
 </body>
 </html>

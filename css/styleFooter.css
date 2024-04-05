@@ -3,6 +3,7 @@
     z-index: 2;
     background: #A42AF0;
     color: white;
+    margin-top: 2%;
 }
 
 footer div{
@@ -35,4 +36,17 @@ canvas {
     position: absolute;
     bottom: 0;
     left: 0;
+}
+
+@media (max-width: 770px) {
+    .footer {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+    }
+
+    body {
+        padding-bottom: 50px !important;
+    }
 }

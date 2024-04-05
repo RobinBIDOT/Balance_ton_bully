@@ -1,18 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Sélectionne le bouton du menu burger
-    const burgerButton = document.querySelector('.navbar-toggler');
-
-    // Sélectionne le contenu du menu
-    const menuContent = document.querySelector('.navbar-collapse');
-
-    // Ajoute un gestionnaire d'événements au clic sur le bouton du menu burger
-    burgerButton.addEventListener('click', function() {
-        // Bascule la classe 'show' pour afficher ou cacher le menu
-        menuContent.classList.toggle('show');
-    });
-});
-
-
 /**
  * Cette fonction est exécutée lorsque le document HTML est complètement chargé et prêt à être manipulé.
  * Elle affiche le menu déroulant au survol de l'élément avec la classe 'dropdown'.
