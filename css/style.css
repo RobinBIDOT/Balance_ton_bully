@@ -202,7 +202,7 @@ header a:hover{
 
 .illustrations img{
     max-width: 130px;
-    
+
 }
 
 .third-solution{
@@ -309,9 +309,9 @@ header a:hover{
     text-decoration: none;
 }
 
-.navbar-toggler {
-    display: none;
-}
+/*.navbar-toggler {*/
+/*    display: none;*/
+/*}*/
 
 /* Masque le menu au chargement de la page */
 .navbar-collapse {
@@ -341,53 +341,53 @@ header a:hover{
     }
 }
 
-@media (max-width: 1200px) {
-    .navbar-nav {
-        display: none;
-    }
+/*@media (max-width: 1200px) {*/
+/*    .navbar-nav {*/
+/*        display: none;*/
+/*    }*/
 
-    .navbar-toggler {
-        display: block !important;
-    }
-}
+/*    .navbar-toggler {*/
+/*        display: block !important;*/
+/*    }*/
+/*}*/
 @media screen and (max-width: 950px) {
     .container-stats {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
     }
 
     .statistiques, .video-container {
-        grid-column: 1 / -1; 
+        grid-column: 1 / -1;
     }
     .video {
         margin: 6.5rem;
     }
 
     .first-stat, .second-stat, .first-solution, .second-solution, .third-solution, .fourth-solution {
-        text-align: center; 
+        text-align: center;
     }
 
     .first-percent, .second-percent {
-        font-size: 3rem; 
+        font-size: 3rem;
         color: rebeccapurple;
     }
 
     .harassment, .high-school-harassment {
-        font-size: 1.5rem; 
+        font-size: 1.5rem;
     }
 
     .solutions {
         display: block;
-        grid-template-columns: 1fr; 
-        grid-template-rows: minmax(min-content, max-content); 
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(min-content, max-content);
         gap: 3rem;
-        
+
     }
 
     .first-solution, .second-solution, .third-solution, .fourth-solution {
         margin: 1.5rem;
     }
     .illustrations {
-        grid-column: 1; 
+        grid-column: 1;
     }
 }
 
