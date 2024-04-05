@@ -309,9 +309,9 @@ header a:hover{
     text-decoration: none;
 }
 
-/*.navbar-toggler {*/
-/*    display: none;*/
-/*}*/
+ /* .navbar-toggler {
+   display: none;
+}  */
 
 /* Masque le menu au chargement de la page */
 .navbar-collapse {
@@ -341,15 +341,16 @@ header a:hover{
     }
 }
 
-/*@media (max-width: 1200px) {*/
-/*    .navbar-nav {*/
-/*        display: none;*/
-/*    }*/
+/* @media (max-width: 1200px) {
+   .navbar-nav {
+    display: none;
 
-/*    .navbar-toggler {*/
-/*        display: block !important;*/
-/*    }*/
-/*}*/
+
+   .navbar-toggler 
+    /* display: block !important;
+  }
+} */
+
 @media screen and (max-width: 950px) {
     .container-stats {
         grid-template-columns: 1fr;

@@ -6,12 +6,12 @@
 <div class='container-fluid p-0 rounded'>
     <header class='bg-light text-black rounded-top'>
         <div class='row align-items-center justify-content-between m-0'>
-            <div class='col-12 col-md-auto p-2 text-center'>
+            <div class='col-12 col-lg-auto p-2 text-center'>
                 <a href='../pages/index.php'>
                     <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
                 </a>
             </div>
-            <div class='col d-flex justify-content-center'>
+            <div class='col d-lg-flex justify-content-center'>
                 <div class="content">
                     <div class="search-bar">
                         <input type="text" placeholder="Entrez votre recherche" aria-label="search" class="search-bar__input">
@@ -21,13 +21,13 @@
                     </div>
                 </div>
             </div>
-            <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section'>
+            <div class='col col-md-auto text-center pt-1 pr-4 connexion-section'>
                 <!-- Icône de connexion et navigation (toujours visible) -->
-                <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top">
+                <div class="d-none d-lg-flex justify-content-center custom-bg-logo rounded-top">
                     <a href="../pages/connexion.php" class="d-block mb-2" style="max-width: 50px;">
                         <img src="../assets/icon_people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
-                    <div class="container my-3 connexion-home">
+                    <div class="container connexion-home">
                         <!-- Si l'utilisateur est connecté, afficher le message de bienvenue et les options de profil et de déconnexion -->
                         <?php if (isset($_SESSION['nickName'])) { ?>
                             <div class="d-flex flex-column align-items-center justify-content-center">
