@@ -106,7 +106,7 @@ try {
     </div>
     <br>
     <!-- Formulaire de recherche -->
-    <form method="GET" action="">
+    <form method="GET" action="#">
         <div class="mb-3">
             <label for="searchTitle" class="form-label">Rechercher par titre :</label>
             <input type="text" class="form-control" id="searchTitle" name="searchTitle" placeholder="Entrez un titre">

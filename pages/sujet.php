@@ -62,8 +62,8 @@ try {
                 <title>Sujet du forum</title>
                 <?php include('../includes/headLink.php') ?>
             </head>
-            <?php include('../includes/headerNav.php')?>
             <body>
+            <?php include('../includes/headerNav.php')?>
             <div class="container mt-5 mx-auto max-w-6xl">
                 <h1 class="text-3xl font-bold mb-4"><?= $row['titre'] ?></h1>
                 <p class="mb-2"><strong>Auteur :</strong> <?= $row['nom_auteur'] ?> | <strong>Date de création :</strong> <?= $row['date_creation'] ?></p>
@@ -230,6 +230,39 @@ try {
             </div>
             <?php include('../includes/footer.php') ?>
             <?php include('../includes/scriptLink.php') ?>
+            <script>
+                /**
+                 * Fonction JavaScript pour signaler une réponse sur un forum.
+                 *
+                 * Cette fonction envoie une requête AJAX pour signaler une réponse spécifique.
+                 * Elle demande une confirmation à l'utilisateur avant de procéder.
+                 *
+                 * @param {number} idReponse - Identifiant de la réponse à signaler.
+                 */
+                function signalerReponse(idReponse) {
+                    // Confirmation avant le signalement
+                    if (confirm('Voulez-vous vraiment signaler cette réponse ?')) {
+                        // Requête AJAX pour le signalement
+                        fetch('../pages/signalerReponse.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'idReponse=' + idReponse
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert('La réponse a été signalée avec succès.');
+                                } else {
+                                    alert('Erreur lors du signalement.');
+                                }
+                            })
+                            .catch(error => console.error('Erreur:', error));
+                    }
+                }
+
+            </script>
             </body>
             </html>
             <?php
@@ -244,36 +277,3 @@ try {
     echo "Erreur de connexion à la base de données : " . $e->getMessage();
 }
 ?>
-<script>
-    /**
-     * Fonction JavaScript pour signaler une réponse sur un forum.
-     *
-     * Cette fonction envoie une requête AJAX pour signaler une réponse spécifique.
-     * Elle demande une confirmation à l'utilisateur avant de procéder.
-     *
-     * @param {number} idReponse - Identifiant de la réponse à signaler.
-     */
-    function signalerReponse(idReponse) {
-        // Confirmation avant le signalement
-        if (confirm('Voulez-vous vraiment signaler cette réponse ?')) {
-            // Requête AJAX pour le signalement
-            fetch('../pages/signalerReponse.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'idReponse=' + idReponse
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('La réponse a été signalée avec succès.');
-                } else {
-                    alert('Erreur lors du signalement.');
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
-        }
-    }
-
-</script>

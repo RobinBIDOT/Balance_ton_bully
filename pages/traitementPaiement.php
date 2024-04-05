@@ -57,8 +57,8 @@ if ($donId) {
             $montantFinal = ($montant !== null && $montant > 0) ? $montant : $montantLibre;
 
             // Affichage des informations
-            echo "<p>Type de don : $typeDon</p>";
-            echo "<p>Montant total du don : $montantFinal €</p>";
+//            echo "<p>Type de don : $typeDon</p>";
+//            echo "<p>Montant total du don : $montantFinal €</p>";
         } else {
             echo "<p>Aucun don trouvé avec l'ID : $donId</p>";
         }
@@ -72,9 +72,6 @@ if ($donId) {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de Paiement</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de paiement</title>

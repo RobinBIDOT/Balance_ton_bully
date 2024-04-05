@@ -20,9 +20,10 @@ session_start();
 // Récupérer l'ID du professionnel depuis l'URL
 if (isset($_GET['professionnel_id'])) {
     $professionnel_id = intval($_GET['professionnel_id']);
-    echo "Professionnel ID : ";
+    echo '<span class="d-none">Professionnel ID : </span>';
+
 //    var_dump($professionnel_id);
-    echo "<br><br>";
+//    echo "<br><br>";
 } else {
     // Rediriger vers une page d'erreur si l'ID n'est pas fourni
     header("Location: ../pages/consultations.php");
