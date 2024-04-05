@@ -25,7 +25,7 @@
                 <!-- Icône de connexion et navigation (toujours visible) -->
                 <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top">
                     <a href="../pages/connexion.php" class="d-block mb-2" style="max-width: 50px;">
-                        <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
+                        <img src="../assets/icon_people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
                     <div class="container my-3 connexion-home">
                         <!-- Si l'utilisateur est connecté, afficher le message de bienvenue et les options de profil et de déconnexion -->
@@ -67,14 +67,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/qui-somme-nous.php">Qui sommes-nous ?</a>
                     </li>
-                    <!-- Élément supplémentaire pour le responsive -->
-                    <div class="d-md-none">
-                        <div class="mt-2">
-                            <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
-                                Connexion
-                            </a>
-                        </div>
-                    </div>
                     <!-- Élément de menu déroulant -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-black text-center mx-3 mx-md-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
