@@ -64,14 +64,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/qui-somme-nous.php">Qui sommes-nous ?</a>
                     </li>
-                    <!-- Élément supplémentaire pour le responsive -->
-                    <div class="d-md-none">
-                        <div class="mt-2">
-                            <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
-                                Connexion
-                            </a>
-                        </div>
-                    </div>
                     <!-- Élément de menu déroulant -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-black text-center mx-3 mx-md-5" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,5 +83,12 @@
                 </ul>
             </div>
         </nav>
+    </div>
+</div>
+<div class="d-md-none">
+    <div class="mt-2">
+        <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
+            Connexion
+        </a>
     </div>
 </div>
