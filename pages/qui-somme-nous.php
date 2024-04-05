@@ -19,7 +19,7 @@ session_start();
         .custom-primary { color: #0854C7; }
         .custom-secondary { color: #58C1F5; }
         .card-img-top {width: 100%; height: 420px; object-fit: cover; border-radius: 0.25rem;}
-        .card{transition: transform 0.3s ease-in-out; background-color: custom-secondary;}
+        .card{transition: transform 0.3s ease-in-out; background-color: var(--custom-secondary);}
         .card:hover {transform: scale(1.05);}
     </style>
 </head>
