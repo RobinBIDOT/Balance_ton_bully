@@ -141,6 +141,9 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 figure.style.transform = `rotateY(${angle * i}deg) translateZ(${radius}px)`;
             });
         });
+
+
+
     </script>
 </body>
 </html>
