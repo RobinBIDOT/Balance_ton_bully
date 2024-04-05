@@ -18,49 +18,59 @@ if (isset($_GET['date_heure']) && isset($_GET['professionnel_id'])) {
         // Formatter la date pour qu'elle soit au format DATETIME
         $date_heure_formattee = $date_heure_obj->format('Y-m-d H:i:s');
 
-        // Récupérer les informations sur le professionnel de santé
-        $stmt_pro = $dbh->prepare("SELECT * FROM professionnels_sante WHERE id = ?");
-        $stmt_pro->execute([$professionnel_id]);
-        $professionnel = $stmt_pro->fetch(PDO::FETCH_ASSOC);
+        // Vérifier si le rendez-vous existe déjà
+        $stmt_check = $dbh->prepare("SELECT COUNT(*) AS count FROM rendez_vous WHERE professionnel_id = ? AND date_heure = ?");
+        $stmt_check->execute([$professionnel_id, $date_heure_formattee]);
+        $result = $stmt_check->fetch(PDO::FETCH_ASSOC);
 
-        // Vérifier si l'utilisateur est connecté
-        if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
-            // Récupérer les informations sur l'utilisateur
-            $stmt_user = $dbh->prepare("SELECT * FROM utilisateurs WHERE id = ?");
-            $stmt_user->execute([$_SESSION['id']]);
-            $utilisateur = $stmt_user->fetch(PDO::FETCH_ASSOC);
+        // Si aucun rendez-vous trouvé, insérer le nouveau rendez-vous
+        if ($result['count'] == 0) {
+            // Récupérer les informations sur le professionnel de santé
+            $stmt_pro = $dbh->prepare("SELECT * FROM professionnels_sante WHERE id = ?");
+            $stmt_pro->execute([$professionnel_id]);
+            $professionnel = $stmt_pro->fetch(PDO::FETCH_ASSOC);
 
-            // Vérifier si les informations sur le professionnel et l'utilisateur sont présentes
-            if ($professionnel && $utilisateur) {
-                // Insérer le rendez-vous dans la base de données
-                $professionnel_id = $professionnel['id'];
-                $utilisateur_id = $_SESSION['id'];
-                $confirme = true;
+            // Vérifier si l'utilisateur est connecté
+            if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
+                // Récupérer les informations sur l'utilisateur
+                $stmt_user = $dbh->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+                $stmt_user->execute([$_SESSION['id']]);
+                $utilisateur = $stmt_user->fetch(PDO::FETCH_ASSOC);
 
-                // Préparer la requête SQL pour insérer le rendez-vous dans la base de données
-                $sql = "INSERT INTO rendez_vous (professionnel_id, utilisateur_id, date_heure, confirme) VALUES (?, ?, ?, ?)";
-                $stmt = $dbh->prepare($sql);
-                $stmt->execute([$professionnel_id, $utilisateur_id, $date_heure_formattee, $confirme]);
+                // Vérifier si les informations sur le professionnel et l'utilisateur sont présentes
+                if ($professionnel && $utilisateur) {
+                    // Insérer le rendez-vous dans la base de données
+                    $utilisateur_id = $_SESSION['id'];
+                    $confirme = true;
 
-                // Vérifier si l'insertion a réussi
-                if ($stmt->rowCount() > 0) {
-                    // Le rendez-vous a été enregistré avec succès
-                    echo "<script>alert('Le rendez-vous a été enregistré avec succès dans la base de données.');</script>";
+                    // Préparer la requête SQL pour insérer le rendez-vous dans la base de données
+                    $sql = "INSERT INTO rendez_vous (professionnel_id, utilisateur_id, date_heure, confirme) VALUES (?, ?, ?, ?)";
+                    $stmt = $dbh->prepare($sql);
+                    $stmt->execute([$professionnel_id, $utilisateur_id, $date_heure_formattee, $confirme]);
+
+                    // Vérifier si l'insertion a réussi
+                    if ($stmt->rowCount() > 0) {
+                        // Le rendez-vous a été enregistré avec succès
+                        echo "<script>alert('Le rendez-vous a été enregistré avec succès dans la base de données.');</script>";
+                    } else {
+                        // Une erreur s'est produite lors de l'enregistrement du rendez-vous
+                        echo "<script>alert('Une erreur s\'est produite lors de l\'enregistrement du rendez-vous.');</script>";
+                    }
                 } else {
-                    // Une erreur s'est produite lors de l'enregistrement du rendez-vous
-                    echo "<script>alert('Une erreur s\'est produite lors de l\'enregistrement du rendez-vous.');</script>";
+                    // Informations manquantes sur le professionnel ou l'utilisateur
+                    echo "<script>alert('Erreur : Informations manquantes sur le professionnel ou l\'utilisateur.');</script>";
                 }
             } else {
-                // Informations manquantes sur le professionnel ou l'utilisateur
-                echo "<script>alert('Erreur : Informations manquantes sur le professionnel ou l\'utilisateur.');</script>";
+                // L'utilisateur n'est pas connecté
+                echo "<script>alert('Erreur : L\'utilisateur n\'est pas connecté.');</script>";
             }
         } else {
-            // L'utilisateur n'est pas connecté
-            echo "<script>alert('Erreur : L\'utilisateur n\'est pas connecté.');</script>";
+            // Le rendez-vous existe déjà
+            echo "<script>alert('Un rendez-vous existe déjà pour ce professionnel à cette date et heure.');</script>";
         }
     } else {
         // La conversion de la date a échoué
-        echo "<script>alert('Erreur : La date et l'heure ne sont pas au format valide.');</script>";
+        echo "<script>alert('Erreur : La date et l\'heure ne sont pas au format valide.');</script>";
     }
 } else {
     // Afficher un message d'erreur ou rediriger vers une autre page

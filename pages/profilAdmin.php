@@ -202,8 +202,8 @@ if(isset($_GET['updateStatus'])) {
     <link rel="stylesheet" href="../css/styleProfilAdmin.css">
     <link rel="stylesheet" href="../css/styleClock.css">
 </head>
-<?php include('../includes/headerNav.php') ?>
 <body>
+<?php include('../includes/headerNav.php') ?>
 <div class="container-fluid mt-5 ">
     <h1 class="text-center mb-4">Administration</h1>
     <div class="row justify-content-center my-5">
@@ -257,7 +257,7 @@ if(isset($_GET['updateStatus'])) {
                     <div class="form-group">
                         <input type="checkbox" name="photoChanged" value="yes"> Cochez si vous changez la photo
                         <label for="editActuPhoto">Photo</label>
-                        <input type="file" class="form-control" id="editActuPhoto" name="photo" autocomplete="off">
+                        <input type="file" class="form-control" id="editActuPhoto" name="photo">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -297,7 +297,7 @@ if(isset($_GET['updateStatus'])) {
                     </div>
                     <div class="form-group">
                         <label for="editUserPhoto">Photo Avatar</label>
-                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar" autocomplete="off">
+                        <input type="file" class="form-control" id="editUserPhoto" name="photo_avatar">
                     </div>
                 </div>
                 <div class="modal-footer">

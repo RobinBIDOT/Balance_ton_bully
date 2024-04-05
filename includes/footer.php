@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="col-12 col-md-4 col-lg-3 col-xl-2">
                                     <div class="widget">
-                                        <h4 class="widget-title mb-4">Liens utiles</h4>
+                                        <h4 class="widget-title mb-4 fs-5 fw-bold">Liens utiles</h4>
                                         <ul class="list-unstyled">
                                             <li class="mb-2">
                                                 <a href="https://e-enfance.org/" class="text-decoration-none" target="_blank">e-enfance</a>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="col-12 col-lg-3 col-xl-4">
                                     <div class="widget">
-                                        <h4 class="widget-title mb-4">Don</h4>
+                                        <h4 class="widget-title mb-4 fs-5 fw-bold">Don</h4>
                                         <p class="mb-4">Aidez-nous à lutter contre le harcèlement scolaire en faisant un don. Votre contribution peut faire une grande différence.</p>
                                         <div class="d-grid justify-content-center" style="max-width: 200px; margin: 0 auto;">
                                             <a href="../pages/dons.php" class="btn btn-primary btn-sm">Faire un don</a>

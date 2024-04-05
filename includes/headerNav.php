@@ -74,6 +74,17 @@
                             <li><a class="dropdown-item text-center" href="../pages/intervention.php">Intervention</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item d-md-none">
+                        <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">Connexion</a>
+                    </li>
+                    <?php if (isset($_SESSION['nickName'])) { ?>
+                        <li class="nav-item d-md-none">
+                                <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/account.php" class="d-block nav-link text-black text-center mx-5">Votre profil</a>
+                        </li>
+                        <li class="nav-item d-md-none">
+                                <a class="nav-link text-black text-center mx-3 mx-md-5" href="../php/deconnexion.php" class="d-block nav-link text-black text-center mx-5">Déconnexion</a>
+                        </li>
+                    <?php } ?>
                     <!-- Élément de menu admin -->
                     <?php if (isset($_SESSION['nickName']) && $_SESSION['id_role'] === 1) { ?>
                         <li class="nav-item">
@@ -83,12 +94,5 @@
                 </ul>
             </div>
         </nav>
-    </div>
-</div>
-<div class="d-md-none">
-    <div class="mt-2">
-        <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
-            Connexion
-        </a>
     </div>
 </div>
