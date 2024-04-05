@@ -243,6 +243,5 @@ if(isset($_SESSION['nickName'])) :
     </div>
 <?php endif; ?>
 <?php include('../includes/footer.php') ?>
-
 </body>
 </html>
