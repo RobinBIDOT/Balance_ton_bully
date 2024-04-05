@@ -135,7 +135,7 @@ try {
                                 <small><?php echo $row['userName']; ?> - <?php echo $row['date_creation']; ?> </small>
                             </div>
                             <div class="nombre-reponses">
-                                <span class="text-decoration-underline text-primary" style="cursor: pointer;" >
+                                <span class="text-primary" style="cursor: pointer;" >
                                     <?php if ($row['nombre_reponses'] > 1){
                                         echo $row['nombre_reponses'] ?> Réponses</span> <?php
                                     } else {
