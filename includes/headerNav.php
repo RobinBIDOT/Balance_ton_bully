@@ -3,7 +3,7 @@
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-12 col-md-auto p-2 text-center'>
                 <a href='../pages/index.php'>
-                    <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
+                    <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site'>
                 </a>
             </div>
             <div class='col d-flex justify-content-center'>

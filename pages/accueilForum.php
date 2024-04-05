@@ -149,6 +149,12 @@ try {
                                     <input type="submit" id="delContent" class="btn btn-danger btn-sm ms-2" value="Supprimer">
                                 </form>
                             <?php endif; ?>
+<!--                            --><?php //if(isset($_SESSION['nickName']) && ($_SESSION['nickName'] === $row['userName'] || $_SESSION['id_role'] == 1)) : ?>
+<!--                                <form action="../php/supprimerSujet.php" method="post">-->
+<!--                                    <input type="hidden" name="id_sujet" value="--><?php //echo $row['id']; ?><!--">-->
+<!--                                    <button type="submit" class="btn btn-danger btn-sm ms-2" value="Supprimer">Supprimer</button>-->
+<!--                                </form>-->
+<!--                            --><?php //endif; ?>
                         </div>
                     </a>
                 <?php endwhile; ?>
