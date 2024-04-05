@@ -12,7 +12,7 @@
  */
 
 // Inclusion du fichier de fonctions et démarrage de la session
-include './tools/functions.php';
+include '../php/tools/functions.php';
 
 // Démarrage ou reprise de la session
 session_start();
@@ -135,7 +135,7 @@ if (isset($_POST['submit'])) {
                     </div>
                     <?php }
             } ?>
-            <form method="POST" action="">
+            <form method="POST">
                 <!--<div class="mb-3">
                     <label for="name" class="form-label text-white">Votre prénom:</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Nom...">

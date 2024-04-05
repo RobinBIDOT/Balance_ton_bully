@@ -99,7 +99,7 @@ if (isset($_POST['disconnect'])) {
         <h2 class="text-center text-white">Se connecter</h2>
         <?php if (!isset($_SESSION['nickName'])) { ?>
             <div id="wrapper" class="mt-5">
-                <form method="POST" action="">
+                <form method="POST">
                     <div class="mb-3">
                         <label for="pseudo" class="form-label text-white">Votre pseudo:</label>
                         <input type="text" class="form-control" id="pseudo" name="pseudo" placeholder="Pseudo...">

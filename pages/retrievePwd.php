@@ -1,5 +1,5 @@
 <?php
-include 'tools/functions.php';
+include '../php/tools/functions.php';
 $dbConnexion = dbConnexion();
 session_start();
 @$mail = $_POST['mailRetrieve'];

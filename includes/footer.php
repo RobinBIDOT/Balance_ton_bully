@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../css/style.css">
+<!--<link rel="stylesheet" href="../css/style.css">-->
 <link rel="stylesheet" href="../css/styleFooter.css">
 <footer class="footer pt-3 py-xl-8">
 <!--    Waves   -->
@@ -22,7 +22,7 @@
                                                 <a href="../pages/contact.php" class="text-decoration-none">Nous contacter</a>
                                             </li>
                                             <li class="mb-2">
-                                                <a href="#!" class="text-decoration-none">Confidentialité</a>
+                                                <a href="../pages/confidentialite.php" class="text-decoration-none">Confidentialité</a>
                                             </li>
                                         </ul>
                                     </div>

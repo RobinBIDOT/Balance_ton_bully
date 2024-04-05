@@ -38,7 +38,6 @@ session_start();
             <li><strong>Utilisateur :</strong> Internaute se connectant, utilisant le site susnommé.</li>
             <li><strong>Informations personnelles :</strong> « Les informations qui permettent, sous quelque forme que ce soit, directement ou non, l'identification des personnes physiques auxquelles elles s'appliquent » (article 4 de la loi n° 78-17 du 6 janvier 1978).</li>
         </ul>
-        </p>
         <p>
             Les termes « données à caractère personnel », « personne concernée », « sous-traitant » et « données sensibles » ont le sens défini par le Règlement Général sur la Protection des Données (RGPD : n° 2016-679).
         </p>

@@ -9,8 +9,6 @@ include('../php/tools/functions.php');
 $dbh = dbConnexion();
 session_start();
 
-var_dump($_SESSION);
-
 // Récupérer les données des professionnels de la santé avec leurs expertises depuis la base de données
 $sql = "SELECT ps.id AS professionnel_id,
            ps.nom,

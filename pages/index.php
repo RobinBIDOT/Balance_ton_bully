@@ -18,8 +18,8 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/styleCarousselIndex.css">
+<!--    <link rel="stylesheet" href="../css/style.css">-->
+<!--    <link rel="stylesheet" href="../css/styleCarousselIndex.css">-->
 </head>
 <body>
     <?php include('../includes/headerNav.php')?>
@@ -81,7 +81,7 @@ $actualites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="transition"></div>
     <?php include('../includes/footer.php') ?>
     <!-- Script pour l'animation des pourcentages -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <script>
         $(document).ready(function() {
             // Fonction pour incrémenter le pourcentage progressivement

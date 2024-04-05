@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="my-4">
                             <label for="date_intervention" class="form-label">Date de l’intervention</label>
-                            <input type="date" class="form-control" id="date_intervention" name="date_intervention" placeholder="Date de l’intervention" required>
+                            <input type="date" class="form-control" id="date_intervention" name="date_intervention" required>
                         </div>
                         <button type="submit" class="btn btn-primary text-white">Envoyer</button>
                     </form>

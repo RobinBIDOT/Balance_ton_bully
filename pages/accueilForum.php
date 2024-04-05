@@ -117,7 +117,7 @@ try {
     </div>
     <br>
     <!-- Formulaire de recherche -->
-    <form method="GET" action="">
+    <form method="GET">
         <div class="mb-3">
             <label for="searchTitle" class="form-label">Rechercher par titre :</label>
             <input type="text" class="form-control" id="searchTitle" name="searchTitle" placeholder="Entrez un titre">
@@ -158,7 +158,7 @@ try {
                             <?php if(isset($_SESSION['nickName']) && ($_SESSION['nickName'] === $row['userName'] || $_SESSION['id_role'] == 1)) : ?>
                                 <form action="../php/supprimerSujet.php" method="post">
                                     <input type="hidden" name="id_sujet" id="id_sujet" value="<?php echo $row['id']; ?>">
-                                    <button type="submit" id="delContent" class="btn btn-danger btn-sm ms-2">Supprimer</button>
+                                    <input type="submit" id="delContent" class="btn btn-danger btn-sm ms-2" value="Supprimer">
                                 </form>
                             <?php endif; ?>
                         </div>

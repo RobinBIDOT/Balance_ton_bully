@@ -32,6 +32,7 @@ session_start();
         <p>Email : [balancetonbully@gmail.com]</p>
         <p>Téléphone : [01-32-43-98-22]</p>
         <p>Délégué à la protection des données (DPO) : [Robin BIDOT]</p>
+    </section>
 
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Types de données collectées</h2>
@@ -43,7 +44,7 @@ session_start();
             <li>Adresses IP</li>
             <li>Données d'usage</li>
         </ul>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">But de la collecte de données</h2>
     
@@ -56,7 +57,7 @@ session_start();
             <li>Connexion à l'espace personnel</li>
             <li>Amélioration de nos services</li>
         </ul>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Base légale de traitement des données</h2>
     
@@ -69,7 +70,7 @@ session_start();
             <li>Exécution d'une mission d'intérêt public</li>
             <li>Intérêts légitimes</li>
         </ul>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Partage des données</h2>
     
@@ -79,13 +80,13 @@ session_start();
             <li>Partenaires commerciaux</li>
             <li>Sous-traitants</li>
         </ul>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Durée de conservation des données</h2>
     
         <p>Nous conservons vos données pendant la période suivante :</p>
         <p>[Indiquez la durée de conservation spécifique pour chaque type de données, en tenant compte des exigences légales et opérationnelles]</p>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Droits des utilisateurs</h2>
     
@@ -98,7 +99,7 @@ session_start();
             <li>Portabilité des données (article 20 RGPD)</li>
         </ul>
         <p>Si vous souhaitez exercer l'un de ces droits, veuillez nous contacter à l'adresse indiquée ci-dessus.</p>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Sécurité des données</h2>
     
@@ -108,14 +109,14 @@ session_start();
             <li>Pseudonymisation</li>
             <li>Mesures techniques et organisationnelles</li>
         </ul>
-
+    </section>
     <section class="mb-5 ml-2">
         <h2 class="custom-secondary">Droits de réclamation</h2>
     
         <p>Vous avez le droit de déposer une réclamation auprès de l'autorité de contrôle compétente </p>
 
 
-         </section>
+    </section>
 </div>
         
         <?php include('../includes/footer.php') ?>
