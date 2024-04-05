@@ -426,8 +426,8 @@ if(isset($_GET['updateStatus'])) {
             tableHtml += "<td><a href='" + actu.lien_article + "'>Lien</a></td>";
             tableHtml += "<td>" + actu.date_publication + "</td>";
             tableHtml += "<td>";
-            tableHtml += "<button class='btn btn-outline-primary mb-1' style='width: 100px;' onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
-            tableHtml += "<button class='btn btn-outline-danger' style='width: 100px;' onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
+            tableHtml += "<button class='btn btn-primary'  onclick='editActu(" + actu.id_actualite + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-danger'  onclick='deleteActu(" + actu.id_actualite + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
         });
@@ -554,7 +554,7 @@ if(isset($_GET['updateStatus'])) {
                 if (don.stopper_don_mensuel) {
                     tableHtml += "<td>Mensualités arrêtées le : " + don.date_arret_don_mensuel + "</td>";
                 } else {
-                    tableHtml += "<td><button class='btn btn-outline-danger' onclick='stopDonMensuel(" + don.id + ")'>Arrêter les mensualités</button></td>";
+                    tableHtml += "<td><button class='btn btn-danger' onclick='stopDonMensuel(" + don.id + ")'>Arrêter les mensualités</button></td>";
                 }
             } else {
                 tableHtml += "<td></td>";
@@ -622,8 +622,8 @@ if(isset($_GET['updateStatus'])) {
             tableHtml += "<td><img src='" + user.photo_avatar + "' alt='Avatar' class=img-fluid style='width: 50px; max-width: 60px; '></td>";
             tableHtml += "<td>" + user.role + "</td>";
             tableHtml += "<td class=text-center pe-4>";
-            tableHtml += "<button class='btn btn-outline-primary me-2' onclick='editUser(" + user.id + ")'>Modifier</button> ";
-            tableHtml += "<button class='btn btn-outline-danger' onclick='deleteUser(" + user.id + ")'>Supprimer</button>";
+            tableHtml += "<button class='btn btn-primary me-2' onclick='editUser(" + user.id + ")'>Modifier</button> ";
+            tableHtml += "<button class='btn btn-danger' onclick='deleteUser(" + user.id + ")'>Supprimer</button>";
             tableHtml += "</td>";
             tableHtml += '</tr>';
         });
@@ -730,8 +730,8 @@ if(isset($_GET['updateStatus'])) {
             <td>${signalement.contenuReponse}</td>
             <td>${signalement.dateSignalement}</td>
             <td class='align-middle'>
-                <button class='btn btn-outline-primary mb-1' style='width: 100px;' onclick='editReponse(${signalement.idReponse})'>Modifier</button>
-                <button class='btn btn-outline-danger mb-1' style='width: 100px;' onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
+                <button class='btn btn-primary mb-1'  onclick='editReponse(${signalement.idReponse})'>Modifier</button>
+                <button class='btn btn-danger mb-1'  onclick='deleteReponse(${signalement.idReponse})'>Supprimer</button>
             </td>
         </tr>`;
         });
@@ -855,7 +855,7 @@ if(isset($_GET['updateStatus'])) {
             var horairesHtml = Array.from(horairesSet).join('<br>');
             tableHtml += `<td class="align-middle">${horairesHtml}</td>`;
 
-            tableHtml += "<td class='align-middle'><button class='btn btn-outline-primary w-75 my-1'>Modifier</button> <button class='btn btn-outline-danger w-75 my-1'>Supprimer</button></td>";
+            tableHtml += "<td class='align-middle'><button class='btn btn-primary w-75 my-1'>Modifier</button> <button class='btn btn-danger w-75 my-1'>Supprimer</button></td>";
             tableHtml += '</tr>';
         });
 
@@ -907,7 +907,7 @@ if(isset($_GET['updateStatus'])) {
             html += '<td>' + message.telephone + '</td>';
             html += '<td>' + message.message + '</td>';
             html += '<td>' + message.date + '</td>';
-            let btnClass = message.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnClass = message.est_traite ? 'btn btn-danger' : 'btn btn-success';
             let btnText = message.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
             let newStatus = !message.est_traite;
             html += '<td>' + (message.est_traite ? 'Terminée' : 'À faire') +
@@ -949,7 +949,7 @@ if(isset($_GET['updateStatus'])) {
             html += '<td>' + demande.telephone + '</td>';
             html += '<td>' + demande.message + '</td>';
             html += '<td>' + demande.date + '</td>';
-            let btnClass = demande.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnClass = demande.est_traite ? 'btn btn-danger' : 'btn btn-success';
             let btnText = demande.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
             let newStatus = !demande.est_traite;
             html += '<td>' + (demande.est_traite ? 'Terminée' : 'À faire') +
@@ -994,7 +994,7 @@ if(isset($_GET['updateStatus'])) {
             html += '<td>' + demande.telephone + '</td>';
             html += '<td>' + demande.date + '</td>';
             html += '<td>' + demande.date_souhaite_intervention + '</td>';
-            let btnClass = demande.est_traite ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+            let btnClass = demande.est_traite ? 'btn btn-danger' : 'btn btn-success';
             let btnText = demande.est_traite ? 'Passer à À faire' : 'Passer à Terminé';
             let newStatus = !demande.est_traite;
             html += '<td>' + (demande.est_traite ? 'Terminée' : 'À faire') +

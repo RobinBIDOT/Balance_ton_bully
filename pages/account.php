@@ -270,7 +270,7 @@ function afficherProfilProfessionnelSante($dbh, $userId) {
 <body>
 <?php include('../includes/headerNav.php') ?>
 <div class="container mt-5 mb-5 blue-background">
-    <h1 class="text-center">Votre Profil</h1>
+    <h1 class="text-center" style="font-size: 2rem; font-weight: bold;">Votre Profil</h1>
     <form method="post" action="account.php" class="mt-5">
         <div class="row mb-3">
             <label for="newName" class="col-sm-2 col-form-label">Nom :</label>

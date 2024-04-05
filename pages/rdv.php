@@ -160,16 +160,14 @@ $evenements_json = json_encode($evenements);
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
-                left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+                left: 'timeGridWeek,timeGridDay',
                 center: 'title',
                 right: 'prev,next'
             },
             navLinks: true,
             buttonText: {
-                dayGridMonth: 'Mois',
                 timeGridWeek: 'Semaine',
                 timeGridDay: 'Jour',
-                listWeek: 'Liste semaine'
             },
             height: '70%',
             dayHeaders: true,
