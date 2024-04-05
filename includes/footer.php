@@ -47,8 +47,8 @@
                                     <div class="widget">
                                         <h4 class="widget-title mb-4">Don</h4>
                                         <p class="mb-4">Aidez-nous à lutter contre le harcèlement scolaire en faisant un don. Votre contribution peut faire une grande différence.</p>
-                                        <div class="d-grid justify-content-center" style="max-width: 200px; margin: 0 auto;";>
-                                            <a href="../pages/dons.php" class="btn btn-primary btn-sm" type="button">Faire un don</a>
+                                        <div class="d-grid justify-content-center" style="max-width: 200px; margin: 0 auto">
+                                            <form action="../pages/dons.php"><input type="submit" class="btn btn-primary btn-sm" value="Faire un don"></form>
                                         </div>
                                     </div>
                                 </div>
