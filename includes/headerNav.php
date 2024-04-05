@@ -3,7 +3,7 @@
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-12 col-md-auto p-2 text-center'>
                 <a href='../pages/index.php'>
-                    <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
+                    <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site'>
                 </a>
             </div>
             <div class='col d-flex justify-content-center'>
@@ -20,7 +20,7 @@
                 <!-- Icône de connexion et navigation (toujours visible) -->
                 <div class="d-none d-md-flex justify-content-center custom-bg-logo rounded-top">
                     <a href="../pages/connexion.php" class="d-block mb-2" style="max-width: 50px;">
-                        <img src="../assets/🦆 icon _people_.png" class="connexion-logo img-fluid" alt="connexion">
+                        <img src="../assets/icon%20_people_.png" class="connexion-logo img-fluid" alt="connexion">
                     </a>
                     <div class="container my-3 connexion-home">
                         <!-- Si l'utilisateur est connecté, afficher le message de bienvenue et les options de profil et de déconnexion -->
