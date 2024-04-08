@@ -74,7 +74,7 @@
                             <li><a class="dropdown-item text-center" href="../pages/intervention.php">Intervention</a></li>
                         </ul>
                     </li>
-                    <?php if (!$_SESSION['nickName']){ ?>
+                    <?php if (!isset($_SESSION['nickName'])){ ?>
                     <li class="nav-item d-md-none">
                         <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">Connexion</a>
                     </li>
