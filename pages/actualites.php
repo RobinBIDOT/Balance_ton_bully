@@ -99,11 +99,10 @@ $actualities = rechercherActualites($dbh, $motCle, $offset, $elementsParPage);
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-compatible" content="ie-edge">
     <title>Balance Ton Bully - Actualités</title>
     <?php include('../includes/headLink.php') ?>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
