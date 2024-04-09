@@ -7,14 +7,14 @@
                 </a>
             </div>
             <div class="content">
-                <div class="search-bar">
-                    <form action="../pages/accueilForum.php" method="GET">
-                        <input type="text" placeholder="Entrez votre recherche" aria-label="search" class="search-bar__input" name="searchTitle">
-                        <button aria-label="submit search" class="search-bar__submit" type="submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </form>
-                </div>
+<!--                <div class="search-bar">-->
+<!--                    <form action="../pages/accueilForum.php" method="GET">-->
+<!--                        <input type="text" placeholder="Entrez votre recherche" aria-label="search" class="search-bar__input" name="searchTitle">-->
+<!--                        <button aria-label="submit search" class="search-bar__submit" type="submit">-->
+<!--                            <i class="fa-solid fa-magnifying-glass"></i>-->
+<!--                        </button>-->
+<!--                    </form>-->
+<!--                </div>-->
             </div>
             <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section'>
                 <!-- Icône de connexion et navigation (toujours visible) -->
