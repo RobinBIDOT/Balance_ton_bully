@@ -178,7 +178,7 @@ $professionnels = getProfessionnels($dbh, $offset, $elementsParPage, $nomRecherc
                     <div class="col-md-8">
                         <div class="card-footer blue">
                             <div class="col">
-                                <div class="col mb-1">
+                                <div class="col mb-2">
                                     <h6 class="col mb-2">Expertises :</h6>
                                     <ul class="list-inline" style="margin-bottom: 0;">
                                         <?php

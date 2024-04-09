@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-md-4">
                 <!-- Section Type de Don -->
                 <div class="blue-background">
-                    <h3>Mon don</h3>
+                    <h3 class="fw-bold mb-2" style="font-size: 2rem;">Mon don</h3>
                     <div class="mb-3">
                         <button type="button" class="btn btn-primary" id="donUneFois">Je donne une fois</button>
                         <button type="button" class="btn btn-primary" id="donMensuel">Je donne tous les mois</button>
@@ -149,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
                 <div class="blue-background mt-5">
-                    <h3>Réduction fiscale</h3>
+                    <h3 class="fw-bold mb-2" style="font-size: 2rem;">Réduction fiscale</h3>
                     <p id="infoReduction"></p>
                     <button type="button" id="btnParticulier" class="btn btn-primary">Particulier</button>
                     <button type="button" id="btnOrganisme" class="btn btn-primary">Organisme</button>
@@ -159,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Colonne centrale (Coordonnées) -->
             <div class="col-md-4">
                 <div class="blue-background" id="mesCoordonnees">
-                    <h3>Mes coordonnées</h3>
+                    <h3  class="fw-bold mb-2" style="font-size: 2rem;">Mes coordonnées</h3>
                     <!-- Formulaire coordonnées -->
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="payerOrganisme">
@@ -222,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Colonne de droite (Récapitulatif) -->
             <div class="col-md-4">
                 <div class="blue-background">
-                    <h3>Mon récapitulatif</h3>
+                    <h3  class="fw-bold mb-2" style="font-size: 2rem;">Mon récapitulatif</h3>
                     <!-- Section Récapitulatif -->
                     <div class="mb-3 form-check">
                         <p id="typeDon"></p>

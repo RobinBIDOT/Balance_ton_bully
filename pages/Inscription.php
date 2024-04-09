@@ -65,27 +65,27 @@ if (isset($_POST['submit'])) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            $stmt = $pdo->prepare('SELECT * FROM utilisateurs');
-            $stmt->execute();
+            $stmt = $pdo->prepare('SELECT * FROM utilisateurs WHERE mail = ? OR userName = ?');
+            $stmt->execute([$mail, $pseudo]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($user['mail'] == $mail) {
-                echo "<div class='alert alert-warning' role='alert'>Un compte est deja associé a cette adresse mail";
-            }elseif ($user['userName'] == $pseudo) {
-                echo "<div class='alert alert-warning' role='alert'>Le nom d'utilisateur n'est pas disponible";
-            } else {
 
+            if ($user) {
+                if ($user['mail'] == $mail) {
+                    echo "<div class='alert alert-warning' role='alert'>Un compte est déjà associé à cette adresse e-mail</div>";
+                } elseif ($user['userName'] == $pseudo) {
+                    echo "<div class='alert alert-warning' role='alert'>Le nom d'utilisateur n'est pas disponible</div>";
+                }
+            } else {
                 // Insertion des données dans la base de données
                 $stmt = $pdo->prepare('INSERT INTO utilisateurs (mail, password, userName) VALUES (?,?,?)');
                 $stmt->execute([$mail, $hashedPassword, $pseudo]);
                 echo "<div class='alert alert-success' role='alert'>Utilisateur enregistré avec succès</div>";
             }
+        } catch (PDOException $e) {
+            echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
         }
-        catch
-            (PDOException $e) {
-                echo "<div class='alert alert-danger' role='alert'>Erreur: " . $e->getMessage() . "</div>";
-            }
-    }
 
+    }
 }
 ?>
 <!DOCTYPE html>

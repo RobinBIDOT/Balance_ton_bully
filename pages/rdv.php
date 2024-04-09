@@ -20,9 +20,10 @@ session_start();
 // Récupérer l'ID du professionnel depuis l'URL
 if (isset($_GET['professionnel_id'])) {
     $professionnel_id = intval($_GET['professionnel_id']);
-    echo "Professionnel ID : ";
+    echo '<span class="d-none">Professionnel ID : </span>';
+
 //    var_dump($professionnel_id);
-    echo "<br><br>";
+//    echo "<br><br>";
 } else {
     // Rediriger vers une page d'erreur si l'ID n'est pas fourni
     header("Location: ../pages/consultations.php");
@@ -159,16 +160,14 @@ $evenements_json = json_encode($evenements);
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
-                left: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+                left: 'timeGridWeek,timeGridDay',
                 center: 'title',
                 right: 'prev,next'
             },
             navLinks: true,
             buttonText: {
-                dayGridMonth: 'Mois',
                 timeGridWeek: 'Semaine',
                 timeGridDay: 'Jour',
-                listWeek: 'Liste semaine'
             },
             height: '70%',
             dayHeaders: true,

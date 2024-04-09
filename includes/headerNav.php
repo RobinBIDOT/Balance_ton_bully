@@ -3,18 +3,18 @@
         <div class='row align-items-center justify-content-between m-0'>
             <div class='col-12 col-md-auto p-2 text-center'>
                 <a href='../pages/index.php'>
-                    <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site' />
+                    <img src='../assets/Logo_site.png' class='img-fluid perso_logoSize' alt='logo du site'>
                 </a>
             </div>
-            <div class='col d-flex justify-content-center'>
-                <div class="content">
-                    <div class="search-bar">
-                        <input type="text" placeholder="Entrez votre recherche" aria-label="search" class="search-bar__input">
-                        <button aria-label="submit search" class="search-bar__submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="content">
+<!--                <div class="search-bar">-->
+<!--                    <form action="../pages/accueilForum.php" method="GET">-->
+<!--                        <input type="text" placeholder="Entrez votre recherche" aria-label="search" class="search-bar__input" name="searchTitle">-->
+<!--                        <button aria-label="submit search" class="search-bar__submit" type="submit">-->
+<!--                            <i class="fa-solid fa-magnifying-glass"></i>-->
+<!--                        </button>-->
+<!--                    </form>-->
+<!--                </div>-->
             </div>
             <div class='col-12 col-md-auto text-center pt-1 pr-4 connexion-section'>
                 <!-- Icône de connexion et navigation (toujours visible) -->
@@ -74,6 +74,19 @@
                             <li><a class="dropdown-item text-center" href="../pages/intervention.php">Intervention</a></li>
                         </ul>
                     </li>
+                    <?php if (!isset($_SESSION['nickName'])){ ?>
+                    <li class="nav-item d-md-none">
+                        <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">Connexion</a>
+                    </li>
+                    <?php } ?>
+                    <?php if (isset($_SESSION['nickName'])) { ?>
+                        <li class="nav-item d-md-none">
+                                <a class="nav-link text-black text-center mx-3 mx-md-5" href="../pages/account.php" class="d-block nav-link text-black text-center mx-5">Votre profil</a>
+                        </li>
+                        <li class="nav-item d-md-none">
+                                <a class="nav-link text-black text-center mx-3 mx-md-5" href="../php/deconnexion.php" class="d-block nav-link text-black text-center mx-5">Déconnexion</a>
+                        </li>
+                    <?php } ?>
                     <!-- Élément de menu admin -->
                     <?php if (isset($_SESSION['nickName']) && $_SESSION['id_role'] === 1) { ?>
                         <li class="nav-item">
@@ -83,12 +96,5 @@
                 </ul>
             </div>
         </nav>
-    </div>
-</div>
-<div class="d-md-none">
-    <div class="mt-2">
-        <a href="../pages/connexion.php" class="d-block nav-link text-black text-center mx-5">
-            Connexion
-        </a>
     </div>
 </div>
